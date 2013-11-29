@@ -1,10 +1,8 @@
 package com.alipay.simplehbase.hql.handler;
 
-import java.util.Map;
-
 import com.alipay.simplehbase.hql.HQLNodeType;
 
-public class BinaryNode extends ConditionNode {
+abstract public class BinaryNode extends ConditionNode {
 
     private String property;
     private String compareValue;
@@ -29,8 +27,4 @@ public class BinaryNode extends ConditionNode {
         this.compareValue = compareValue;
     }
 
-    @Override
-    protected boolean isConditionSatisfied(Map<String, Object> para) {
-        throw new RuntimeException();
-    }
 }
