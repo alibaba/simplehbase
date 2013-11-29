@@ -12,7 +12,7 @@ import org.w3c.dom.Node;
 public class XmlUtil {
 
     /**
-     * Find node's attr's String value.
+     * 查找node的属性为attrName的value。
      * */
     public static String getAttr(Node node, String attrName) {
 
