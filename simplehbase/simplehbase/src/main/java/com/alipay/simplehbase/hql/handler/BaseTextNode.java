@@ -3,7 +3,7 @@ package com.alipay.simplehbase.hql.handler;
 import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.HQLNodeType;
 
-public class BaseTextNode extends HQLNode {
+abstract public class BaseTextNode extends HQLNode {
 
     private String textValue;
 

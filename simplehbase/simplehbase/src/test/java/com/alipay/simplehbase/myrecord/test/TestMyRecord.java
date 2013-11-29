@@ -46,6 +46,8 @@ public class TestMyRecord {
         HBaseDataSource hbaseDataSource = new HBaseDataSource();
 
         List<String> hbaseConfigFilePaths = new ArrayList<String>();
+        //如果是在hbase上跑测试，则修改以下2个配置文件。
+        //如果是在hbase standalone模式下跑测试，则注释掉以下2行。
         hbaseConfigFilePaths.add("test\\hbase_site");
         hbaseConfigFilePaths.add("test\\zk_conf");
         hbaseDataSource.setHbaseConfigFilePaths(hbaseConfigFilePaths);

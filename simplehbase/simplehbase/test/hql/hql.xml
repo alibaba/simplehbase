@@ -1,0 +1,82 @@
+<SimpleHbase>
+
+	<statements>
+		<statement id="test_text">
+			hello world to allen .
+		</statement>
+
+		<statement id="test_comment">
+			<!-- comment -->
+			hello world <!-- comment -->
+			to allen .
+			<!-- comment -->
+		</statement>
+
+		<statement id="test_CDATA">
+			<!-- comment -->
+			hello world <!-- comment -->
+			to allen .
+			<!-- comment -->
+			<![CDATA[<sender>John Smith</sender>]]>
+		</statement>
+
+		<statement id="test_isNull">
+			allen
+			<isNull prepend="AND" property="c">
+				love
+			</isNull>
+			<isNull property="d">
+				dandan
+			</isNull>
+		</statement>
+
+		<statement id="test_dynamic1">
+			<dynamic>
+				allen
+				<isNull prepend="AND" property="c">
+					love
+				</isNull>
+				<isNull property="d">
+					dandan
+				</isNull>
+			</dynamic>
+		</statement>
+
+		<statement id="test_dynamic2">
+			<dynamic prepend="hi">
+				allen
+				<isNull prepend="AND" property="c">
+					love
+				</isNull>
+				<isNull property="d">
+					dandan
+				</isNull>
+			</dynamic>
+		</statement>
+
+		<statement id="test_dynamic3">
+			<dynamic prepend="hi">
+				allen
+				<isNull prepend="AND" property="c">
+					love
+					<dynamic prepend="hello">
+						<isNull property="d">
+							dandan
+						</isNull>
+						cup
+						<isNull prepend="cat" property="e">
+							linzhi
+						</isNull>
+					</dynamic>
+				</isNull>
+
+			</dynamic>
+		</statement>
+
+	</statements>
+
+
+
+</SimpleHbase>   
+
+

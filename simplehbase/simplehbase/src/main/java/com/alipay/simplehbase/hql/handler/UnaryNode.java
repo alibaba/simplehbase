@@ -2,7 +2,7 @@ package com.alipay.simplehbase.hql.handler;
 
 import com.alipay.simplehbase.hql.HQLNodeType;
 
-public class UnaryNode extends PrependNode {
+abstract public class UnaryNode extends ConditionNode {
 
     private String property;
 

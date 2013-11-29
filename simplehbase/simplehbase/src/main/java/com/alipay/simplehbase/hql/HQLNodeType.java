@@ -7,7 +7,6 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 /**
  * HQLµÄnode type¡£
  * 
- * 
  * @author xinzhi
  * @version $Id: HQLNodeType.java 2013-09-11 ÉÏÎç11:27:31 xinzhi $
  * */

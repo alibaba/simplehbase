@@ -13,6 +13,8 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
  * */
 public class StringUtil {
 
+
+
     /**
      * str «∑Ò «nullªÚempty?
      * */
