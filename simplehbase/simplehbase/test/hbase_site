@@ -1,0 +1,5 @@
+hbase.client.pause=20
+hbase.client.retries.number=3
+hbase.ipc.client.tcpnodelay=true
+ipc.ping.interval=3000
+hbase.rpc.timeout=60000

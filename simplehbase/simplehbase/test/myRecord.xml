@@ -1,0 +1,20 @@
+<SimpleHbase>
+
+	<HBaseTableSchema tableName="MyRecord" defaultFamily="MyRecordFamily"
+		defaultColumnConvertorType="com.alipay.simplehbase.convertor.DefaultColumnConvertor">
+		<HBaseColumnSchema qualifier="id" typeName="int" />
+		<HBaseColumnSchema qualifier="name" typeName="string" />
+		<HBaseColumnSchema qualifier="date" typeName="date" />
+		<HBaseColumnSchema qualifier="gender"
+			typeName="com.alipay.simplehbase.myrecord.Gender" />
+		<HBaseColumnSchema qualifier="version" typeName="long" />
+	</HBaseTableSchema>
+	
+	<configMap>
+		<config key="SCAN_CACHING" value="20" />
+		<config key="DELETE_BATCH" value="20" />		
+	</configMap>
+	
+</SimpleHbase>   
+
+

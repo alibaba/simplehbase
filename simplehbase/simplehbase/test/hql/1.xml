@@ -1,0 +1,11 @@
+<SimpleHbase>
+
+	<statements>
+		<statement id="id">
+		where 
+		</statement>
+	</statements>
+
+</SimpleHbase>   
+
+
