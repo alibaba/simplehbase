@@ -47,8 +47,6 @@ public class HBaseTableConfigParser {
                 "tableName"));
         tableSchema.setDefaultFamily(XmlUtil.getAttr(hbaseTableSchemaNode,
                 "defaultFamily"));
-        tableSchema.setDefaultColumnConvertorType(XmlUtil.getAttr(
-                hbaseTableSchemaNode, "defaultColumnConvertorType"));
 
         NodeList nodeList = hbaseTableSchemaNode.getChildNodes();
 
@@ -61,8 +59,8 @@ public class HBaseTableConfigParser {
             columnSchema.setFamily(XmlUtil.getAttr(columnNode, "family"));
             columnSchema.setQualifier(XmlUtil.getAttr(columnNode, "qualifier"));
             columnSchema.setTypeName(XmlUtil.getAttr(columnNode, "typeName"));
-            columnSchema.setColumnConvertorType(XmlUtil.getAttr(columnNode,
-                    "columnConvertorType"));
+            columnSchema.setTypeHandlerName(XmlUtil.getAttr(columnNode,
+                    "handler"));
 
             hbaseColumnSchemas.add(columnSchema);
         }

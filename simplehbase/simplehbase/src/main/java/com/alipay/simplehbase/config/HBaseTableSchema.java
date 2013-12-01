@@ -6,8 +6,6 @@ import java.util.TreeMap;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
-import com.alipay.simplehbase.convertor.ColumnConvertor;
-import com.alipay.simplehbase.convertor.ColumnConvertorHolder;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.StringUtil;
 
@@ -24,13 +22,13 @@ import com.alipay.simplehbase.util.StringUtil;
  * */
 public class HBaseTableSchema {
 
-    //------------constant----------------
+    // ------------constant----------------
     /**
      * Family和Qualifier的连接符。
      **/
     private static final String            FamilyQualifierConnector = "^";
 
-    //------------xml config-------------------
+    // ------------xml config-------------------
     /**
      * tableName. not null.
      * */
@@ -41,21 +39,13 @@ public class HBaseTableSchema {
      * */
     @ConfigAttr
     private String                         defaultFamily;
-    /**
-     * 默认的columnConvertor的type。
-     * */
-    @ConfigAttr
-    private String                         defaultColumnConvertorType;
 
-    //------------runtime-------------------
+    // ------------runtime-------------------
     /**
      * 默认的Family。
      * */
     private byte[]                         defaultFamilyBytes;
-    /**
-     * 默认的columnConvertor。
-     * */
-    private ColumnConvertor                defaultColumnConvertor;
+
     /**
      * Family和Qualifier -> HBaseColumnSchema。
      * */
@@ -67,14 +57,9 @@ public class HBaseTableSchema {
     public void init(List<HBaseColumnSchema> hbaseColumnSchemas) {
 
         StringUtil.checkEmptyString(tableName);
+
         if (StringUtil.isNotEmptyString(defaultFamily)) {
             defaultFamilyBytes = Bytes.toBytes(defaultFamily);
-        }
-
-        if (StringUtil.isNotEmptyString(defaultColumnConvertorType)) {
-            defaultColumnConvertor = ColumnConvertorHolder
-                    .findConvertor(defaultColumnConvertorType);
-
         }
 
         if (hbaseColumnSchemas.isEmpty()) {
@@ -84,10 +69,6 @@ public class HBaseTableSchema {
         for (HBaseColumnSchema columnSchema : hbaseColumnSchemas) {
             if (StringUtil.isEmptyString(columnSchema.getFamily())) {
                 columnSchema.setFamily(defaultFamily);
-            }
-
-            if (StringUtil.isEmptyString(columnSchema.getColumnConvertorType())) {
-                columnSchema.setColumnConvertorType(defaultColumnConvertorType);
             }
 
             columnSchema.init();
@@ -121,14 +102,6 @@ public class HBaseTableSchema {
         this.defaultFamily = defaultFamily;
     }
 
-    public String getDefaultColumnConvertorType() {
-        return defaultColumnConvertorType;
-    }
-
-    public void setDefaultColumnConvertorType(String defaultColumnConvertorType) {
-        this.defaultColumnConvertorType = defaultColumnConvertorType;
-    }
-
     public String getTableName() {
         return tableName;
     }
@@ -143,14 +116,6 @@ public class HBaseTableSchema {
 
     public void setDefaultFamilyBytes(byte[] defaultFamilyBytes) {
         this.defaultFamilyBytes = defaultFamilyBytes;
-    }
-
-    public ColumnConvertor getDefaultColumnConvertor() {
-        return defaultColumnConvertor;
-    }
-
-    public void setDefaultColumnConvertor(ColumnConvertor defaultColumnConvertor) {
-        this.defaultColumnConvertor = defaultColumnConvertor;
     }
 
     public Map<String, HBaseColumnSchema> getHaseColumnSchemas() {
@@ -168,9 +133,6 @@ public class HBaseTableSchema {
         sb.append("---------------table--------------------------\n");
         StringUtil.append(sb, "tableName", tableName);
         StringUtil.append(sb, "defaultFamily", defaultFamily);
-        StringUtil.append(sb, "defaultColumnConvertorType",
-                defaultColumnConvertorType);
-
         for (HBaseColumnSchema columnSchema : haseColumnSchemas.values()) {
             StringUtil.append(sb, "columnSchema", columnSchema);
         }

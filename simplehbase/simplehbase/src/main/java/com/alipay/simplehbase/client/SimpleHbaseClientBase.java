@@ -12,8 +12,8 @@ import com.alipay.simplehbase.config.ConfigOfTable;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
-import com.alipay.simplehbase.convertor.ColumnConvertor;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.type.TypeHandler;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.ConfigUtil;
 
@@ -115,10 +115,9 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                 byte[] hbaseColumnValue = result.getValue(
                         columnInfo.familyBytes, columnInfo.qualifierBytes);
 
-                ColumnConvertor convertor = hbaseColumnSchema
-                        .getColumnConvertor();
-                Object value = convertor.toObject(hbaseColumnSchema.getType(),
-                        hbaseColumnValue);
+                TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
+                Object value = typeHandler.toObject(
+                        hbaseColumnSchema.getType(), hbaseColumnValue);
 
                 if (value != null) {
                     columnInfo.field.set(t, value);
@@ -160,8 +159,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                                 + " schemaType=" + schemaType);
             }
 
-            ColumnConvertor convertor = hbaseColumnSchema.getColumnConvertor();
-            return convertor.toBytes(fieldType, value);
+            TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
+            return typeHandler.toBytes(fieldType, value);
         } catch (Exception e) {
             throw new SimpleHBaseException(e);
         }

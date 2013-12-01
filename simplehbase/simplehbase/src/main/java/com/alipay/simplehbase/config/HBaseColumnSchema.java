@@ -3,11 +3,13 @@ package com.alipay.simplehbase.config;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 
-import com.alipay.simplehbase.convertor.ColumnConvertor;
-import com.alipay.simplehbase.convertor.ColumnConvertorHolder;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.type.DefaultTypeHandlers;
+import com.alipay.simplehbase.type.TypeHandler;
+import com.alipay.simplehbase.type.TypeHandlerHolder;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.StringUtil;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * HbaseTable的列的schema。
@@ -23,31 +25,31 @@ import com.alipay.simplehbase.util.StringUtil;
 public class HBaseColumnSchema {
 
     /** log. */
-    private static Logger   log = Logger.getLogger(HBaseColumnSchema.class);
+    private static Logger log = Logger.getLogger(HBaseColumnSchema.class);
 
-    //----------config------
+    // ----------config------
     /** hbase的family。 */
     @ConfigAttr
-    private String          family;
+    private String        family;
     /** hbase的qualifier。 */
     @ConfigAttr
-    private String          qualifier;
+    private String        qualifier;
     /** 对应的javaType。 */
     @ConfigAttr
-    private String          typeName;
-    /** columnConvertor的type。 */
+    private String        typeName;
+    /** typeHandler的type。 */
     @ConfigAttr
-    private String          columnConvertorType;
+    private String        typeHandlerName;
 
-    //-----------runtime------   
+    // -----------runtime------
     /** hbase的family。 */
-    private byte[]          familyBytes;
+    private byte[]        familyBytes;
     /** hbase的qualifier。 */
-    private byte[]          qualifierBytes;
+    private byte[]        qualifierBytes;
     /** 对应的javaType。 */
-    private Class<?>        type;
-    /** columnConvertor。 */
-    private ColumnConvertor columnConvertor;
+    private Class<?>      type;
+    /** TypeHandler。 */
+    private TypeHandler   typeHandler;
 
     /**
      * 初始化。
@@ -57,14 +59,23 @@ public class HBaseColumnSchema {
         StringUtil.checkEmptyString(family);
         StringUtil.checkEmptyString(qualifier);
         StringUtil.checkEmptyString(typeName);
-        StringUtil.checkEmptyString(columnConvertorType);
 
         try {
             familyBytes = Bytes.toBytes(family);
             qualifierBytes = Bytes.toBytes(qualifier);
             type = ClassUtil.forName(typeName);
-            columnConvertor = ColumnConvertorHolder
-                    .findConvertor(columnConvertorType);
+
+            if (StringUtil.isEmptyString(typeHandlerName)) {
+                typeHandler = DefaultTypeHandlers.findDefaultHandler(type);
+                typeHandlerName = typeHandler.getClass().getName();
+            } else {
+                typeHandler = TypeHandlerHolder
+                        .findTypeHandler(typeHandlerName);
+            }
+
+            Util.checkNull(typeHandlerName);
+            Util.checkNull(typeHandler);
+
         } catch (Exception e) {
             log.error(e);
             throw new SimpleHBaseException(e);
@@ -95,14 +106,6 @@ public class HBaseColumnSchema {
         this.typeName = typeName;
     }
 
-    public String getColumnConvertorType() {
-        return columnConvertorType;
-    }
-
-    public void setColumnConvertorType(String columnConvertorType) {
-        this.columnConvertorType = columnConvertorType;
-    }
-
     public byte[] getFamilyBytes() {
         return familyBytes;
     }
@@ -111,12 +114,20 @@ public class HBaseColumnSchema {
         return qualifierBytes;
     }
 
+    public String getTypeHandlerName() {
+        return typeHandlerName;
+    }
+
+    public void setTypeHandlerName(String typeHandlerName) {
+        this.typeHandlerName = typeHandlerName;
+    }
+
     public Class<?> getType() {
         return type;
     }
 
-    public ColumnConvertor getColumnConvertor() {
-        return columnConvertor;
+    public TypeHandler getTypeHandler() {
+        return typeHandler;
     }
 
     @Override
@@ -125,7 +136,7 @@ public class HBaseColumnSchema {
         sb.append("[family=" + family + ",");
         sb.append("qualifier=" + qualifier + ",");
         sb.append("typeName=" + typeName + ",");
-        sb.append("columnConvertorType=" + columnConvertorType + ",");
+        sb.append("typeHandlerName=" + typeHandlerName + "]");
         return sb.toString();
     }
 }
