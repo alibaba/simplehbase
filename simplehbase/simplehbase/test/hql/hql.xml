@@ -30,6 +30,18 @@
 			</isNull>
 		</statement>
 
+		<statement id="test_isEqual">
+			allen
+			<isEqual prepend="AND" property="status" compareValue="Y">
+				MARRIED
+			</isEqual>
+
+			<isEqual prepend="OR" property="age" compareValue="30">
+				AGE
+			</isEqual>
+		</statement>
+
+
 		<statement id="test_dynamic1">
 			<dynamic>
 				allen

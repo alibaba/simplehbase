@@ -13,8 +13,6 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
  * */
 public class StringUtil {
 
-
-
     /**
      * str是否是null或empty?
      * */
@@ -35,6 +33,16 @@ public class StringUtil {
     public static void checkEmptyString(String str) {
         if (isEmptyString(str)) {
             throw new SimpleHBaseException("string is null or empty.");
+        }
+    }
+
+    /**
+     * 检查字符串长度。
+     * */
+    public static void checkLength(String value, int length) {
+        if (value.length() != length) {
+            throw new SimpleHBaseException("checkLength error. value=" + value
+                    + " length=" + length);
         }
     }
 
