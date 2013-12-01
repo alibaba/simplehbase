@@ -26,6 +26,7 @@ public class ClassUtil {
 		nativeClassMap.put("char", char.class);
 		nativeClassMap.put("float", float.class);
 		nativeClassMap.put("double", double.class);
+		nativeClassMap.put("boolean", boolean.class);
 
 		simpleClassMap.put("Byte", Byte.class);
 		simpleClassMap.put("Short", Short.class);
@@ -34,6 +35,7 @@ public class ClassUtil {
 		simpleClassMap.put("Char", Character.class);
 		simpleClassMap.put("Float", Float.class);
 		simpleClassMap.put("Double", Double.class);
+		simpleClassMap.put("Boolean", Boolean.class);
 
 		simpleClassMap.put("string", String.class);
 		simpleClassMap.put("String", String.class);
@@ -47,7 +49,7 @@ public class ClassUtil {
 		boxTypeMap.put(char.class, Character.class);
 		boxTypeMap.put(float.class, Float.class);
 		boxTypeMap.put(double.class, Double.class);
-		boxTypeMap.put(void.class, Void.class);
+		boxTypeMap.put(boolean.class, Boolean.class);
 	}
 
 	/**
