@@ -24,6 +24,8 @@ public enum HQLNodeType {
 
     IsEqual("isEqual"),
 
+    IsNotEqual("isNotEqual"),
+
     IsNull("isNull"), ;
 
     /**

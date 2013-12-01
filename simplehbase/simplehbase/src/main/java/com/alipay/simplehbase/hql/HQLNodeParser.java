@@ -10,6 +10,7 @@ import com.alipay.simplehbase.hql.handler.CDATASectionNodeHandler;
 import com.alipay.simplehbase.hql.handler.CommentNodeHandler;
 import com.alipay.simplehbase.hql.handler.DynamicNodeHandler;
 import com.alipay.simplehbase.hql.handler.IsEqualNodeHandler;
+import com.alipay.simplehbase.hql.handler.IsNotEqualNodeHandler;
 import com.alipay.simplehbase.hql.handler.IsNullNodeHandler;
 import com.alipay.simplehbase.hql.handler.StatementNodeHandler;
 import com.alipay.simplehbase.hql.handler.TextNodeHandler;
@@ -42,6 +43,7 @@ public class HQLNodeParser {
         register(HQLNodeType.IsNull, new IsNullNodeHandler());
 
         register(HQLNodeType.IsEqual, new IsEqualNodeHandler());
+        register(HQLNodeType.IsNotEqual, new IsNotEqualNodeHandler());
 
     }
 

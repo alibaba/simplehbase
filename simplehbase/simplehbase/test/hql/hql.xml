@@ -32,13 +32,24 @@
 
 		<statement id="test_isEqual">
 			allen
-			<isEqual prepend="AND" property="status" compareValue="Y">
+			<isEqual prepend="AND" property="ok" compareValue="Y">
 				MARRIED
 			</isEqual>
 
 			<isEqual prepend="OR" property="age" compareValue="30">
 				AGE
 			</isEqual>
+		</statement>
+
+		<statement id="test_isNotEqual">
+			allen
+			<isNotEqual prepend="AND" property="ok" compareValue="Y">
+				MARRIED
+			</isNotEqual>
+
+			<isNotEqual prepend="OR" property="age" compareValue="30">
+				AGE
+			</isNotEqual>
 		</statement>
 
 
