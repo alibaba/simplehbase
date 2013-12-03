@@ -5,15 +5,7 @@ import java.util.Map;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import com.alipay.simplehbase.hql.handler.CDATASectionNodeHandler;
-import com.alipay.simplehbase.hql.handler.CommentNodeHandler;
-import com.alipay.simplehbase.hql.handler.DynamicNodeHandler;
-import com.alipay.simplehbase.hql.handler.IsEqualNodeHandler;
-import com.alipay.simplehbase.hql.handler.IsNotEqualNodeHandler;
-import com.alipay.simplehbase.hql.handler.IsNullNodeHandler;
-import com.alipay.simplehbase.hql.handler.StatementNodeHandler;
-import com.alipay.simplehbase.hql.handler.TextNodeHandler;
+import com.alipay.simplehbase.hql.handler.*;
 
 /**
  * HQLNodeParser¡£
@@ -41,6 +33,10 @@ public class HQLNodeParser {
         register(HQLNodeType.Dynamic, new DynamicNodeHandler());
 
         register(HQLNodeType.IsNull, new IsNullNodeHandler());
+        register(HQLNodeType.IsNotNull, new IsNotNullNodeHandler());
+
+        register(HQLNodeType.IsEmpty, new IsEmptyNodeHandler());
+        register(HQLNodeType.IsNotEmpty, new IsNotEmptyNodeHandler());
 
         register(HQLNodeType.IsEqual, new IsEqualNodeHandler());
         register(HQLNodeType.IsNotEqual, new IsNotEqualNodeHandler());

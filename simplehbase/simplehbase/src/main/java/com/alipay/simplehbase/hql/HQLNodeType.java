@@ -26,7 +26,15 @@ public enum HQLNodeType {
 
     IsNotEqual("isNotEqual"),
 
-    IsNull("isNull"), ;
+    IsNull("isNull"),
+
+    IsNotNull("isNotNull"),
+
+    IsEmpty("isEmpty"),
+
+    IsNotEmpty("isNotEmpty"),
+
+    ;
 
     /**
      * xmlÖÐnodeµÄname¡£

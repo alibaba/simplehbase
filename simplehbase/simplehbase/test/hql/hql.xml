@@ -22,12 +22,33 @@
 
 		<statement id="test_isNull">
 			allen
-			<isNull prepend="AND" property="c">
-				love
-			</isNull>
-			<isNull property="d">
+			<isNull prepend="love" property="c">
 				dandan
 			</isNull>
+		</statement>
+
+		<statement id="test_isNotNull">
+			allen
+			<isNotNull prepend="love" property="c">
+				dandan
+			</isNotNull>
+		</statement>
+
+		<statement id="test_isEmpty">
+			allen
+			<isEmpty prepend="love" property="c">
+				dandan
+			</isEmpty>
+
+	
+		</statement>
+
+		<statement id="test_isNotEmpty">
+			allen
+			<isNotEmpty prepend="love" property="c">
+				dandan
+			</isNotEmpty>
+		
 		</statement>
 
 		<statement id="test_isEqual">
