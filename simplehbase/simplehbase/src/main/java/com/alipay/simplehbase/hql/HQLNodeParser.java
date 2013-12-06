@@ -5,7 +5,20 @@ import java.util.Map;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import com.alipay.simplehbase.hql.handler.*;
+
+import com.alipay.simplehbase.hql.node.DynamicNodeHandler;
+import com.alipay.simplehbase.hql.node.StatementNodeHandler;
+import com.alipay.simplehbase.hql.node.binary.IsEqualNodeHandler;
+import com.alipay.simplehbase.hql.node.binary.IsNotEqualNodeHandler;
+import com.alipay.simplehbase.hql.node.text.CDATASectionNodeHandler;
+import com.alipay.simplehbase.hql.node.text.CommentNodeHandler;
+import com.alipay.simplehbase.hql.node.text.TextNodeHandler;
+import com.alipay.simplehbase.hql.node.unary.IsEmptyNodeHandler;
+import com.alipay.simplehbase.hql.node.unary.IsNotEmptyNodeHandler;
+import com.alipay.simplehbase.hql.node.unary.IsNotNullNodeHandler;
+import com.alipay.simplehbase.hql.node.unary.IsNotPropertyAvailableNodeHandler;
+import com.alipay.simplehbase.hql.node.unary.IsNullNodeHandler;
+import com.alipay.simplehbase.hql.node.unary.IsPropertyAvailableNodeHandler;
 
 /**
  * HQLNodeParser¡£
@@ -37,6 +50,11 @@ public class HQLNodeParser {
 
         register(HQLNodeType.IsEmpty, new IsEmptyNodeHandler());
         register(HQLNodeType.IsNotEmpty, new IsNotEmptyNodeHandler());
+
+        register(HQLNodeType.IsPropertyAvailable,
+                new IsPropertyAvailableNodeHandler());
+        register(HQLNodeType.IsNotPropertyAvailable,
+                new IsNotPropertyAvailableNodeHandler());
 
         register(HQLNodeType.IsEqual, new IsEqualNodeHandler());
         register(HQLNodeType.IsNotEqual, new IsNotEqualNodeHandler());

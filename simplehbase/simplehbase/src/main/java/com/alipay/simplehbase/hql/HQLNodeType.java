@@ -11,21 +11,25 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
  * @version $Id: HQLNodeType.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public enum HQLNodeType {
-
+    //Text
     CDATASection("#cdata-section"),
 
     Text("#text"),
 
     Comment("#comment"),
 
+    //顶级statement。
     Statement("statement"),
 
+    //动态节点。
     Dynamic("dynamic"),
 
+    //二元条件节点。
     IsEqual("isEqual"),
 
     IsNotEqual("isNotEqual"),
 
+    //一元条件节点。
     IsNull("isNull"),
 
     IsNotNull("isNotNull"),
@@ -33,6 +37,10 @@ public enum HQLNodeType {
     IsEmpty("isEmpty"),
 
     IsNotEmpty("isNotEmpty"),
+
+    IsPropertyAvailable("isPropertyAvailable"),
+
+    IsNotPropertyAvailable("isNotPropertyAvailable"),
 
     ;
 

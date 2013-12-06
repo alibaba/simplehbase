@@ -74,6 +74,22 @@
 		</statement>
 
 
+	    <statement id="test_isPropertyAvailable">
+			allen
+			<isPropertyAvailable prepend="love" property="c">
+				dandan
+			</isPropertyAvailable>
+		
+		</statement>
+		
+		<statement id="test_isNotPropertyAvailable">
+			allen
+			<isNotPropertyAvailable prepend="love" property="c">
+				dandan
+			</isNotPropertyAvailable>		
+		</statement>
+		
+
 		<statement id="test_dynamic1">
 			<dynamic>
 				allen
