@@ -9,6 +9,10 @@ import org.w3c.dom.NodeList;
 import com.alipay.simplehbase.hql.node.DynamicNodeHandler;
 import com.alipay.simplehbase.hql.node.StatementNodeHandler;
 import com.alipay.simplehbase.hql.node.binary.IsEqualNodeHandler;
+import com.alipay.simplehbase.hql.node.binary.IsGreaterEqualNodeHandler;
+import com.alipay.simplehbase.hql.node.binary.IsGreaterThanNodeHandler;
+import com.alipay.simplehbase.hql.node.binary.IsLessEqualNodeHandler;
+import com.alipay.simplehbase.hql.node.binary.IsLessThanNodeHandler;
 import com.alipay.simplehbase.hql.node.binary.IsNotEqualNodeHandler;
 import com.alipay.simplehbase.hql.node.text.CDATASectionNodeHandler;
 import com.alipay.simplehbase.hql.node.text.CommentNodeHandler;
@@ -58,6 +62,12 @@ public class HQLNodeParser {
 
         register(HQLNodeType.IsEqual, new IsEqualNodeHandler());
         register(HQLNodeType.IsNotEqual, new IsNotEqualNodeHandler());
+
+        register(HQLNodeType.IsGreaterThan, new IsGreaterThanNodeHandler());
+        register(HQLNodeType.IsGreaterEqual, new IsGreaterEqualNodeHandler());
+
+        register(HQLNodeType.IsLessThan, new IsLessThanNodeHandler());
+        register(HQLNodeType.IsLessEqual, new IsLessEqualNodeHandler());
 
     }
 

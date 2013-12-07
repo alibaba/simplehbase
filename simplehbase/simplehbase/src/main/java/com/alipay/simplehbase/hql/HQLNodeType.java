@@ -29,6 +29,14 @@ public enum HQLNodeType {
 
     IsNotEqual("isNotEqual"),
 
+    IsGreaterThan("isGreaterThan"),
+
+    IsGreaterEqual("isGreaterEqual"),
+
+    IsLessThan("isLessThan"),
+
+    IsLessEqual("isLessEqual"),
+
     //一元条件节点。
     IsNull("isNull"),
 

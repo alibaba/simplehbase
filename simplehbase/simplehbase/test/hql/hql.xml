@@ -40,7 +40,7 @@
 				dandan
 			</isEmpty>
 
-	
+
 		</statement>
 
 		<statement id="test_isNotEmpty">
@@ -48,7 +48,26 @@
 			<isNotEmpty prepend="love" property="c">
 				dandan
 			</isNotEmpty>
-		
+
+		</statement>
+
+
+
+
+		<statement id="test_isPropertyAvailable">
+			allen
+			<isPropertyAvailable prepend="love" property="c">
+				dandan
+			</isPropertyAvailable>
+
+		</statement>
+
+		<statement id="test_isNotPropertyAvailable">
+			allen
+			<isNotPropertyAvailable prepend="love"
+				property="c">
+				dandan
+			</isNotPropertyAvailable>
 		</statement>
 
 		<statement id="test_isEqual">
@@ -73,22 +92,73 @@
 			</isNotEqual>
 		</statement>
 
+		<statement id="test_isGreaterThan">
+			allen
+			<isGreaterThan prepend="AND" property="name"
+				compareValue="bob">
+				MARRIED
+			</isGreaterThan>
 
-	    <statement id="test_isPropertyAvailable">
-			allen
-			<isPropertyAvailable prepend="love" property="c">
-				dandan
-			</isPropertyAvailable>
-		
+			<isGreaterThan prepend="OR" property="age"
+				compareValue="30">
+				AGE
+			</isGreaterThan>
+
+			<isGreaterThan prepend="OR" property="date"
+				compareValue="2013-10-01">
+				tree
+			</isGreaterThan>
 		</statement>
-		
-		<statement id="test_isNotPropertyAvailable">
+
+		<statement id="test_isGreaterEqual">
 			allen
-			<isNotPropertyAvailable prepend="love" property="c">
-				dandan
-			</isNotPropertyAvailable>		
+			<isGreaterEqual prepend="AND" property="name"
+				compareValue="bob">
+				MARRIED
+			</isGreaterEqual>
+
+			<isGreaterEqual prepend="OR" property="age"
+				compareValue="30">
+				AGE
+			</isGreaterEqual>
+
+			<isGreaterEqual prepend="OR" property="date"
+				compareValue="2013-10-01">
+				tree
+			</isGreaterEqual>
 		</statement>
-		
+
+		<statement id="test_isLessThan">
+			allen
+			<isLessThan prepend="AND" property="name" compareValue="bob">
+				MARRIED
+			</isLessThan>
+
+			<isLessThan prepend="OR" property="age" compareValue="30">
+				AGE
+			</isLessThan>
+
+			<isLessThan prepend="OR" property="date" compareValue="2013-10-01">
+				tree
+			</isLessThan>
+		</statement>
+
+		<statement id="test_isLessEqual">
+			allen
+			<isLessEqual prepend="AND" property="name" compareValue="bob">
+				MARRIED
+			</isLessEqual>
+
+			<isLessEqual prepend="OR" property="age" compareValue="30">
+				AGE
+			</isLessEqual>
+
+			<isLessEqual prepend="OR" property="date" compareValue="2013-10-01">
+				tree
+			</isLessEqual>
+		</statement>
+
+
 
 		<statement id="test_dynamic1">
 			<dynamic>
