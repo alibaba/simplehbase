@@ -45,5 +45,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/apache/zookeeper/zookeeper/3.3.2/zookeeper-3.3.2.jar" sourcepath="M2_REPO/org/apache/zookeeper/zookeeper/3.3.2/zookeeper-3.3.2-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar" sourcepath="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/hadoop/thirdparty/guava/guava/r09-jarjar/guava-r09-jarjar.jar"/>
+	<classpathentry kind="lib" path="D:/allen_code/other/antlr_study/lib/antlr-4.0-complete.jar" sourcepath="D:/allen_code/other/antlr_study/lib_src/antlr4.4.1runtime.zip"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

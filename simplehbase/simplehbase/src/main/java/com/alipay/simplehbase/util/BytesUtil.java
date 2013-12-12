@@ -12,43 +12,42 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
  */
 public class BytesUtil {
 
-	/** byte[] ZERO */
-	public static final byte[] ZERO = { (byte) 0 };
+    /** byte[] ZERO */
+    public static final byte[] ZERO = { (byte) 0 };
 
-	/** byte[] ONE */
-	public static final byte[] ONE = { (byte) 1 };
+    /** byte[] ONE */
+    public static final byte[] ONE  = { (byte) 1 };
 
-	/**
-	 * 字节数组合并
-	 * 
-	 * @param bytesArray
-	 *            多个字节数据
-	 * @return 合并成一个字节数组
-	 */
-	public static byte[] merge(byte[]... bytesArray) {
-		byte[] result = new byte[] {};
+    /**
+     * 字节数组合并
+     * 
+     * @param bytesArray 多个字节数据
+     * @return 合并成一个字节数组
+     */
+    public static byte[] merge(byte[]... bytesArray) {
+        byte[] result = new byte[] {};
 
-		if (bytesArray == null) {
-			return result;
-		}
+        if (bytesArray == null) {
+            return result;
+        }
 
-		for (byte[] bytes : bytesArray) {
-			if (bytes == null) {
-				continue;
-			}
-			result = Bytes.add(result, bytes);
-		}
+        for (byte[] bytes : bytesArray) {
+            if (bytes == null) {
+                continue;
+            }
+            result = Bytes.add(result, bytes);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * 检查数组长度。
-	 * */
-	public static void checkLength(byte[] values, int length) {
-		if (values.length != length) {
-			throw new SimpleHBaseException("checkLength error. values.length="
-					+ values.length + " length=" + length);
-		}
-	}
+    /**
+     * 检查数组长度。
+     * */
+    public static void checkLength(byte[] values, int length) {
+        if (values.length != length) {
+            throw new SimpleHBaseException("checkLength error. values.length="
+                    + values.length + " length=" + length);
+        }
+    }
 }

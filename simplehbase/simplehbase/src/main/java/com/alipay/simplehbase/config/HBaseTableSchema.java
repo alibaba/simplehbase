@@ -22,34 +22,28 @@ import com.alipay.simplehbase.util.StringUtil;
  * */
 public class HBaseTableSchema {
 
-    // ------------constant----------------
-    /**
-     * Family和Qualifier的连接符。
-     **/
-    private static final String            FamilyQualifierConnector = "^";
-
     // ------------xml config-------------------
     /**
      * tableName. not null.
      * */
     @ConfigAttr
-    private String                         tableName;
+    private String                                      tableName;
     /**
      * 默认的Family。
      * */
     @ConfigAttr
-    private String                         defaultFamily;
+    private String                                      defaultFamily;
 
     // ------------runtime-------------------
     /**
      * 默认的Family。
      * */
-    private byte[]                         defaultFamilyBytes;
+    private byte[]                                      defaultFamilyBytes;
 
     /**
-     * Family和Qualifier -> HBaseColumnSchema。
+     * Qualifier->Family-> HBaseColumnSchema。
      * */
-    private Map<String, HBaseColumnSchema> haseColumnSchemas        = new TreeMap<String, HBaseColumnSchema>();
+    private Map<String, Map<String, HBaseColumnSchema>> columnSchemas = new TreeMap<String, Map<String, HBaseColumnSchema>>();
 
     /**
      * 初始化。
@@ -73,25 +67,42 @@ public class HBaseTableSchema {
 
             columnSchema.init();
 
-            String key = mapKey(columnSchema.getFamily(),
-                    columnSchema.getQualifier());
-            haseColumnSchemas.put(key, columnSchema);
-        }
+            Map<String, HBaseColumnSchema> temMap = columnSchemas
+                    .get(columnSchema.getQualifier());
+            if (temMap == null) {
+                temMap = new TreeMap<String, HBaseColumnSchema>();
+                columnSchemas.put(columnSchema.getQualifier(), temMap);
+            }
 
+            temMap.put(columnSchema.getFamily(), columnSchema);
+
+        }
     }
 
     /**
      * 根据family和qualifier查找HBaseColumnSchema。
      * */
     public HBaseColumnSchema findColumnSchema(String family, String qualifier) {
-        return haseColumnSchemas.get(mapKey(family, qualifier));
+        return columnSchemas.get(qualifier).get(family);
     }
 
     /**
-     * 由family和qualifier计算haseColumnSchemas的key值。
+     * 根据qualifier查找HBaseColumnSchema。
+     * 
+     * <pre>
+     * 该HBaseTableSchema不存在多个family有相同的qualifier。
+     * </pre>
      * */
-    private String mapKey(String family, String qualifier) {
-        return family + FamilyQualifierConnector + qualifier;
+    public HBaseColumnSchema findColumnSchema(String qualifier) {
+        Map<String, HBaseColumnSchema> tem = columnSchemas.get(qualifier);
+        if (tem.size() == 1) {
+            for (HBaseColumnSchema t : tem.values()) {
+                return t;
+            }
+        }
+
+        throw new SimpleHBaseException(
+                "0 or many HBaseColumnSchema with qualifier = " + qualifier);
     }
 
     public String getDefaultFamily() {
@@ -118,25 +129,17 @@ public class HBaseTableSchema {
         this.defaultFamilyBytes = defaultFamilyBytes;
     }
 
-    public Map<String, HBaseColumnSchema> getHaseColumnSchemas() {
-        return haseColumnSchemas;
-    }
-
-    public void setHaseColumnSchemas(
-            Map<String, HBaseColumnSchema> haseColumnSchemas) {
-        this.haseColumnSchemas = haseColumnSchemas;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("---------------table--------------------------\n");
         StringUtil.append(sb, "tableName", tableName);
         StringUtil.append(sb, "defaultFamily", defaultFamily);
-        for (HBaseColumnSchema columnSchema : haseColumnSchemas.values()) {
-            StringUtil.append(sb, "columnSchema", columnSchema);
+        for (Map<String, HBaseColumnSchema> tem : columnSchemas.values()) {
+            for (HBaseColumnSchema columnSchema : tem.values()) {
+                StringUtil.append(sb, "columnSchema", columnSchema);
+            }
         }
-
         sb.append("---------------table--------------------------\n");
         return sb.toString();
     }
