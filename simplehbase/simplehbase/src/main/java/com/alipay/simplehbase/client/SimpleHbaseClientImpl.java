@@ -107,7 +107,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
 
         ProgContext progContext = TreeUtil.parse(hql);
-        Filter filter = TreeUtil.parse(progContext, hbaseTableConfig, para);
+        Filter filter = TreeUtil.parseSelectFilter(progContext, hbaseTableConfig, para);
 
         return findObjectList(startRowKey, endRowKey, type, startIndex, length,
                 filter);
