@@ -188,7 +188,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                 Util.close(htableInterface);
             }
 
-            int deleteListSize = deletes.size();
+            final int deleteListSize = deletes.size();
             if (deleteListSize == 0) {
                 return;
             }
