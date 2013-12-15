@@ -1,6 +1,7 @@
 package com.alipay.simplehbase.client;
 
 import java.util.List;
+import java.util.Map;
 
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
@@ -49,6 +50,69 @@ public interface SimpleHbaseClient {
      * */
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, long startIndex, long length);
+
+    /**
+     * 动态条件id查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * 
+     * @param startRowKey startRowKey。
+     * @param endRowKey endRowKey。
+     * @param type POJO type。
+     * @param id 动态语句id。
+     * @param para 参数。
+     * 
+     * @return POJO对象列表。
+     * */
+    public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
+            Class<? extends T> type, String id, Map<String, Object> para);
+
+    /**
+     * 动态条件id查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * 
+     * @param startRowKey startRowKey。
+     * @param endRowKey endRowKey。
+     * @param type POJO type。
+     * @param startIndex 结果开始索引，0-based。
+     * @param length 结果列表size限制。
+     * @param id 动态语句id。
+     * @param para 参数。
+     * 
+     * @return POJO对象列表。
+     * */
+    public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
+            Class<? extends T> type, long startIndex, long length, String id,
+            Map<String, Object> para);
+
+    /**
+     * 动态条件hql查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * 
+     * @param startRowKey startRowKey。
+     * @param endRowKey endRowKey。
+     * @param type POJO type。
+     * @param hql 原生hql。
+     * @param para 参数。
+     * 
+     * @return POJO对象列表。
+     * */
+    public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
+            RowKey endRowKey, Class<? extends T> type, String hql,
+            Map<String, Object> para);
+
+    /**
+     * 动态条件hql查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * 
+     * @param startRowKey startRowKey。
+     * @param endRowKey endRowKey。
+     * @param type POJO type。
+     * @param startIndex 结果开始索引，0-based。
+     * @param length 结果列表size限制。
+     * @param hql 原生hql。
+     * @param para 参数。
+     * 
+     * @return POJO对象列表。
+     * */
+    public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
+            RowKey endRowKey, Class<? extends T> type, long startIndex,
+            long length, String hql, Map<String, Object> para);
 
     /**
      * Put POJO。

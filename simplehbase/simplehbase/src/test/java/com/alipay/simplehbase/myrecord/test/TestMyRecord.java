@@ -24,6 +24,7 @@ import com.alipay.simplehbase.config.ConfigOfDataSource;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 
+import com.alipay.simplehbase.literal.LiteralValue;
 import com.alipay.simplehbase.myrecord.Gender;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordConstants;
@@ -34,7 +35,7 @@ public class TestMyRecord {
     protected static SimpleHbaseClient      simpleHbaseClient;
     protected static SimpleHbaseAdminClient simpleHbaseAdminClient;
 
-    private static String                   configFilePath = "test\\myRecord.xml";
+    private static String                   configFilePath = "test\\hql\\myRecord.xml";
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -73,6 +74,7 @@ public class TestMyRecord {
         simpleHbaseAdminClient = new SimpleHbaseAdminClientImpl();
         simpleHbaseAdminClient.setHBaseDataSource(hbaseDataSource);
 
+        deleteTable();
         createTable();
     }
 
@@ -138,4 +140,59 @@ public class TestMyRecord {
             simpleHbaseClient.putObject(myRecordRowKey, myRecords[i]);
         }
     }
+
+    protected void put(String str) {
+        MyRecord myRecord = parseMyRecord(str);
+        MyRecordRowKey myRecordRowKey = new MyRecordRowKey(myRecord.getId());
+        simpleHbaseClient.putObject(myRecordRowKey, myRecord);
+    }
+
+    protected MyRecord parseMyRecord(String str) {
+
+        MyRecord record = new MyRecord();
+
+        String[] parts = str.split("[=,]");
+
+        for (int i = 0; i < parts.length; i += 2) {
+
+            if (parts[i].equals("id")) {
+                record.setId((Integer) (LiteralValue.convertToObject(int.class,
+                        parts[i + 1])));
+                continue;
+            }
+
+            if (parts[i].equals("name")) {
+                record.setName(parts[i + 1]);
+                continue;
+            }
+
+            if (parts[i].equals("date")) {
+                record.setDate((Date) (LiteralValue.convertToObject(Date.class,
+                        parts[i + 1])));
+                continue;
+            }
+
+            if (parts[i].equals("gender")) {
+                record.setGender((Gender) (LiteralValue.convertToObject(
+                        Gender.class, parts[i + 1])));
+                continue;
+            }
+
+            if (parts[i].equals("age")) {
+                record.setId((Integer) (LiteralValue.convertToObject(int.class,
+                        parts[i + 1])));
+                continue;
+            }
+
+            if (parts[i].equals("version")) {
+                record.setId((Integer) (LiteralValue.convertToObject(int.class,
+                        parts[i + 1])));
+                continue;
+            }
+
+        }
+
+        return record;
+    }
+
 }

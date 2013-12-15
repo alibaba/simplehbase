@@ -40,7 +40,9 @@ public class SimpleHbaseAdminClientImpl implements SimpleHbaseAdminClient {
             // delete table if table exist.
             if (hbaseAdmin.tableExists(tableName)) {
                 // disable table before delete it.
-                hbaseAdmin.disableTable(tableName);
+                if (!hbaseAdmin.isTableDisabled(tableName)) {
+                    hbaseAdmin.disableTable(tableName);
+                }
                 hbaseAdmin.deleteTable(tableName);
             }
         } catch (Exception e) {

@@ -5,24 +5,20 @@ import org.apache.hadoop.hbase.util.Bytes;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 
 /**
- * 字节工具类。
+ * BytesUtil.
  * 
  * @author xinzhi
- * @version $Id: BytesUtil.java, v 0.1 2013-9-13 下午03:09:40 xinzhi Exp $
  */
 public class BytesUtil {
 
-    /** byte[] ZERO */
+    /** bytes [ZERO] */
     public static final byte[] ZERO = { (byte) 0 };
 
-    /** byte[] ONE */
+    /** bytes [ONE] */
     public static final byte[] ONE  = { (byte) 1 };
 
     /**
-     * 字节数组合并
-     * 
-     * @param bytesArray 多个字节数据
-     * @return 合并成一个字节数组
+     * merge bytes arrays into one bytes array.
      */
     public static byte[] merge(byte[]... bytesArray) {
         byte[] result = new byte[] {};
@@ -42,12 +38,15 @@ public class BytesUtil {
     }
 
     /**
-     * 检查数组长度。
+     * check the value's length.
      * */
     public static void checkLength(byte[] values, int length) {
         if (values.length != length) {
             throw new SimpleHBaseException("checkLength error. values.length="
                     + values.length + " length=" + length);
         }
+    }
+
+    private BytesUtil() {
     }
 }

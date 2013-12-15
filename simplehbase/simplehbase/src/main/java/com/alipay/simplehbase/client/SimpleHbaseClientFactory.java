@@ -40,19 +40,6 @@ public class SimpleHbaseClientFactory {
         return (SimpleHbaseClient) proxy;
     }
 
-    /**
-     * 返回封装后的SimpleHbaseClient。
-     * 
-     * @return 封装后的SimpleHbaseClient。
-     * */
-    public static SimpleHbaseClient getSimpleHbaseClient() {
-        Object proxy = Proxy.newProxyInstance(
-                SimpleHbaseClient.class.getClassLoader(),
-                new Class[] { SimpleHbaseClient.class },
-                new ClientInvocationHandler(new SimpleHbaseClientImpl()));
-        return (SimpleHbaseClient) proxy;
-    }
-
     private static class ClientInvocationHandler implements InvocationHandler {
 
         /** log。 */

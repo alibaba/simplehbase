@@ -6,29 +6,28 @@ import java.util.Map;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 
 /**
- * StringUtil。
+ * StringUtil.
  * 
  * @author xinzhi
- * @version $Id: StringUtil.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class StringUtil {
 
     /**
-     * str是否是null或empty?
+     * String is null or empty string.
      * */
     public static boolean isEmptyString(String str) {
         return str == null || str.isEmpty();
     }
 
     /**
-     * str是否是非null且非empty?
+     * String is NOT null or empty string.
      * */
     public static boolean isNotEmptyString(String str) {
         return !isEmptyString(str);
     }
 
     /**
-     * 检查str不为empty。
+     * Check for str is NOT null or empty string.
      * */
     public static void checkEmptyString(String str) {
         if (isEmptyString(str)) {
@@ -37,7 +36,7 @@ public class StringUtil {
     }
 
     /**
-     * 检查字符串长度。
+     * Check string's length.
      * */
     public static void checkLength(String value, int length) {
         if (value.length() != length) {
@@ -46,10 +45,16 @@ public class StringUtil {
         }
     }
 
+    /**
+     * Appends msg and value to StringBuiler.
+     * */
     public static void append(StringBuilder sb, String msg, Object value) {
         sb.append(msg + "=" + value + "\n");
     }
 
+    /**
+     * Appends msg and map to StringBuilder.
+     * */
     public static void append(StringBuilder sb, String msg,
             Map<String, String> map) {
         sb.append(msg + "\n");
@@ -60,6 +65,9 @@ public class StringUtil {
         }
     }
 
+    /**
+     * Appends msg and list to StringBuilder.
+     * */
     public static void append(StringBuilder sb, String msg, List<String> list) {
         sb.append(msg + "\n");
         if (list != null) {

@@ -4,15 +4,14 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
- * XmlUtil。
+ * XmlUtil.
  * 
  * @author xinzhi
- * @version $Id: XmlUtil.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class XmlUtil {
 
     /**
-     * 查找node的属性为attrName的value。
+     * Get attr node value of node or null if attr doesn't exist.
      * */
     public static String getAttr(Node node, String attrName) {
 

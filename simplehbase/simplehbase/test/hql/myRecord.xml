@@ -3,6 +3,7 @@
 	<HBaseTableSchema tableName="MyRecord" defaultFamily="MyRecordFamily">
 		<HBaseColumnSchema qualifier="id" typeName="int" />
 		<HBaseColumnSchema qualifier="name" typeName="string" />
+		<HBaseColumnSchema qualifier="age" typeName="long" />
 		<HBaseColumnSchema qualifier="date" typeName="date" />
 		<HBaseColumnSchema qualifier="gender"
 			typeName="com.alipay.simplehbase.myrecord.Gender" />
@@ -15,5 +16,6 @@
 	</configMap>
 
 </SimpleHbase>   
+
 
 

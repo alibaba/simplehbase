@@ -1,15 +1,17 @@
 package com.alipay.simplehbase.util;
 
 /**
- * CompareUtil。
+ * CompareUtil.
  * 
  * @author xinzhi
- * @version $Id: CompareUtil.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class CompareUtil {
 
     /**
-     * 比较one和other。
+     * compare one and other.
+     * 
+     * @return a negative integer, zero, or a positive integer as object one is
+     *         less than, equal to, or greater than the object other.
      * */
     public static int compare(Object one, Object other) {
         Comparable cOne = (Comparable) one;

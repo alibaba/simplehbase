@@ -2,6 +2,8 @@ package com.alipay.simplehbase.myrecord;
 
 import java.util.Date;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import com.alipay.simplehbase.client.HBaseColumn;
 import com.alipay.simplehbase.client.HBaseTable;
 import com.alipay.simplehbase.client.HBaseVersion;
@@ -17,6 +19,9 @@ public class MyRecord {
     private Date   date;
     @HBaseColumn(qualifier = "gender")
     private Gender gender;
+    @HBaseColumn(qualifier = "age")
+    private long   age;
+
     @HBaseVersion
     @HBaseColumn(qualifier = "version")
     private long   version;
@@ -61,10 +66,19 @@ public class MyRecord {
         this.gender = gender;
     }
 
+    public long getAge() {
+        return age;
+    }
+
+    public void setAge(long age) {
+        this.age = age;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + (int) (age ^ (age >>> 32));
         result = prime * result + ((date == null) ? 0 : date.hashCode());
         result = prime * result + ((gender == null) ? 0 : gender.hashCode());
         result = prime * result + id;
@@ -82,6 +96,8 @@ public class MyRecord {
         if (getClass() != obj.getClass())
             return false;
         MyRecord other = (MyRecord) obj;
+        if (age != other.age)
+            return false;
         if (date == null) {
             if (other.date != null)
                 return false;
@@ -100,4 +116,10 @@ public class MyRecord {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
 }

@@ -2,8 +2,10 @@ package com.alipay.simplehbase.client;
 
 import java.io.IOException;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
@@ -12,8 +14,13 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.filter.Filter;
 
+import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
+import com.alipay.simplehbase.antlr.manual.TreeUtil;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.hql.HBaseQuery;
+import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -53,54 +60,57 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     @Override
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, long startIndex, long length) {
-        Util.checkRowKey(startRowKey);
-        Util.checkRowKey(endRowKey);
-        Util.checkNull(type);
-        if (startIndex < 0) {
-            throw new SimpleHBaseException("startIndex is invalid. startIndex="
-                    + startIndex);
+        return findObjectList(startRowKey, endRowKey, type, startIndex, length,
+                null);
+    }
+
+    @Override
+    public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
+            Class<? extends T> type, String id, Map<String, Object> para) {
+        return findObjectList(startRowKey, endRowKey, type, 0L, Long.MAX_VALUE,
+                id, para);
+
+    }
+
+    @Override
+    public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
+            Class<? extends T> type, long startIndex, long length, String id,
+            Map<String, Object> para) {
+        HBaseQuery hbaseQuery = getHbaseTableConfig().getQueryMap().get(id);
+        Util.checkNull(hbaseQuery);
+
+        StringBuilder sb = new StringBuilder();
+        Map<Object, Object> context = new HashMap<Object, Object>();
+        hbaseQuery.getHqlNode().applyParaMap(para, sb, context);
+
+        String hql = sb.toString().trim();
+
+        return findObjectListByRawHql(startRowKey, endRowKey, type, startIndex,
+                length, hql, para);
+    }
+
+    @Override
+    public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
+            RowKey endRowKey, Class<? extends T> type, String hql,
+            Map<String, Object> para) {
+        return findObjectListByRawHql(startRowKey, endRowKey, type, 0L,
+                Long.MAX_VALUE, hql, para);
+    }
+
+    @Override
+    public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
+            RowKey endRowKey, Class<? extends T> type, long startIndex,
+            long length, String hql, Map<String, Object> para) {
+
+        if (StringUtil.isEmptyString(hql)) {
+            return findObjectList(startRowKey, endRowKey, type);
         }
-        if (length < 1) {
-            throw new SimpleHBaseException("length is invalid. length="
-                    + length);
-        }
 
-        Scan scan = new Scan();
-        scan.setStartRow(startRowKey.toBytes());
-        scan.setStopRow(endRowKey.toBytes());
-        scan.setCaching(getScanCaching());
-        applyRequestFamily(type, scan);
+        ProgContext progContext = TreeUtil.parse(hql);
+        Filter filter = TreeUtil.parse(progContext, hbaseTableConfig, para);
 
-        HTableInterface htableInterface = htableInterface();
-        ResultScanner resultScanner = null;
-
-        List<T> resultList = new LinkedList<T>();
-        try {
-            resultScanner = htableInterface.getScanner(scan);
-            long ignoreCounter = startIndex;
-            long resultCounter = 0L;
-            Result result = null;
-            while ((result = resultScanner.next()) != null) {
-                if (ignoreCounter-- > 0) {
-                    continue;
-                }
-
-                resultList.add(convert(result, type));
-
-                if (++resultCounter >= length) {
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            throw new SimpleHBaseException(
-                    "findObjectList. startRowKey=" + startRowKey
-                            + " endRowKey=" + endRowKey + " type=" + type, e);
-        } finally {
-            Util.close(resultScanner);
-            Util.close(htableInterface);
-        }
-
-        return resultList;
+        return findObjectList(startRowKey, endRowKey, type, startIndex, length,
+                filter);
     }
 
     @Override
@@ -328,6 +338,59 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
 
         return result;
+    }
+
+    private <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
+            Class<? extends T> type, long startIndex, long length, Filter filter) {
+        Util.checkRowKey(startRowKey);
+        Util.checkRowKey(endRowKey);
+        Util.checkNull(type);
+        if (startIndex < 0) {
+            throw new SimpleHBaseException("startIndex is invalid. startIndex="
+                    + startIndex);
+        }
+        if (length < 1) {
+            throw new SimpleHBaseException("length is invalid. length="
+                    + length);
+        }
+
+        Scan scan = new Scan();
+        scan.setStartRow(startRowKey.toBytes());
+        scan.setStopRow(endRowKey.toBytes());
+        scan.setCaching(getScanCaching());
+        scan.setFilter(filter);
+        applyRequestFamily(type, scan);
+
+        HTableInterface htableInterface = htableInterface();
+        ResultScanner resultScanner = null;
+
+        List<T> resultList = new LinkedList<T>();
+        try {
+            resultScanner = htableInterface.getScanner(scan);
+            long ignoreCounter = startIndex;
+            long resultCounter = 0L;
+            Result result = null;
+            while ((result = resultScanner.next()) != null) {
+                if (ignoreCounter-- > 0) {
+                    continue;
+                }
+
+                resultList.add(convert(result, type));
+
+                if (++resultCounter >= length) {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            throw new SimpleHBaseException(
+                    "findObjectList. startRowKey=" + startRowKey
+                            + " endRowKey=" + endRowKey + " type=" + type, e);
+        } finally {
+            Util.close(resultScanner);
+            Util.close(htableInterface);
+        }
+
+        return resultList;
     }
 
 }

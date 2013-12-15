@@ -5,10 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * DateUtil。
+ * DateUtil.
  * 
  * @author xinzhi
- * @version $Id: DateUtil.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class DateUtil {
 
@@ -19,7 +18,7 @@ public class DateUtil {
     public static final String DayFormat    = "yyyy-MM-dd";
 
     /**
-     * 以format格式解析str为日期，解析失败返回null。
+     * Returns date by parsing str with format, or null if parsing fails.
      * */
     public static Date parse(String str, String format) {
         try {

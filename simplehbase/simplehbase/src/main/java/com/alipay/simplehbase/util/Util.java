@@ -10,33 +10,30 @@ import com.alipay.simplehbase.client.TypeInfo;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 
 /**
- * Client Util。
+ * Client Util.
  * 
  * @author xinzhi
- * @version $Id: Util.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class Util {
 
     /**
-     * Check object is null.
+     * Check object is NOT null.
      * 
-     * @param obj obj.
      * */
     public static void checkNull(Object obj) {
         if (obj == null) {
-            throw new SimpleHBaseException("obj is null.");
+            throw new SimpleHBaseException("object is null.");
         }
     }
 
     /**
-     * 检查rowKey.
+     * Check rowKey.
      * 
      * <pre>
-     * rowKey不为null。
-     * rowKey的toBytes不为null。
+     * rowKey is not null.
+     * the result of rowKey's toBytes is not null.
      * </pre>
      * 
-     * @param rowKey rowKey。
      * */
     public static void checkRowKey(RowKey rowKey) {
         if (rowKey == null) {
@@ -48,9 +45,7 @@ public class Util {
     }
 
     /**
-     * 关闭HTableInterface。
-     * 
-     * @param htableInterface htableInterface。
+     * Close HTableInterface.
      * */
     public static void close(HTableInterface htableInterface) {
         if (htableInterface == null) {
@@ -66,9 +61,7 @@ public class Util {
     }
 
     /**
-     * 关闭ResultScanner。
-     * 
-     * @param resultScanner resultScanner。
+     * Close ResultScanner.
      * */
     public static void close(ResultScanner resultScanner) {
         if (resultScanner == null) {
@@ -78,9 +71,7 @@ public class Util {
     }
 
     /**
-     * 检查typeInfo是否是带版本号的typeInfo。
-     * 
-     * @param typeInfo typeInfo。
+     * Check for typeInfo is versioned typeInfo.
      * */
     public static void checkVersioned(TypeInfo typeInfo) {
         checkNull(typeInfo);
@@ -91,16 +82,13 @@ public class Util {
     }
 
     /**
-     * 检查2个对象有相同的class。
-     * 
-     * @param obj 第1个对象。
-     * @param other 第2个对象。
+     * Check for 2 objects have same type.
      * */
-    public static void checkSameType(Object obj, Object other) {
-        checkNull(obj);
+    public static void checkSameType(Object one, Object other) {
+        checkNull(one);
         checkNull(other);
-        if (obj.getClass() != other.getClass()) {
-            throw new SimpleHBaseException("not same type. obj = " + obj
+        if (one.getClass() != other.getClass()) {
+            throw new SimpleHBaseException("not same type. one = " + one
                     + " other = " + other);
         }
     }

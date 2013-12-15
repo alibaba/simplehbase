@@ -32,7 +32,7 @@ public class TestHQL {
 
     protected HQLNode findStatementHQLNode(String id) {
         List<HBaseQuery> hbaseQueries = HBaseTableConfigParser
-                .parseHBaseQuery("test\\hql\\hql.xml");
+                .parseHBaseQuery("test\\hql\\testHqlNode.xml");
         for (HBaseQuery query : hbaseQueries) {
             if (query.getId().equals(id)) {
                 return query.getHqlNode();
