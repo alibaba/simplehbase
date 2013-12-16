@@ -1,11 +1,11 @@
 package com.alipay.simplehbase.antlr.manual;
 
+import java.io.StringReader;
 import java.util.Map;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.hadoop.hbase.filter.Filter;
-import org.apache.tools.ant.filters.StringInputStream;
 
 import com.alipay.simplehbase.antlr.auto.StatementsLexer;
 import com.alipay.simplehbase.antlr.auto.StatementsParser;
@@ -26,8 +26,7 @@ public class TreeUtil {
      * */
     public static ProgContext parse(String hql) {
         try {
-            ANTLRInputStream input = new ANTLRInputStream(
-                    new StringInputStream(hql));
+            ANTLRInputStream input = new ANTLRInputStream(new StringReader(hql));
             StatementsLexer lexer = new StatementsLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             StatementsParser parser = new StatementsParser(tokens);
