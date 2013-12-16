@@ -9,6 +9,9 @@ import org.junit.Test;
 import com.alipay.simplehbase.myrecord.Gender;
 import com.alipay.simplehbase.util.DateUtil;
 
+/**
+ * @author xinzhi
+ */
 public class TestLiteralValue {
     @Test
     public void testEnum() {

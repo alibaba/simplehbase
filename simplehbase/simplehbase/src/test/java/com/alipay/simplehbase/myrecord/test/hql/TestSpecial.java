@@ -12,7 +12,9 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.test.TestMyRecord;
-
+/**
+ * @author xinzhi
+ */
 public class TestSpecial extends TestMyRecord {
 
     //hbase默认值为空字节数组。

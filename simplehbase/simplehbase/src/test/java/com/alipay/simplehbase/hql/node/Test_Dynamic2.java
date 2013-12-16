@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import com.alipay.simplehbase.hql.HQLNode;
 
+/**
+ * @author xinzhi
+ */
 public class Test_Dynamic2 extends TestHQL {
 
     @Test

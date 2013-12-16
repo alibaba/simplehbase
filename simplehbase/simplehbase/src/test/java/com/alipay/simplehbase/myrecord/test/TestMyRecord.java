@@ -29,7 +29,9 @@ import com.alipay.simplehbase.myrecord.Gender;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordConstants;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
-
+/**
+ * @author xinzhi
+ */
 public class TestMyRecord {
 
     protected static SimpleHbaseClient      simpleHbaseClient;

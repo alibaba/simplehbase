@@ -6,6 +6,9 @@ import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.node.TestHQL;
 import com.alipay.simplehbase.util.DateUtil;
 
+/**
+ * @author xinzhi
+ */
 public class Test_IsGreaterThan extends TestHQL {
     @Test
     public void test_0() {

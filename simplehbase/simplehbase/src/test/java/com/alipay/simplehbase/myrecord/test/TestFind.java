@@ -7,7 +7,9 @@ import org.junit.Test;
 
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
-
+/**
+ * @author xinzhi
+ */
 public class TestFind extends TestMyRecord {
 
     @Test

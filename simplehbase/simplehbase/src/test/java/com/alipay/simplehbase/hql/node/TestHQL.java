@@ -14,6 +14,9 @@ import com.alipay.simplehbase.config.HBaseTableConfigParser;
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.hql.HQLNode;
 
+/**
+ * @author xinzhi
+ */
 public class TestHQL {
 
     /** log. */

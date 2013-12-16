@@ -4,6 +4,9 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import com.alipay.simplehbase.client.RowKey;
 
+/**
+ * @author xinzhi
+ */
 public class MyRecordRowKey implements RowKey {
 
     private int row;

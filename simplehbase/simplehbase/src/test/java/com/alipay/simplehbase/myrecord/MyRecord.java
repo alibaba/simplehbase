@@ -7,7 +7,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import com.alipay.simplehbase.client.HBaseColumn;
 import com.alipay.simplehbase.client.HBaseTable;
 import com.alipay.simplehbase.client.HBaseVersion;
-
+/**
+ * @author xinzhi
+ */
 @HBaseTable(defaultFamily = MyRecordConstants.ColumnFamilyName)
 public class MyRecord {
 

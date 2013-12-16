@@ -4,7 +4,9 @@ import org.junit.Test;
 
 import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.node.TestHQL;
-
+/**
+ * @author xinzhi
+ */
 public class Test_IsNotPropertyAvailable extends TestHQL {
 
     @Test

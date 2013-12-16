@@ -7,7 +7,9 @@ import org.junit.Test;
 import com.alipay.simplehbase.myrecord.Gender;
 
 import junit.framework.Assert;
-
+/**
+ * @author xinzhi
+ */
 public class TestConvert {
     @Test
     public void testEnum() {
