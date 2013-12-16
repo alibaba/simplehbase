@@ -13,6 +13,8 @@ conditionc : '(' conditionc ')'        # wrapper
 	| cid EQUAL var                    # equalvar
 	| cid LESS constant                # lessconstant
 	| cid LESS var                     # lessvar
+	| cid GREATER constant             # greaterconstant
+	| cid GREATER var                  # greatervar
 	;
 
 
@@ -32,6 +34,7 @@ OR : 'or' ;
 
 EQUAL : 'equal' ;
 LESS : 'less' ;
+GREATER: 'greater' ;
    
 TEXT :  [a-zA-Z0-9_.]+ ;
 
