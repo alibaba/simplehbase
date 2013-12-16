@@ -179,7 +179,7 @@ public class TestMyRecord {
             }
 
             if (parts[i].equals("age")) {
-                record.setId((Integer) (LiteralValue.convertToObject(int.class,
+                record.setAge((Long) (LiteralValue.convertToObject(long.class,
                         parts[i + 1])));
                 continue;
             }

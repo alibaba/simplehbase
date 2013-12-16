@@ -1,5 +1,7 @@
 package com.alipay.simplehbase.antlr.manual;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CidContext;
@@ -51,14 +53,37 @@ public class ContextUtil {
     }
 
     /**
+     * Parse para list from varContext list.
+     * */
+    public static List<Object> parseParaList(List<VarContext> varContextList,
+            Map<String, Object> para) {
+        List<Object> result = new ArrayList<Object>();
+        for (VarContext varContext : varContextList) {
+            result.add(parsePara(varContext, para));
+        }
+        return result;
+    }
+
+    /**
      * Parse constant from constantContext.
      * */
     public static Object parseConstant(HBaseColumnSchema hbaseColumnSchema,
             ConstantContext constantContext) {
-
         String constant = constantContext.TEXT().getText();
         return LiteralValue.convertToObject(hbaseColumnSchema.getType(),
                 constant);
     }
 
+    /**
+     * Parse constant list from constantContext list.
+     * */
+    public static List<Object> parseConstantList(
+            HBaseColumnSchema hbaseColumnSchema,
+            List<ConstantContext> constantContextList) {
+        List<Object> result = new ArrayList<Object>();
+        for (ConstantContext constantContext : constantContextList) {
+            result.add(parseConstant(hbaseColumnSchema, constantContext));
+        }
+        return result;
+    }
 }

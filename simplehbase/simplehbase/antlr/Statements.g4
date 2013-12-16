@@ -6,7 +6,7 @@ selectc: SELECT wherec;
 
 wherec: WHERE conditionc;
 
-conditionc : '(' conditionc ')'        # wrapper
+conditionc : LB conditionc RB        # wrapper
 	| conditionc AND conditionc        # andcondition
 	| conditionc OR conditionc         # orcondition
 	| cid EQUAL constant               # equalconstant
@@ -21,14 +21,29 @@ conditionc : '(' conditionc ')'        # wrapper
 	| cid GREATEREQUAL var             # greaterequalvar
 	| cid NOTEQUAL constant            # notequalconstant
 	| cid NOTEQUAL var                 # notequalvar
+	| cid NOTMATCH constant            # notmatchconstant
+	| cid NOTMATCH var                 # notmatchvar
+	| cid MATCH constant               # matchconstant
+	| cid MATCH var                    # matchvar
+	| cid IN constantList              # inconstantlist
+	| cid IN var                       # invarlist
+	| cid NOTIN constantList           # notinconstantlist
+	| cid NOTIN var                    # notinvarlist
+	| cid BETWEEN constant AND constant # betweenconstant
+	| cid BETWEEN var AND var           # betweenvar
+	| cid NOTBETWEEN constant AND constant # notbetweenconstant
+	| cid NOTBETWEEN var AND var           # notbetweenvar	
 	;
 
-
+constantList : LB constant ( ',' constant) * RB ;
 
 	
 cid : TEXT ;
 constant: '"' TEXT '"';	
 var : '#' TEXT '#' ;
+
+LB : '(' ;
+RB : ')' ;
 
 WHERE : 'where' ;	
 
@@ -48,14 +63,20 @@ LESS : 'less' ;
 GREATEREQUAL : 'greaterequal';
 GREATER: 'greater' ;
 
-EQUAL : 'equal' ;
 NOTEQUAL : 'notequal' ;
+EQUAL : 'equal' ;
 
 
+NOTMATCH : 'notmatch' ;
+MATCH : 'match' ;
 
+IN : 'in' ;
+NOTIN : 'notin' ;
 
+BETWEEN : 'between' ;
+NOTBETWEEN : 'notbetween' ;
 
-   
-TEXT :  [a-zA-Z0-9_.]+ ;
+  
+TEXT :  [a-zA-Z0-9_\<\(\[\{\\\^\-\=\$\!\|\]\}\)\?\*\+\.\>]+ ;
 
 WS  :   [ \t\r\n]+ -> skip ; // toss out whitespace
