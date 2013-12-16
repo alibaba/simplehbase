@@ -12,54 +12,49 @@ import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.test.TestMyRecord;
 
-public class TestLess extends TestMyRecord {
+public class TestNotEqual extends TestMyRecord {
 
     @Test
     public void testConstants() {
         put("id=0,name=aaa");
         put("id=1,name=bbb");
-        put("id=2,name=ccc");
+        put("id=2,name=bbb");
 
-        String hql = "select where name less \"aaa\"";
+        String hql = "select where name notequal \"aaa\"";
+
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 hql, null);
-        Assert.assertTrue(myRecordList.size() == 0);
 
-        hql = "select where name less \"bbb\"";
+        Assert.assertTrue(myRecordList.size() == 2);
+
+        hql = "select where name notequal \"bbb\"";
         myRecordList = simpleHbaseClient.findObjectListByRawHql(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 hql, null);
         Assert.assertTrue(myRecordList.size() == 1);
 
-        hql = "select where name less \"ccc\"";
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
-        Assert.assertTrue(myRecordList.size() == 2);
-
-        hql = "select where name less \"ddd\"";
+        hql = "select where name notequal \"ccc\"";
         myRecordList = simpleHbaseClient.findObjectListByRawHql(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 hql, null);
         Assert.assertTrue(myRecordList.size() == 3);
-
     }
 
     @Test
     public void testVar() {
         put("id=0,name=aaa");
         put("id=1,name=bbb");
-        put("id=2,name=ccc");
+        put("id=2,name=bbb");
 
-        String hql = "select where name less #name#";
+        String hql = "select where name notequal #name#";
         Map<String, Object> para = new HashMap<String, Object>();
 
         para.put("name", "aaa");
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 hql, para);
-        Assert.assertTrue(myRecordList.size() == 0);
+        Assert.assertTrue(myRecordList.size() == 2);
 
         para.put("name", "bbb");
         myRecordList = simpleHbaseClient.findObjectListByRawHql(
@@ -71,14 +66,7 @@ public class TestLess extends TestMyRecord {
         myRecordList = simpleHbaseClient.findObjectListByRawHql(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 hql, para);
-        Assert.assertTrue(myRecordList.size() == 2);
-
-        para.put("name", "ddd");
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
         Assert.assertTrue(myRecordList.size() == 3);
-
     }
 
 }

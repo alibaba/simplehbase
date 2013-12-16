@@ -15,6 +15,12 @@ conditionc : '(' conditionc ')'        # wrapper
 	| cid LESS var                     # lessvar
 	| cid GREATER constant             # greaterconstant
 	| cid GREATER var                  # greatervar
+	| cid LESSEQUAL constant           # lessequalconstant
+	| cid LESSEQUAL var                # lessequalvar
+	| cid GREATEREQUAL constant        # greaterequalconstant
+	| cid GREATEREQUAL var             # greaterequalvar
+	| cid NOTEQUAL constant            # notequalconstant
+	| cid NOTEQUAL var                 # notequalvar
 	;
 
 
@@ -29,12 +35,26 @@ WHERE : 'where' ;
 SELECT : 'select' ; 
 COUNT : 'count' ;
 
+
 AND : 'and' ;
 OR : 'or' ;
 
-EQUAL : 'equal' ;
+
+
+
+LESSEQUAL : 'lessequal' ;
 LESS : 'less' ;
+
+GREATEREQUAL : 'greaterequal';
 GREATER: 'greater' ;
+
+EQUAL : 'equal' ;
+NOTEQUAL : 'notequal' ;
+
+
+
+
+
    
 TEXT :  [a-zA-Z0-9_.]+ ;
 

@@ -50,14 +50,8 @@ public class TestGreater extends TestMyRecord {
         String hql = "select where name greater #name#";
         Map<String, Object> para = new HashMap<String, Object>();
 
-        para.put("name", "ccc");
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
-        Assert.assertTrue(myRecordList.size() == 0);
-
         para.put("name", "aaa");
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 hql, para);
         Assert.assertTrue(myRecordList.size() == 2);
@@ -67,6 +61,13 @@ public class TestGreater extends TestMyRecord {
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 hql, para);
         Assert.assertTrue(myRecordList.size() == 1);
+
+        para.put("name", "ccc");
+        myRecordList = simpleHbaseClient.findObjectListByRawHql(
+                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
+                hql, para);
+        Assert.assertTrue(myRecordList.size() == 0);
+
     }
 
 }

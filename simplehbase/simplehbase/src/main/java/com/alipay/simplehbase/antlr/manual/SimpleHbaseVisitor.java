@@ -23,9 +23,15 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.EqualconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.EqualvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterconstantContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterequalconstantContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterequalvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreatervarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.LessconstantContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.LessequalconstantContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.LessequalvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.LessvarContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.NotequalconstantContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.NotequalvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.OrconditionContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectcContext;
@@ -107,6 +113,30 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
     }
 
     @Override
+    public Filter visitNotequalconstant(NotequalconstantContext ctx) {
+        CidContext cidContext = ctx.cid();
+        ConstantContext constantContext = ctx.constant();
+
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        Object object = ContextUtil.parseConstant(hbaseColumnSchema,
+                constantContext);
+
+        return constructFilter(hbaseColumnSchema, CompareOp.NOT_EQUAL, object);
+    }
+
+    @Override
+    public Filter visitNotequalvar(NotequalvarContext ctx) {
+        CidContext cidContext = ctx.cid();
+        VarContext varContext = ctx.var();
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        Object object = ContextUtil.parsePara(varContext, para);
+
+        return constructFilter(hbaseColumnSchema, CompareOp.NOT_EQUAL, object);
+    }
+
+    @Override
     public Filter visitLessvar(LessvarContext ctx) {
 
         CidContext cidContext = ctx.cid();
@@ -134,6 +164,32 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
     }
 
     @Override
+    public Filter visitLessequalconstant(LessequalconstantContext ctx) {
+        CidContext cidContext = ctx.cid();
+        ConstantContext constantContext = ctx.constant();
+
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        Object object = ContextUtil.parseConstant(hbaseColumnSchema,
+                constantContext);
+
+        return constructFilter(hbaseColumnSchema, CompareOp.LESS_OR_EQUAL,
+                object);
+    }
+
+    @Override
+    public Filter visitLessequalvar(LessequalvarContext ctx) {
+        CidContext cidContext = ctx.cid();
+        VarContext varContext = ctx.var();
+
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        Object object = ContextUtil.parsePara(varContext, para);
+        return constructFilter(hbaseColumnSchema, CompareOp.LESS_OR_EQUAL,
+                object);
+    }
+
+    @Override
     public Filter visitGreaterconstant(GreaterconstantContext ctx) {
         CidContext cidContext = ctx.cid();
         ConstantContext constantContext = ctx.constant();
@@ -155,6 +211,32 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
                 .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
         Object object = ContextUtil.parsePara(varContext, para);
         return constructFilter(hbaseColumnSchema, CompareOp.GREATER, object);
+    }
+
+    @Override
+    public Filter visitGreaterequalvar(GreaterequalvarContext ctx) {
+        CidContext cidContext = ctx.cid();
+        VarContext varContext = ctx.var();
+
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        Object object = ContextUtil.parsePara(varContext, para);
+        return constructFilter(hbaseColumnSchema, CompareOp.GREATER_OR_EQUAL,
+                object);
+    }
+
+    @Override
+    public Filter visitGreaterequalconstant(GreaterequalconstantContext ctx) {
+        CidContext cidContext = ctx.cid();
+        ConstantContext constantContext = ctx.constant();
+
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        Object object = ContextUtil.parseConstant(hbaseColumnSchema,
+                constantContext);
+
+        return constructFilter(hbaseColumnSchema, CompareOp.GREATER_OR_EQUAL,
+                object);
     }
 
     private static Filter constructFilter(HBaseColumnSchema hbaseColumnSchema,
