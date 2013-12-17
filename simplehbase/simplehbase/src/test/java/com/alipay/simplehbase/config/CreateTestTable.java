@@ -1,4 +1,6 @@
-package com.alipay.simplehbase.myrecord.test;
+package com.alipay.simplehbase.config;
+
+import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
 
 public class CreateTestTable {
 

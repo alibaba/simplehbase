@@ -23,6 +23,7 @@ import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
 import com.alipay.simplehbase.config.ConfigOfDataSource;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
+import com.alipay.simplehbase.config.TestConfig;
 
 import com.alipay.simplehbase.literal.LiteralValue;
 import com.alipay.simplehbase.myrecord.Gender;
@@ -38,18 +39,8 @@ public class MyRecordTestBase {
     protected static SimpleHbaseClient      simpleHbaseClient;
     protected static SimpleHbaseAdminClient simpleHbaseAdminClient;
 
-    private static String                   configFilePath                    = "test\\hql\\myRecord.xml";
-
-    /**
-     * Flag to control table creation.
-     * 
-     * <pre>
-     * run CreateTestTable before set to false. 
-     * run DeleteTestTable after running tests when set to false.
-     * </pre>
-     * 
-     * */
-    private static boolean                  shouldDeleteAndCreateTablePerTest = false;
+    private static String                   configFilePath                    = TestConfig.MyRecordXmlFile;
+    private static boolean                  shouldDeleteAndCreateTablePerTest = TestConfig.ShouldDeleteAndCreateTablePerTest;
 
     static {
         //        System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
@@ -62,8 +53,8 @@ public class MyRecordTestBase {
         List<String> hbaseConfigFilePaths = new ArrayList<String>();
         //如果是在hbase上跑测试，则修改以下2个配置文件。
         //如果是在hbase standalone模式下跑测试，则注释掉以下2行。
-        hbaseConfigFilePaths.add("test\\hbase_site");
-        hbaseConfigFilePaths.add("test\\zk_conf");
+        hbaseConfigFilePaths.add(TestConfig.HbaseSiteFile);
+        hbaseConfigFilePaths.add(TestConfig.ZkConfigFile);
         hbaseDataSource.setHbaseConfigFilePaths(hbaseConfigFilePaths);
 
         // simplehbase config.
@@ -119,7 +110,7 @@ public class MyRecordTestBase {
         simpleHbaseClient.deleteObjectList(start, end);
     }
 
-    protected static void createTable() throws Exception {
+    public static void createTable() throws Exception {
         // create new table.
         HTableDescriptor tableDescriptor = new HTableDescriptor(
                 MyRecordConstants.TableName);
@@ -131,7 +122,7 @@ public class MyRecordTestBase {
 
     }
 
-    protected static void deleteTable() throws Exception {
+    public static void deleteTable() throws Exception {
         simpleHbaseAdminClient.deleteTable(MyRecordConstants.TableName);
     }
 
