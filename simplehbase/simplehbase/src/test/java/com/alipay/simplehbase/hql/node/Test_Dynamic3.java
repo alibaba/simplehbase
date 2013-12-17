@@ -7,7 +7,7 @@ import com.alipay.simplehbase.hql.HQLNode;
 /**
  * @author xinzhi
  */
-public class Test_Dynamic3 extends HQLBase {
+public class Test_Dynamic3 extends HQLTestBase {
 
     @Test
     public void test_0() {

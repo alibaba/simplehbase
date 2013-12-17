@@ -17,10 +17,10 @@ import com.alipay.simplehbase.hql.HQLNode;
 /**
  * @author xinzhi
  */
-public class HQLBase {
+public class HQLTestBase {
 
     /** log. */
-    private static Logger         log     = Logger.getLogger(HQLBase.class);
+    private static Logger         log     = Logger.getLogger(HQLTestBase.class);
 
     protected StringBuilder       sb      = new StringBuilder();
     protected Map<String, Object> para    = new HashMap<String, Object>();

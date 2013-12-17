@@ -6,11 +6,11 @@ import java.util.List;
 import org.junit.Test;
 
 import com.alipay.simplehbase.hql.HQLNode;
-import com.alipay.simplehbase.hql.node.HQLBase;
+import com.alipay.simplehbase.hql.node.HQLTestBase;
 /**
  * @author xinzhi
  */
-public class Test_IsEmpty extends HQLBase {
+public class Test_IsEmpty extends HQLTestBase {
 
     @Test
     public void test_String_0() {

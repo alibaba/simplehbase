@@ -3,13 +3,13 @@ package com.alipay.simplehbase.hql.node.binary;
 import org.junit.Test;
 
 import com.alipay.simplehbase.hql.HQLNode;
-import com.alipay.simplehbase.hql.node.HQLBase;
+import com.alipay.simplehbase.hql.node.HQLTestBase;
 import com.alipay.simplehbase.util.DateUtil;
 
 /**
  * @author xinzhi
  */
-public class Test_IsLessEqual extends HQLBase {
+public class Test_IsLessEqual extends HQLTestBase {
     @Test
     public void test_0() {
         HQLNode hqlNode = findStatementHQLNode("test_isLessEqual");

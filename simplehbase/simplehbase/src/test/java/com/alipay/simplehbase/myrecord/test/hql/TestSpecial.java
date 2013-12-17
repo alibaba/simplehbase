@@ -11,11 +11,11 @@ import org.junit.Test;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
-import com.alipay.simplehbase.myrecord.test.MyRecordBase;
+import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
 /**
  * @author xinzhi
  */
-public class TestSpecial extends MyRecordBase {
+public class TestSpecial extends MyRecordTestBase {
 
     //hbase默认值为空字节数组。
     @Test

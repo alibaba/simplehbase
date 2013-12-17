@@ -10,7 +10,7 @@ import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 /**
  * @author xinzhi
  */
-public class TestDelete extends MyRecordBase {
+public class TestDelete extends MyRecordTestBase {
     @Test
     public void deleteObject() {
 

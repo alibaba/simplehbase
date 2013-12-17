@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * @author xinzhi
  */
-public class TestCreateAndDelete extends MyRecordBase {
+public class TestCreateAndDelete extends MyRecordTestBase {
 
     @Before
     public void before() {
@@ -19,7 +19,7 @@ public class TestCreateAndDelete extends MyRecordBase {
 
     @Test
     public void testCreateAndDelete() throws Exception {
-        MyRecordBase.deleteTable();
-        MyRecordBase.createTable();
+        MyRecordTestBase.deleteTable();
+        MyRecordTestBase.createTable();
     }
 }

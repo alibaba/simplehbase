@@ -33,7 +33,7 @@ import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 /**
  * @author xinzhi
  */
-public class MyRecordBase {
+public class MyRecordTestBase {
 
     protected static SimpleHbaseClient      simpleHbaseClient;
     protected static SimpleHbaseAdminClient simpleHbaseAdminClient;
