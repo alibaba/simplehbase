@@ -1,6 +1,6 @@
 package com.alipay.simplehbase.config;
 
-public class TestConfig {
+public class Config {
 
     public static String  TestHqlNodeXmlFile                = "test\\hql\\testHqlNode.xml";
     public static String  HbaseSiteFile                     = "test\\hbase_site";
@@ -16,5 +16,5 @@ public class TestConfig {
      * </pre>
      * 
      * */
-    public static boolean ShouldDeleteAndCreateTablePerTest = false;
+    public static boolean ShouldDeleteAndCreateTablePerTest = true;
 }

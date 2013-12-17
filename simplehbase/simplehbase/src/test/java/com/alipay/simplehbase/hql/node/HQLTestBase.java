@@ -11,7 +11,7 @@ import org.junit.Before;
 import junit.framework.Assert;
 
 import com.alipay.simplehbase.config.HBaseTableConfigParser;
-import com.alipay.simplehbase.config.TestConfig;
+import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.hql.HQLNode;
 
@@ -36,7 +36,7 @@ public class HQLTestBase {
 
     protected HQLNode findStatementHQLNode(String id) {
         List<HBaseQuery> hbaseQueries = HBaseTableConfigParser
-                .parseHBaseQuery(TestConfig.TestHqlNodeXmlFile);
+                .parseHBaseQuery(Config.TestHqlNodeXmlFile);
         for (HBaseQuery query : hbaseQueries) {
             if (query.getId().equals(id)) {
                 return query.getHqlNode();

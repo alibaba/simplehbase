@@ -23,7 +23,7 @@ import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
 import com.alipay.simplehbase.config.ConfigOfDataSource;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
-import com.alipay.simplehbase.config.TestConfig;
+import com.alipay.simplehbase.config.Config;
 
 import com.alipay.simplehbase.literal.LiteralValue;
 import com.alipay.simplehbase.myrecord.Gender;
@@ -39,8 +39,8 @@ public class MyRecordTestBase {
     protected static SimpleHbaseClient      simpleHbaseClient;
     protected static SimpleHbaseAdminClient simpleHbaseAdminClient;
 
-    private static String                   configFilePath                    = TestConfig.MyRecordXmlFile;
-    private static boolean                  shouldDeleteAndCreateTablePerTest = TestConfig.ShouldDeleteAndCreateTablePerTest;
+    private static String                   configFilePath                    = Config.MyRecordXmlFile;
+    private static boolean                  shouldDeleteAndCreateTablePerTest = Config.ShouldDeleteAndCreateTablePerTest;
 
     static {
         //        System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
@@ -53,8 +53,8 @@ public class MyRecordTestBase {
         List<String> hbaseConfigFilePaths = new ArrayList<String>();
         //如果是在hbase上跑测试，则修改以下2个配置文件。
         //如果是在hbase standalone模式下跑测试，则注释掉以下2行。
-        hbaseConfigFilePaths.add(TestConfig.HbaseSiteFile);
-        hbaseConfigFilePaths.add(TestConfig.ZkConfigFile);
+        hbaseConfigFilePaths.add(Config.HbaseSiteFile);
+        hbaseConfigFilePaths.add(Config.ZkConfigFile);
         hbaseDataSource.setHbaseConfigFilePaths(hbaseConfigFilePaths);
 
         // simplehbase config.
