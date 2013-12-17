@@ -29,22 +29,33 @@ import com.alipay.simplehbase.myrecord.Gender;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordConstants;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
+
 /**
  * @author xinzhi
  */
-public class TestMyRecord {
+public class MyRecordBase {
 
     protected static SimpleHbaseClient      simpleHbaseClient;
     protected static SimpleHbaseAdminClient simpleHbaseAdminClient;
 
-    private static String                   configFilePath = "test\\hql\\myRecord.xml";
+    private static String                   configFilePath                    = "test\\hql\\myRecord.xml";
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
-                "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
-        System.setProperty("javax.xml.parsers.SAXParserFactory",
-                "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
+    /**
+     * Flag to control table creation.
+     * 
+     * <pre>
+     * run CreateTestTable before set to false. 
+     * run DeleteTestTable after running tests when set to false.
+     * </pre>
+     * 
+     * */
+    private static boolean                  shouldDeleteAndCreateTablePerTest = false;
+
+    static {
+        //        System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
+        //                "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+        //        System.setProperty("javax.xml.parsers.SAXParserFactory",
+        //                "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
 
         HBaseDataSource hbaseDataSource = new HBaseDataSource();
 
@@ -75,14 +86,21 @@ public class TestMyRecord {
 
         simpleHbaseAdminClient = new SimpleHbaseAdminClientImpl();
         simpleHbaseAdminClient.setHBaseDataSource(hbaseDataSource);
+    }
 
-        deleteTable();
-        createTable();
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        if (shouldDeleteAndCreateTablePerTest) {
+            deleteTable();
+            createTable();
+        }
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-        deleteTable();
+        if (shouldDeleteAndCreateTablePerTest) {
+            deleteTable();
+        }
     }
 
     @Before
@@ -101,7 +119,7 @@ public class TestMyRecord {
         simpleHbaseClient.deleteObjectList(start, end);
     }
 
-    private static void createTable() throws Exception {
+    protected static void createTable() throws Exception {
         // create new table.
         HTableDescriptor tableDescriptor = new HTableDescriptor(
                 MyRecordConstants.TableName);
@@ -113,7 +131,7 @@ public class TestMyRecord {
 
     }
 
-    private static void deleteTable() throws Exception {
+    protected static void deleteTable() throws Exception {
         simpleHbaseAdminClient.deleteTable(MyRecordConstants.TableName);
     }
 

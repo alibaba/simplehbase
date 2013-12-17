@@ -10,7 +10,7 @@ import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 /**
  * @author xinzhi
  */
-public class TestFind extends TestMyRecord {
+public class TestFind extends MyRecordBase {
 
     @Test
     public void findObject() {

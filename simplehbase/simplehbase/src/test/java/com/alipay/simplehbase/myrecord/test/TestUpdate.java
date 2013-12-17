@@ -8,7 +8,7 @@ import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 /**
  * @author xinzhi
  */
-public class TestUpdate extends TestMyRecord {
+public class TestUpdate extends MyRecordBase {
 
     @Test
     public void updateObjectWithVersion() {

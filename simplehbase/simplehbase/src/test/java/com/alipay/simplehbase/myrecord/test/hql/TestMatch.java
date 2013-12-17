@@ -10,11 +10,11 @@ import org.junit.Test;
 
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
-import com.alipay.simplehbase.myrecord.test.TestMyRecord;
+import com.alipay.simplehbase.myrecord.test.MyRecordBase;
 /**
  * @author xinzhi
  */
-public class TestMatch extends TestMyRecord {
+public class TestMatch extends MyRecordBase {
 
     @Test
     public void testConstants() {

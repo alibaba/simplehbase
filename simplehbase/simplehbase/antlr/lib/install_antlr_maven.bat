@@ -1,0 +1,1 @@
+start mvn install:install-file -Dfile=antlr-4.0-complete.jar -DgroupId=org.antlr -DartifactId=antlr -Dversion=4.0-complete -Dpackaging=jar

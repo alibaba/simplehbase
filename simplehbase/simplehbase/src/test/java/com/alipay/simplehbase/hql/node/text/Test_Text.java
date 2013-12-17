@@ -3,12 +3,12 @@ package com.alipay.simplehbase.hql.node.text;
 import org.junit.Test;
 
 import com.alipay.simplehbase.hql.HQLNode;
-import com.alipay.simplehbase.hql.node.TestHQL;
+import com.alipay.simplehbase.hql.node.HQLBase;
 
 /**
  * @author xinzhi
  */
-public class Test_Text extends TestHQL {
+public class Test_Text extends HQLBase {
 
     @Test
     public void test() {
