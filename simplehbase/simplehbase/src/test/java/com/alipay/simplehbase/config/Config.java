@@ -16,5 +16,5 @@ public class Config {
      * </pre>
      * 
      * */
-    public static boolean ShouldDeleteAndCreateTablePerTest = true;
+    public static boolean ShouldDeleteAndCreateTablePerTest = false;
 }

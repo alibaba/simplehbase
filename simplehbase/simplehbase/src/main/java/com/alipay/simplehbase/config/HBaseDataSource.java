@@ -1,8 +1,5 @@
 package com.alipay.simplehbase.config;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +11,7 @@ import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.log4j.Logger;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.util.ConfigUtil;
 import com.alipay.simplehbase.util.StringUtil;
 
 /**
@@ -134,7 +132,8 @@ public class HBaseDataSource {
         try {
             if (hbaseConfigFilePaths != null) {
                 for (String filePath : hbaseConfigFilePaths) {
-                    finalHbaseConfig.putAll(loadConfigFile(filePath));
+                    finalHbaseConfig
+                            .putAll(ConfigUtil.loadConfigFile(filePath));
                 }
             }
 
@@ -147,8 +146,8 @@ public class HBaseDataSource {
                 hbaseConfiguration.set(entry.getKey(), entry.getValue());
             }
 
-            finalDataSourceConfig
-                    .putAll(loadConfigFile(dataSourceConfigFilePath));
+            finalDataSourceConfig.putAll(ConfigUtil
+                    .loadConfigFile(dataSourceConfigFilePath));
             if (dataSourceConfig != null) {
                 finalDataSourceConfig.putAll(dataSourceConfig);
             }
@@ -170,44 +169,6 @@ public class HBaseDataSource {
             log.error("initHTablePoolHolder error.", e);
             throw new SimpleHBaseException("initHTablePoolHolder error.", e);
         }
-    }
-
-    /**
-     * 加载配置文件。
-     * 
-     * @param filePath 配置文件路径。
-     * @return 配置文件解析出的配置项map。
-     * */
-    private Map<String, String> loadConfigFile(String filePath)
-            throws IOException {
-
-        Map<String, String> result = new HashMap<String, String>();
-        if (filePath == null) {
-            return result;
-        }
-
-        LineNumberReader lineNumberReader = null;
-        try {
-            lineNumberReader = new LineNumberReader(new FileReader(filePath));
-            for (String line = lineNumberReader.readLine(); line != null; line = lineNumberReader
-                    .readLine()) {
-
-                String[] parts = line.split("=");
-                if (parts == null || parts.length != 2) {
-                    log.warn("wrong config line. file=" + filePath + " line="
-                            + line);
-                    continue;
-                }
-
-                result.put(parts[0], parts[1]);
-            }
-        } finally {
-            if (lineNumberReader != null) {
-                lineNumberReader.close();
-            }
-        }
-
-        return result;
     }
 
     public String getId() {
