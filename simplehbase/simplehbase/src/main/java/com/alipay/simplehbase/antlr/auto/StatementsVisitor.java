@@ -19,9 +19,9 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitBetweenvar(StatementsParser.BetweenvarContext ctx);
 
-	T visitLessconstant(StatementsParser.LessconstantContext ctx);
+	T visitCountc(StatementsParser.CountcContext ctx);
 
-	T visitProg(StatementsParser.ProgContext ctx);
+	T visitLessconstant(StatementsParser.LessconstantContext ctx);
 
 	T visitWrapper(StatementsParser.WrapperContext ctx);
 
@@ -35,6 +35,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitMatchvar(StatementsParser.MatchvarContext ctx);
 
+	T visitSelectcl(StatementsParser.SelectclContext ctx);
+
 	T visitGreaterequalvar(StatementsParser.GreaterequalvarContext ctx);
 
 	T visitConstant(StatementsParser.ConstantContext ctx);
@@ -44,6 +46,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	T visitNotbetweenvar(StatementsParser.NotbetweenvarContext ctx);
 
 	T visitOrcondition(StatementsParser.OrconditionContext ctx);
+
+	T visitCountcl(StatementsParser.CountclContext ctx);
 
 	T visitGreaterequalconstant(StatementsParser.GreaterequalconstantContext ctx);
 
@@ -55,9 +59,9 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitNotequalconstant(StatementsParser.NotequalconstantContext ctx);
 
-	T visitLessequalvar(StatementsParser.LessequalvarContext ctx);
-
 	T visitBetweenconstant(StatementsParser.BetweenconstantContext ctx);
+
+	T visitLessequalvar(StatementsParser.LessequalvarContext ctx);
 
 	T visitLessvar(StatementsParser.LessvarContext ctx);
 

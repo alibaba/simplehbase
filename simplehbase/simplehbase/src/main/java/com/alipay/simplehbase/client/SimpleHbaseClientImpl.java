@@ -8,16 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.hbase.client.Delete;
-import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.client.coprocessor.AggregationClient;
+import org.apache.hadoop.hbase.client.coprocessor.LongColumnInterpreter;
 import org.apache.hadoop.hbase.filter.Filter;
 
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
 import com.alipay.simplehbase.antlr.manual.TreeUtil;
+import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.util.StringUtil;
@@ -33,21 +35,33 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
     @Override
     public <T> T findObject(RowKey rowKey, Class<? extends T> type) {
-        Util.checkRowKey(rowKey);
-        Util.checkNull(type);
+        List<T> result = findObjectList(rowKey, rowKey, type);
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
+        }
+    }
 
-        Get get = new Get(rowKey.toBytes());
-        applyRequestFamily(type, get);
+    @Override
+    public <T> T findObject(RowKey rowKey, Class<? extends T> type, String id,
+            Map<String, Object> para) {
+        List<T> result = findObjectList(rowKey, rowKey, type, id, para);
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
+        }
+    }
 
-        HTableInterface htableInterface = htableInterface();
-        try {
-            Result result = htableInterface.get(get);
-            return convert(result, type);
-        } catch (Exception e) {
-            throw new SimpleHBaseException("findObject. rowkey=" + rowKey
-                    + " type=" + type, e);
-        } finally {
-            Util.close(htableInterface);
+    @Override
+    public <T> T findObjectByRawHql(RowKey rowKey, Class<? extends T> type,
+            String hql, Map<String, Object> para) {
+        List<T> result = findObjectListByRawHql(rowKey, rowKey, type, hql, para);
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
         }
     }
 
@@ -107,7 +121,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
 
         ProgContext progContext = TreeUtil.parse(hql);
-        Filter filter = TreeUtil.parseSelectFilter(progContext, hbaseTableConfig, para);
+        Filter filter = TreeUtil.parseSelectFilter(progContext,
+                hbaseTableConfig, para);
 
         return findObjectList(startRowKey, endRowKey, type, startIndex, length,
                 filter);
@@ -393,4 +408,63 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         return resultList;
     }
 
+    @Override
+    public long count(RowKey startRowKey, RowKey endRowKey) {
+        return count(startRowKey, endRowKey, null);
+    }
+
+    @Override
+    public long count(RowKey startRowKey, RowKey endRowKey, String id,
+            Map<String, Object> para) {
+        HBaseQuery hbaseQuery = getHbaseTableConfig().getQueryMap().get(id);
+        Util.checkNull(hbaseQuery);
+
+        StringBuilder sb = new StringBuilder();
+        Map<Object, Object> context = new HashMap<Object, Object>();
+        hbaseQuery.getHqlNode().applyParaMap(para, sb, context);
+
+        String hql = sb.toString().trim();
+
+        return countByRawHql(startRowKey, endRowKey, hql, para);
+
+    }
+
+    @Override
+    public long countByRawHql(RowKey startRowKey, RowKey endRowKey, String hql,
+            Map<String, Object> para) {
+
+        if (StringUtil.isEmptyString(hql)) {
+            return count(startRowKey, endRowKey);
+        }
+
+        ProgContext progContext = TreeUtil.parse(hql);
+        Filter filter = TreeUtil.parseCountFilter(progContext,
+                hbaseTableConfig, para);
+
+        return count(startRowKey, endRowKey, filter);
+    }
+
+    private long count(RowKey startRowKey, RowKey endRowKey, Filter filter) {
+        Util.checkRowKey(startRowKey);
+        Util.checkRowKey(endRowKey);
+
+        Scan scan = new Scan();
+        scan.setStartRow(startRowKey.toBytes());
+        scan.setStopRow(endRowKey.toBytes());
+        scan.setCaching(getScanCaching());
+        scan.setFilter(filter);
+        HBaseColumnSchema hbaseColumnSchema = columnSchema();
+        scan.addColumn(hbaseColumnSchema.getFamilyBytes(),
+                hbaseColumnSchema.getQualifierBytes());
+        scan.setFilter(filter);
+
+        LongColumnInterpreter columnInterpreter = new LongColumnInterpreter();
+        AggregationClient aggregationClient = aggregationClient();
+        try {
+            return aggregationClient.rowCount(tableNameBytes(),
+                    columnInterpreter, scan);
+        } catch (Throwable t) {
+            throw new SimpleHBaseException("error when count.", t);
+        }
+    }
 }

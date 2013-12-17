@@ -1,11 +1,30 @@
 package com.alipay.simplehbase.config;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HColumnDescriptor;
+import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.client.HTableInterface;
+
+import com.alipay.simplehbase.client.SimpleHbaseAdminClient;
+import com.alipay.simplehbase.client.SimpleHbaseAdminClientImpl;
+import com.alipay.simplehbase.client.SimpleHbaseClient;
+import com.alipay.simplehbase.client.SimpleHbaseClientFactory;
+import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
+
 public class Config {
 
-    public static String  TestHqlNodeXmlFile                = "test\\hql\\testHqlNode.xml";
-    public static String  HbaseSiteFile                     = "test\\hbase_site";
-    public static String  ZkConfigFile                      = "test\\zk_conf";
-    public static String  MyRecordXmlFile                   = "test\\hql\\myRecord.xml";
+    final public static String                     TableName                         = "MyRecord";
+    final public static String                     ColumnFamilyName                  = "MyRecordFamily";
+
+    public static String                           TestHqlNodeXmlFile                = "test\\hql\\testHqlNode.xml";
+    public static String                           HbaseSiteFile                     = "test\\hbase_site";
+    public static String                           ZkConfigFile                      = "test\\zk_conf";
+    public static String                           MyRecordXmlFile                   = "test\\hql\\myRecord.xml";
 
     /**
      * Flag to control table creation.
@@ -16,5 +35,87 @@ public class Config {
      * </pre>
      * 
      * */
-    public static boolean ShouldDeleteAndCreateTablePerTest = false;
+    public static boolean                          ShouldDeleteAndCreateTablePerTest = false;
+
+    private static volatile SimpleHbaseClient      simpleHbaseClient;
+
+    private static volatile SimpleHbaseAdminClient simpleHbaseAdminClient;
+
+    public static SimpleHbaseAdminClient getSimpleHbaseAdminClient() {
+        return simpleHbaseAdminClient;
+    }
+
+    public static SimpleHbaseClient getSimpleHbaseClient() {
+        return simpleHbaseClient;
+    }
+
+    public static Configuration getConfiguration() {
+        return simpleHbaseClient.getHBaseDataSource().getHbaseConfiguration();
+    }
+
+    public static HTableInterface getHTableInterface(String tableName) {
+        return simpleHbaseClient.getHBaseDataSource().getHTable(tableName);
+    }
+
+    public static void createTable() throws Exception {
+        // create new table.
+        HTableDescriptor tableDescriptor = new HTableDescriptor(TableName);
+        tableDescriptor.addFamily(new HColumnDescriptor(ColumnFamilyName));
+        simpleHbaseAdminClient.createTable(tableDescriptor);
+
+    }
+
+    public static void deleteTable() throws Exception {
+        simpleHbaseAdminClient.deleteTable(TableName);
+    }
+
+    public static void beforeClass() throws Exception {
+        if (Config.ShouldDeleteAndCreateTablePerTest) {
+            deleteTable();
+            createTable();
+        }
+    }
+
+    public static void afterClass() throws Exception {
+        if (Config.ShouldDeleteAndCreateTablePerTest) {
+            deleteTable();
+        }
+    }
+
+    static {
+        //        System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
+        //                "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+        //        System.setProperty("javax.xml.parsers.SAXParserFactory",
+        //                "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
+        HBaseDataSource hbaseDataSource = new HBaseDataSource();
+
+        List<String> hbaseConfigFilePaths = new ArrayList<String>();
+        //如果是在hbase上跑测试，则修改以下2个配置文件。
+        //如果是在hbase standalone模式下跑测试，则注释掉以下2行。
+        hbaseConfigFilePaths.add(Config.HbaseSiteFile);
+        hbaseConfigFilePaths.add(Config.ZkConfigFile);
+        hbaseDataSource.setHbaseConfigFilePaths(hbaseConfigFilePaths);
+
+        // simplehbase config.
+        Map<String, String> dataSourceConfig = new HashMap<String, String>();
+        dataSourceConfig.put(ConfigOfDataSource.HTABLE_POOL_SIZE, "5");
+        hbaseDataSource.setDataSourceConfig(dataSourceConfig);
+
+        hbaseDataSource.init();
+
+        HBaseTableConfig hbaseTableConfig = new HBaseTableConfig();
+        hbaseTableConfig.setConfigFilePath(MyRecordXmlFile);
+        hbaseTableConfig.init();
+
+        SimpleHbaseClient tClient = new SimpleHbaseClientImpl();
+        tClient.setHBaseDataSource(hbaseDataSource);
+        tClient.setHbaseTableConfig(hbaseTableConfig);
+
+        simpleHbaseClient = SimpleHbaseClientFactory
+                .getSimpleHbaseClient(tClient);
+
+        simpleHbaseAdminClient = new SimpleHbaseAdminClientImpl();
+        simpleHbaseAdminClient.setHBaseDataSource(simpleHbaseClient
+                .getHBaseDataSource());
+    }
 }

@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.alipay.simplehbase.config.Config;
+
 /**
  * @author xinzhi
  */
@@ -19,7 +21,7 @@ public class TestCreateAndDelete extends MyRecordTestBase {
 
     @Test
     public void testCreateAndDelete() throws Exception {
-        MyRecordTestBase.deleteTable();
-        MyRecordTestBase.createTable();
+        Config.deleteTable();
+        Config.createTable();
     }
 }

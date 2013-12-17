@@ -6,6 +6,8 @@ import org.apache.hadoop.hbase.client.coprocessor.LongColumnInterpreter;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.alipay.simplehbase.config.Config;
+
 public class HbaseCoprocessorTest extends HbaseTestBase {
 
     @Test
@@ -14,7 +16,7 @@ public class HbaseCoprocessorTest extends HbaseTestBase {
         LongColumnInterpreter columnInterpreter = new LongColumnInterpreter();
 
         AggregationClient aggregationClient = new AggregationClient(
-                CommonConfig.getConfiguration());
+                Config.getConfiguration());
 
         Scan scan = new Scan();
 
@@ -33,7 +35,7 @@ public class HbaseCoprocessorTest extends HbaseTestBase {
     public void testSum() throws Throwable {
         LongColumnInterpreter columnInterpreter = new LongColumnInterpreter();
         AggregationClient aggregationClient = new AggregationClient(
-                CommonConfig.getConfiguration());
+                Config.getConfiguration());
         Scan scan = new Scan();
         scan.addColumn(ColumnFamilyName, QName1);
         Long sum = aggregationClient.sum(TableNameBytes, columnInterpreter,
@@ -45,7 +47,7 @@ public class HbaseCoprocessorTest extends HbaseTestBase {
     public void testCount() throws Throwable {
         LongColumnInterpreter columnInterpreter = new LongColumnInterpreter();
         AggregationClient aggregationClient = new AggregationClient(
-                CommonConfig.getConfiguration());
+                Config.getConfiguration());
         Scan scan = new Scan();
         scan.addColumn(ColumnFamilyName, QName1);
         Long count = aggregationClient.rowCount(TableNameBytes,

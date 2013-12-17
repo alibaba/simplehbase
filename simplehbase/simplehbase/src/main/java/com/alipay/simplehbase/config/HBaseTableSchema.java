@@ -36,6 +36,11 @@ public class HBaseTableSchema {
 
     // ------------runtime-------------------
     /**
+     * tablename bytes.
+     * */
+    private byte[]                                      tableNameBytes;
+
+    /**
      * 默认的Family。
      * */
     private byte[]                                      defaultFamilyBytes;
@@ -51,6 +56,7 @@ public class HBaseTableSchema {
     public void init(List<HBaseColumnSchema> hbaseColumnSchemas) {
 
         StringUtil.checkEmptyString(tableName);
+        tableNameBytes = Bytes.toBytes(tableName);
 
         if (StringUtil.isNotEmptyString(defaultFamily)) {
             defaultFamilyBytes = Bytes.toBytes(defaultFamily);
@@ -105,6 +111,19 @@ public class HBaseTableSchema {
                 "0 or many HBaseColumnSchema with qualifier = " + qualifier);
     }
 
+    /**
+     * 查找一个HBaseColumnSchema。
+     * 
+     * */
+    public HBaseColumnSchema findOneColumnSchema() {
+        for (Map<String, HBaseColumnSchema> t : columnSchemas.values()) {
+            for (HBaseColumnSchema hbaseColumnSchema : t.values()) {
+                return hbaseColumnSchema;
+            }
+        }
+        throw new SimpleHBaseException("no HBaseColumnSchema found.");
+    }
+
     public String getDefaultFamily() {
         return defaultFamily;
     }
@@ -127,6 +146,10 @@ public class HBaseTableSchema {
 
     public void setDefaultFamilyBytes(byte[] defaultFamilyBytes) {
         this.defaultFamilyBytes = defaultFamilyBytes;
+    }
+
+    public byte[] getTableNameBytes() {
+        return tableNameBytes;
     }
 
     @Override

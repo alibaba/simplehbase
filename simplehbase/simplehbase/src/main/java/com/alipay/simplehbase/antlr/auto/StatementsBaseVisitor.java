@@ -20,9 +20,9 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitBetweenvar(StatementsParser.BetweenvarContext ctx) { return visitChildren(ctx); }
 
-	@Override public T visitLessconstant(StatementsParser.LessconstantContext ctx) { return visitChildren(ctx); }
+	@Override public T visitCountc(StatementsParser.CountcContext ctx) { return visitChildren(ctx); }
 
-	@Override public T visitProg(StatementsParser.ProgContext ctx) { return visitChildren(ctx); }
+	@Override public T visitLessconstant(StatementsParser.LessconstantContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitWrapper(StatementsParser.WrapperContext ctx) { return visitChildren(ctx); }
 
@@ -36,6 +36,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitMatchvar(StatementsParser.MatchvarContext ctx) { return visitChildren(ctx); }
 
+	@Override public T visitSelectcl(StatementsParser.SelectclContext ctx) { return visitChildren(ctx); }
+
 	@Override public T visitGreaterequalvar(StatementsParser.GreaterequalvarContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitConstant(StatementsParser.ConstantContext ctx) { return visitChildren(ctx); }
@@ -45,6 +47,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	@Override public T visitNotbetweenvar(StatementsParser.NotbetweenvarContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitOrcondition(StatementsParser.OrconditionContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitCountcl(StatementsParser.CountclContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitGreaterequalconstant(StatementsParser.GreaterequalconstantContext ctx) { return visitChildren(ctx); }
 
@@ -56,9 +60,9 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitNotequalconstant(StatementsParser.NotequalconstantContext ctx) { return visitChildren(ctx); }
 
-	@Override public T visitLessequalvar(StatementsParser.LessequalvarContext ctx) { return visitChildren(ctx); }
-
 	@Override public T visitBetweenconstant(StatementsParser.BetweenconstantContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitLessequalvar(StatementsParser.LessequalvarContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitLessvar(StatementsParser.LessvarContext ctx) { return visitChildren(ctx); }
 

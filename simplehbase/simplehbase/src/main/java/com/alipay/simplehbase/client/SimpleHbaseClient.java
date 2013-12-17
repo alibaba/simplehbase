@@ -28,6 +28,32 @@ public interface SimpleHbaseClient {
     public <T> T findObject(RowKey rowKey, Class<? extends T> type);
 
     /**
+     * 查找rowKey指定的对象。
+     * 
+     * @param rowKey rowKey。
+     * @param type POJO type。
+     * @param id 动态语句id。
+     * @param para 参数。
+     * 
+     * @return POJO。
+     * */
+    public <T> T findObject(RowKey rowKey, Class<? extends T> type, String id,
+            Map<String, Object> para);
+
+    /**
+     * 查找rowKey指定的对象。
+     * 
+     * @param rowKey rowKey。
+     * @param type POJO type。
+     * @param hql 原生hql。
+     * @param para 参数。
+     * 
+     * @return POJO。
+     * */
+    public <T> T findObjectByRawHql(RowKey rowKey, Class<? extends T> type,
+            String hql, Map<String, Object> para);
+
+    /**
      * 查找[startRowKey,endRowKey)范围的POJO对象列表。
      * 
      * @param startRowKey startRowKey。
@@ -113,6 +139,42 @@ public interface SimpleHbaseClient {
     public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
             RowKey endRowKey, Class<? extends T> type, long startIndex,
             long length, String hql, Map<String, Object> para);
+
+    /**
+     * 统计，统计[startRowKey,endRowKey)范围的记录条数。
+     * 
+     * @param startRowKey startRowKey。
+     * @param endRowKey endRowKey。
+     * 
+     * @return 记录条数。
+     * */
+    public long count(RowKey startRowKey, RowKey endRowKey);
+
+    /**
+     * 动态条件hql统计，统计[startRowKey,endRowKey)范围的记录条数。
+     * 
+     * @param startRowKey startRowKey。
+     * @param endRowKey endRowKey。
+     * @param id 动态语句id。
+     * @param para 参数。
+     * 
+     * @return 记录条数。
+     * */
+    public long count(RowKey startRowKey, RowKey endRowKey, String id,
+            Map<String, Object> para);
+
+    /**
+     * 动态条件hql统计，统计[startRowKey,endRowKey)范围的记录条数。
+     * 
+     * @param startRowKey startRowKey。
+     * @param endRowKey endRowKey。
+     * @param hql 原生hql。
+     * @param para 参数。
+     * 
+     * @return 记录条数。
+     * */
+    public long countByRawHql(RowKey startRowKey, RowKey endRowKey, String hql,
+            Map<String, Object> para);
 
     /**
      * Put POJO。

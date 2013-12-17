@@ -6,12 +6,10 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.hbase.HColumnDescriptor;
-import org.apache.hadoop.hbase.HTableDescriptor;
+
 import org.apache.hadoop.hbase.client.Delete;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTableInterface;
-import org.apache.hadoop.hbase.client.HTablePool;
+
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
@@ -22,68 +20,49 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import com.alipay.simplehbase.config.Config;
+import com.alipay.simplehbase.util.Util;
+
 public class HbaseTestBase {
 
-    protected static Log        log              = LogFactory
-                                                         .getLog(HbaseTestBase.class);
+    protected static Log      log              = LogFactory
+                                                       .getLog(HbaseTestBase.class);
 
-    protected static HBaseAdmin hbaseAdmin;
-    protected static HTablePool pool;
-    protected static String     TableName        = "allen_test";
-    protected static byte[]     TableNameBytes   = Bytes.toBytes(TableName);
-    protected static byte[]     ColumnFamilyName = Bytes.toBytes("cf");
+    protected static String   TableName        = Config.TableName;
 
-    protected static String     QNameStr1        = "q1";
-    protected static String     QNameStr2        = "q2";
-    protected static String     QNameStr3        = "q3";
+    protected static byte[]   TableNameBytes   = Bytes.toBytes(TableName);
+    protected static byte[]   ColumnFamilyName = Bytes.toBytes(Config.ColumnFamilyName);
 
-    protected static byte[]     QName1           = Bytes.toBytes(QNameStr1);
-    protected static byte[]     QName2           = Bytes.toBytes(QNameStr2);
-    protected static byte[]     QName3           = Bytes.toBytes(QNameStr3);
+    protected static String   QNameStr1        = "q1";
+    protected static String   QNameStr2        = "q2";
+    protected static String   QNameStr3        = "q3";
 
-    protected HTableInterface   table;
+    protected static byte[]   QName1           = Bytes.toBytes(QNameStr1);
+    protected static byte[]   QName2           = Bytes.toBytes(QNameStr2);
+    protected static byte[]   QName3           = Bytes.toBytes(QNameStr3);
+
+    protected HTableInterface table;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        hbaseAdmin = CommonConfig.getHBaseAdmin();
-        deleteTable();
-        createTable();
+        Config.beforeClass();
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-        deleteTable();
+        Config.afterClass();
     }
 
     @Before
     public void before() throws Throwable {
-        pool = CommonConfig.getHTablePool();
-        table = pool.getTable(TableName);
+        table = Config.getHTableInterface(TableName);
         fillData();
     }
 
     @After
     public void after() throws Exception {
         deleteData();
-    }
-
-    private static void createTable() throws Exception {
-
-        // create new table.
-        HTableDescriptor tableDescriptor = new HTableDescriptor(TableName);
-        tableDescriptor.addFamily(new HColumnDescriptor(ColumnFamilyName));
-        hbaseAdmin.createTable(tableDescriptor);
-    }
-
-    private static void deleteTable() throws Exception {
-        // delete table if table exist.
-        if (hbaseAdmin.tableExists(TableName)) {
-            // disable table before delete it.
-            if (!hbaseAdmin.isTableDisabled(TableName)) {
-                hbaseAdmin.disableTable(TableName);
-            }
-            hbaseAdmin.deleteTable(TableName);
-        }
+        Util.close(table);
     }
 
     String rowKeyStr1 = "allen_test_row1";
@@ -134,6 +113,7 @@ public class HbaseTestBase {
         try {
             // full scan.
             Scan scan = new Scan();
+
             ResultScanner resultScanner = table.getScanner(scan);
 
             List<byte[]> rows = new LinkedList<byte[]>();
@@ -148,9 +128,6 @@ public class HbaseTestBase {
                 table.delete(new Delete(row));
                 log.info("delete " + Bytes.toString(row));
             }
-
-            // return table to pool.
-            table.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -211,6 +211,10 @@ public class HBaseDataSource {
         this.dataSourceConfig = dataSourceConfig;
     }
 
+    public Configuration getHbaseConfiguration() {
+        return hbaseConfiguration;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

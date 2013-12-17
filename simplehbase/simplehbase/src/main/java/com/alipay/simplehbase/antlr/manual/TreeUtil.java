@@ -10,7 +10,9 @@ import org.apache.hadoop.hbase.filter.Filter;
 import com.alipay.simplehbase.antlr.auto.StatementsLexer;
 import com.alipay.simplehbase.antlr.auto.StatementsParser;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConditioncContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CountclContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectclContext;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 
@@ -42,11 +44,26 @@ public class TreeUtil {
      * */
     public static Filter parseSelectFilter(ProgContext progContext,
             HBaseTableConfig hbaseTableConfig, Map<String, Object> para) {
-        ConditioncContext conditioncContext = progContext.selectc().wherec()
+
+        SelectclContext SelectclContext = ((SelectclContext) progContext);
+        ConditioncContext conditioncContext = SelectclContext.selectc()
+                .wherec().conditionc();
+        SimpleHbaseVisitor hbaseVisitor = new SimpleHbaseVisitor(
+                hbaseTableConfig, para);
+        return conditioncContext.accept(hbaseVisitor);
+    }
+
+    /**
+     * Parse filter from count hql's progContext.
+     * */
+    public static Filter parseCountFilter(ProgContext progContext,
+            HBaseTableConfig hbaseTableConfig, Map<String, Object> para) {
+
+        CountclContext countclContext = ((CountclContext) progContext);
+        ConditioncContext conditioncContext = countclContext.countc().wherec()
                 .conditionc();
         SimpleHbaseVisitor hbaseVisitor = new SimpleHbaseVisitor(
                 hbaseTableConfig, para);
         return conditioncContext.accept(hbaseVisitor);
-
     }
 }

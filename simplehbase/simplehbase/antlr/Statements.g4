@@ -1,10 +1,17 @@
 grammar Statements;
 
-prog:   selectc ; 
+
+prog:    selectc           # selectcl
+       | countc            # countcl
+       ;
+
 
 selectc: SELECT wherec;
+countc: COUNT wherec;
+
 
 wherec: WHERE conditionc;
+
 
 conditionc : LB conditionc RB        # wrapper
 	| conditionc AND conditionc        # andcondition

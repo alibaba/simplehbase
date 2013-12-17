@@ -25,6 +25,8 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.CidContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConditioncContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantListContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CountcContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CountclContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.EqualconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.EqualvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterconstantContext;
@@ -50,6 +52,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.NotmatchvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.OrconditionContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectcContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectclContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.VarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.WherecContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.WrapperContext;
@@ -516,16 +519,6 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
     }
 
     @Override
-    public Filter visitProg(ProgContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Filter visitSelectc(SelectcContext ctx) {
-        return null;
-    }
-
-    @Override
     public Filter visitCid(CidContext ctx) {
         return null;
     }
@@ -570,4 +563,23 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
         return null;
     }
 
+    @Override
+    public Filter visitCountc(CountcContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Filter visitSelectcl(SelectclContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Filter visitCountcl(CountclContext ctx) {
+        return null;
+    }
+
+    @Override
+    public Filter visitSelectc(SelectcContext ctx) {
+        return null;
+    }
 }

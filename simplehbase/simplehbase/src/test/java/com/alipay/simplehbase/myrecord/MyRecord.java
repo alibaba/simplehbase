@@ -7,10 +7,12 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import com.alipay.simplehbase.client.HBaseColumn;
 import com.alipay.simplehbase.client.HBaseTable;
 import com.alipay.simplehbase.client.HBaseVersion;
+import com.alipay.simplehbase.config.Config;
+
 /**
  * @author xinzhi
  */
-@HBaseTable(defaultFamily = MyRecordConstants.ColumnFamilyName)
+@HBaseTable(defaultFamily = Config.ColumnFamilyName)
 public class MyRecord {
 
     @HBaseColumn(qualifier = "id")

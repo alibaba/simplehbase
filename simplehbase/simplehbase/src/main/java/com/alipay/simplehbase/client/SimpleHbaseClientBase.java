@@ -6,6 +6,7 @@ import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.client.coprocessor.AggregationClient;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.alipay.simplehbase.config.ConfigOfTable;
@@ -36,11 +37,42 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
+     * 获取一个AggregationClient。
+     * */
+    protected AggregationClient aggregationClient() {
+        AggregationClient aggregationClient = new AggregationClient(
+                dataSource.getHbaseConfiguration());
+        return aggregationClient;
+    }
+
+    /**
+     * 获取tablename bytes.
+     **/
+    protected byte[] tableNameBytes() {
+        return hbaseTableConfig.getHbaseTableSchema().getTableNameBytes();
+    }
+
+    /**
      * 根据family和qualifier查找HBaseColumnSchema。
      * */
     protected HBaseColumnSchema columnSchema(String family, String qualifier) {
         return hbaseTableConfig.getHbaseTableSchema().findColumnSchema(family,
                 qualifier);
+    }
+
+    /**
+     * 根据qualifier查找HBaseColumnSchema。
+     * */
+    protected HBaseColumnSchema columnSchema(String qualifier) {
+        return hbaseTableConfig.getHbaseTableSchema().findColumnSchema(
+                qualifier);
+    }
+
+    /**
+     * 查找一个HBaseColumnSchema。
+     * */
+    protected HBaseColumnSchema columnSchema() {
+        return hbaseTableConfig.getHbaseTableSchema().findOneColumnSchema();
     }
 
     /**
