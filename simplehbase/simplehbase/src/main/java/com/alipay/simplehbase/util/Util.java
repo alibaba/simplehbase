@@ -1,12 +1,10 @@
 package com.alipay.simplehbase.util;
 
+import java.io.Closeable;
 import java.io.IOException;
 
-import org.apache.hadoop.hbase.client.HTableInterface;
-import org.apache.hadoop.hbase.client.ResultScanner;
-
 import com.alipay.simplehbase.client.RowKey;
-import com.alipay.simplehbase.client.TypeInfo;
+import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 
 /**
@@ -17,12 +15,53 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 public class Util {
 
     /**
+     * Check bool is NOT false.
+     * */
+    public static void check(boolean bool) {
+        if (bool == false) {
+            throw new SimpleHBaseException("bool is false.");
+        }
+    }
+
+    /**
      * Check object is NOT null.
-     * 
      * */
     public static void checkNull(Object obj) {
         if (obj == null) {
-            throw new SimpleHBaseException("object is null.");
+            throw new SimpleHBaseException("obj  is null.");
+        }
+    }
+
+    /**
+     * Check for str is NOT null or empty string.
+     * */
+    public static void checkEmptyString(String str) {
+        if (StringUtil.isEmptyString(str)) {
+            throw new SimpleHBaseException("str is null or empty.");
+        }
+    }
+
+    /**
+     * check the value's length.
+     * */
+    public static void checkLength(byte[] values, int length) {
+        Util.checkNull(values);
+
+        if (values.length != length) {
+            throw new SimpleHBaseException("checkLength error. values.length="
+                    + values.length + " length=" + length);
+        }
+    }
+
+    /**
+     * Check string's length.
+     * */
+    public static void checkLength(String value, int length) {
+        Util.checkNull(value);
+
+        if (value.length() != length) {
+            throw new SimpleHBaseException("checkLength error. value=" + value
+                    + " length=" + length);
         }
     }
 
@@ -36,57 +75,35 @@ public class Util {
      * 
      * */
     public static void checkRowKey(RowKey rowKey) {
-        if (rowKey == null) {
-            throw new SimpleHBaseException("rowkey is null.");
-        }
+        checkNull(rowKey);
+
         if (rowKey.toBytes() == null) {
-            throw new SimpleHBaseException("rowkey bytes is null.");
+            throw new SimpleHBaseException("rowkey bytes is null. rowKey = "
+                    + rowKey);
         }
     }
 
     /**
-     * Close HTableInterface.
+     * Close Closeable.
      * */
-    public static void close(HTableInterface htableInterface) {
-        if (htableInterface == null) {
+    public static void close(@Nullable Closeable closeable) {
+        if (closeable == null) {
             return;
         }
-
         try {
-            htableInterface.close();
+            closeable.close();
         } catch (IOException e) {
-            throw new SimpleHBaseException("close htableInterface exception.",
-                    e);
+            throw new SimpleHBaseException("close closeable exception.", e);
         }
     }
 
     /**
-     * Close ResultScanner.
+     * Check for 2 objects have identity type.
      * */
-    public static void close(ResultScanner resultScanner) {
-        if (resultScanner == null) {
-            return;
-        }
-        resultScanner.close();
-    }
-
-    /**
-     * Check for typeInfo is versioned typeInfo.
-     * */
-    public static void checkVersioned(TypeInfo typeInfo) {
-        checkNull(typeInfo);
-        if (!typeInfo.isVersionedType()) {
-            throw new SimpleHBaseException("not a versioned type. typeInfo = "
-                    + typeInfo.getType());
-        }
-    }
-
-    /**
-     * Check for 2 objects have same type.
-     * */
-    public static void checkSameType(Object one, Object other) {
+    public static void checkIdentityType(Object one, Object other) {
         checkNull(one);
         checkNull(other);
+
         if (one.getClass() != other.getClass()) {
             throw new SimpleHBaseException("not same type. one = " + one
                     + " other = " + other);

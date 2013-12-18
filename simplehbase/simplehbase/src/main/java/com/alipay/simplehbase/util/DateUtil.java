@@ -21,10 +21,14 @@ public class DateUtil {
      * Returns date by parsing str with format, or null if parsing fails.
      * */
     public static Date parse(String str, String format) {
+        Util.checkEmptyString(str);
+        Util.checkEmptyString(format);
+
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
             return simpleDateFormat.parse(str);
         } catch (ParseException e) {
+            //ignore.
         }
         return null;
     }

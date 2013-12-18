@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.DateUtil;
-import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -59,7 +59,7 @@ public class LiteralValue {
         }
 
         if (type == Character.class) {
-            StringUtil.checkLength(literalValue, 1);
+            Util.checkLength(literalValue, 1);
             obj = literalValue.charAt(0);
         }
 
@@ -84,16 +84,21 @@ public class LiteralValue {
         }
 
         Util.checkNull(obj);
+
         return obj;
     }
 
     private static Date convertToDate(String literalValue) {
+        Util.checkEmptyString(literalValue);
+
         for (String s : dateFormats) {
             Date date = DateUtil.parse(literalValue, s);
             if (date != null) {
                 return date;
             }
         }
-        return null;
+
+        throw new SimpleHBaseException("cannot convert to date. literalValue="
+                + literalValue);
     }
 }

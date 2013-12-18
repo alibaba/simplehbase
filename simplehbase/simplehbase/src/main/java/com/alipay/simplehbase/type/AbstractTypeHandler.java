@@ -1,6 +1,8 @@
 package com.alipay.simplehbase.type;
 
+import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * TypeHandler的骨架实现。
@@ -10,41 +12,46 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
  * */
 abstract public class AbstractTypeHandler implements TypeHandler {
 
-	/**
-	 * 该Handler是否处理该java的class type。
-	 * */
-	abstract protected boolean aboutToHandle(Class<?> type);
+    /**
+     * 该Handler是否处理该java的class type。
+     * */
+    abstract protected boolean aboutToHandle(Class<?> type);
 
-	abstract protected byte[] innerToBytes(Class<?> type, Object value);
+    abstract protected byte[] innerToBytes(Class<?> type, @Nullable Object value);
 
-	abstract protected Object innerToObject(Class<?> type, byte[] bytes);
+    abstract protected Object innerToObject(Class<?> type,
+            @Nullable byte[] bytes);
 
-	@Override
-	public byte[] toBytes(Class<?> type, Object value) {
-		if (!aboutToHandle(type)) {
-			throw new SimpleHBaseException("wrong type to handle. type = "
-					+ type);
-		}
+    @Override
+    public byte[] toBytes(Class<?> type, @Nullable Object value) {
+        Util.checkNull(type);
 
-		if (value == null) {
-			return null;
-		}
+        if (!aboutToHandle(type)) {
+            throw new SimpleHBaseException("wrong type to handle. type = "
+                    + type);
+        }
 
-		return innerToBytes(type, value);
-	}
+        if (value == null) {
+            return null;
+        }
 
-	@Override
-	public Object toObject(Class<?> type, byte[] bytes) {
-		if (!aboutToHandle(type)) {
-			throw new SimpleHBaseException("wrong type to handle. type = "
-					+ type);
-		}
+        return innerToBytes(type, value);
+    }
 
-		if (bytes == null || bytes.length == 0) {
-			return null;
-		}
+    @Override
+    public Object toObject(Class<?> type, @Nullable byte[] bytes) {
+        Util.checkNull(type);
 
-		return innerToObject(type, bytes);
-	}
+        if (!aboutToHandle(type)) {
+            throw new SimpleHBaseException("wrong type to handle. type = "
+                    + type);
+        }
+
+        if (bytes == null || bytes.length == 0) {
+            return null;
+        }
+
+        return innerToObject(type, bytes);
+    }
 
 }

@@ -62,10 +62,8 @@ public class ClassUtil {
      * 
      * */
     public static Class<?> forName(String className) {
+        Util.checkEmptyString(className);
 
-        if (StringUtil.isEmptyString(className)) {
-            return null;
-        }
         if (nativeClassMap.containsKey(className)) {
             return nativeClassMap.get(className);
         }
@@ -89,7 +87,10 @@ public class ClassUtil {
      * try convert boxer type first.
      * </pre>
      * */
-    public static boolean sameType(Class<?> c1, Class<?> c2) {
+    public static boolean withSameType(Class<?> c1, Class<?> c2) {
+        Util.checkNull(c1);
+        Util.checkNull(c2);
+
         if (c1 == c2) {
             return true;
         }
@@ -100,6 +101,8 @@ public class ClassUtil {
      * Returns boxer of c or c if c can't be boxed.
      * */
     public static Class<?> tryConvertToBoxClass(Class<?> c) {
+        Util.checkNull(c);
+
         if (boxTypeMap.containsKey(c)) {
             return boxTypeMap.get(c);
         }

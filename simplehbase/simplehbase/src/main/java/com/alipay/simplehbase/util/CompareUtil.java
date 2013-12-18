@@ -14,6 +14,9 @@ public class CompareUtil {
      *         less than, equal to, or greater than the object other.
      * */
     public static int compare(Object one, Object other) {
+        Util.checkNull(one);
+        Util.checkNull(other);
+
         Comparable cOne = (Comparable) one;
         return cOne.compareTo(other);
     }

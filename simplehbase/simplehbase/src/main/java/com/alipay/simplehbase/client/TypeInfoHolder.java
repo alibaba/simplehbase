@@ -4,6 +4,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
+import com.alipay.simplehbase.util.Util;
+
 /**
  * TypeInfoµÄHolderÀà¡£
  * 
@@ -25,6 +27,7 @@ public class TypeInfoHolder {
      * @return TypeInfo¡£
      */
     public static TypeInfo findTypeInfo(Class<?> type) {
+        Util.checkNull(type);
 
         if (typeInfos.get(type) == null) {
             TypeInfo oldTypeInfo = typeInfos.putIfAbsent(type,

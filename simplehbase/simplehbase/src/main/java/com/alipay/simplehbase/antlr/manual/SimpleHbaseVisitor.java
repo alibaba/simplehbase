@@ -50,7 +50,6 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.NotinvarlistContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.NotmatchconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.NotmatchvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.OrconditionContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectclContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.VarContext;

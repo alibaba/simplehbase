@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.util.StringUtil;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * HbaseTableµƒ≈‰÷√–≈œ¢°£
@@ -42,7 +43,7 @@ public class HBaseTableConfig {
 
     public void init() {
         try {
-            StringUtil.checkEmptyString(configFilePath);
+            Util.checkEmptyString(configFilePath);
 
             List<HBaseColumnSchema> hbaseColumnSchemas = new ArrayList<HBaseColumnSchema>();
             HBaseTableConfigParser.parseTableSchema(configFilePath,

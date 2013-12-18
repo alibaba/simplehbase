@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.alipay.simplehbase.core.Nullable;
+
 /**
  * ConfigUtil.
  * 
@@ -24,6 +26,10 @@ public class ConfigUtil {
      * */
     public static int parsePositiveInt(Map<String, String> config, String key,
             int defaultValue) {
+        Util.checkNull(config);
+        Util.checkEmptyString(key);
+        Util.check(defaultValue > 0);
+
         try {
             String vaule = config.get(key);
             int result = Integer.parseInt(vaule);
@@ -41,11 +47,11 @@ public class ConfigUtil {
      * Load config file.
      * 
      * */
-    public static Map<String, String> loadConfigFile(String filePath)
+    public static Map<String, String> loadConfigFile(@Nullable String filePath)
             throws IOException {
 
         Map<String, String> result = new HashMap<String, String>();
-        if (filePath == null) {
+        if (StringUtil.isEmptyString(filePath)) {
             return result;
         }
 

@@ -8,6 +8,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.StringUtil;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * HbaseTableµÄschema¡£
@@ -55,7 +56,7 @@ public class HBaseTableSchema {
      * */
     public void init(List<HBaseColumnSchema> hbaseColumnSchemas) {
 
-        StringUtil.checkEmptyString(tableName);
+        Util.checkEmptyString(tableName);
         tableNameBytes = Bytes.toBytes(tableName);
 
         if (StringUtil.isNotEmptyString(defaultFamily)) {

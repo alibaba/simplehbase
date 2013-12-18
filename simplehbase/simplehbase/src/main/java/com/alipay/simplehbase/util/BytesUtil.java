@@ -2,7 +2,7 @@ package com.alipay.simplehbase.util;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
-import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.core.Nullable;
 
 /**
  * BytesUtil.
@@ -20,7 +20,7 @@ public class BytesUtil {
     /**
      * merge bytes arrays into one bytes array.
      */
-    public static byte[] merge(byte[]... bytesArray) {
+    public static byte[] merge(@Nullable byte[]... bytesArray) {
         byte[] result = new byte[] {};
 
         if (bytesArray == null) {
@@ -35,16 +35,6 @@ public class BytesUtil {
         }
 
         return result;
-    }
-
-    /**
-     * check the value's length.
-     * */
-    public static void checkLength(byte[] values, int length) {
-        if (values.length != length) {
-            throw new SimpleHBaseException("checkLength error. values.length="
-                    + values.length + " length=" + length);
-        }
     }
 
     private BytesUtil() {

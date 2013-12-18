@@ -3,6 +3,7 @@ package com.alipay.simplehbase.hql;
 import org.w3c.dom.Node;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * HQLµÄnode type¡£
@@ -62,6 +63,8 @@ public enum HQLNodeType {
     }
 
     public static HQLNodeType findHQLNodeType(Node node) {
+
+        Util.checkNull(node);
 
         for (HQLNodeType hqlNodeType : HQLNodeType.values()) {
             if (node.getNodeName().equals(hqlNodeType.xmlNodeName)) {

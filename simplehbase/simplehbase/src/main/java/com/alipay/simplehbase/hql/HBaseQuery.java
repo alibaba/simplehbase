@@ -1,6 +1,5 @@
 package com.alipay.simplehbase.hql;
 
-import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -15,7 +14,7 @@ public class HBaseQuery {
     private HQLNode hqlNode;
 
     public HBaseQuery(String id, HQLNode hqlNode) {
-        StringUtil.checkEmptyString(id);
+        Util.checkEmptyString(id);
         Util.checkNull(hqlNode);
 
         this.id = id;

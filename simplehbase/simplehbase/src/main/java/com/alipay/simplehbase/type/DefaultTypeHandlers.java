@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.alipay.simplehbase.type.handler.*;
 import com.alipay.simplehbase.util.ClassUtil;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * Ä¬ÈÏµÄTypeHandler¡£
@@ -34,6 +35,8 @@ public class DefaultTypeHandlers {
     }
 
     public static TypeHandler findDefaultHandler(Class<?> type) {
+        Util.checkNull(type);
+
         type = ClassUtil.tryConvertToBoxClass(type);
 
         if (type.isEnum()) {

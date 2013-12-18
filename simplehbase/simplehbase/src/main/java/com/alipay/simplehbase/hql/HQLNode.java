@@ -36,6 +36,7 @@ abstract public class HQLNode {
 
     protected HQLNode(HQLNodeType hqlNodeType) {
         Util.checkNull(hqlNodeType);
+        
         this.hqlNodeType = hqlNodeType;
     }
 

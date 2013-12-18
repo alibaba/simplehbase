@@ -6,6 +6,8 @@ import org.apache.log4j.Logger;
 
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.util.StringUtil;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * SimpleHbaseAdminClientµÄÊµÏÖ¡£
@@ -24,6 +26,8 @@ public class SimpleHbaseAdminClientImpl implements SimpleHbaseAdminClient {
 
     @Override
     public void createTable(HTableDescriptor tableDescriptor) {
+        Util.checkNull(tableDescriptor);
+
         try {
             HBaseAdmin hbaseAdmin = hbaseDataSource.getHBaseAdmin();
             hbaseAdmin.createTable(tableDescriptor);
@@ -35,6 +39,8 @@ public class SimpleHbaseAdminClientImpl implements SimpleHbaseAdminClient {
 
     @Override
     public void deleteTable(String tableName) {
+        Util.checkEmptyString(tableName);
+
         try {
             HBaseAdmin hbaseAdmin = hbaseDataSource.getHBaseAdmin();
             // delete table if table exist.

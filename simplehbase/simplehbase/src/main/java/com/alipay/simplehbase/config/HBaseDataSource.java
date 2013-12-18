@@ -8,11 +8,13 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTableInterface;
+import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.log4j.Logger;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.ConfigUtil;
 import com.alipay.simplehbase.util.StringUtil;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * HbaseDataSource表示一个hbase数据源。
@@ -85,9 +87,9 @@ public class HBaseDataSource {
     private Configuration       hbaseConfiguration;
 
     /**
-     * HTablePoolHolder。
+     * HTablePool.
      * */
-    private HTablePoolHolder    htablePoolHolder;
+    private HTablePool          htablePool;
 
     /**
      * 初始化dataSource。
@@ -95,7 +97,7 @@ public class HBaseDataSource {
     public void init() {
         try {
             parseConfig();
-            initHTablePoolHolder();
+            initHtablePool();
             log.info(this);
         } catch (Exception e) {
             log.error(e);
@@ -110,7 +112,8 @@ public class HBaseDataSource {
      * @return HTableInterface。
      * */
     public HTableInterface getHTable(String tableName) {
-        return htablePoolHolder.getHTable(tableName);
+        Util.checkEmptyString(tableName);
+        return htablePool.getTable(tableName);
     }
 
     /**
@@ -159,12 +162,15 @@ public class HBaseDataSource {
     }
 
     /**
-     * 初始化HTablePoolHolder。
+     * Initial HTablePool.
      * */
-    private void initHTablePoolHolder() {
+    private void initHtablePool() {
         try {
-            htablePoolHolder = new HTablePoolHolder();
-            htablePoolHolder.init(hbaseConfiguration, finalDataSourceConfig);
+            int hbasePoolSize = ConfigUtil.parsePositiveInt(
+                    finalDataSourceConfig, ConfigOfDataSource.HTABLE_POOL_SIZE,
+                    ConfigOfDataSource.HTABLE_POOL_SIZE_DEFAULT);
+
+            htablePool = new HTablePool(hbaseConfiguration, hbasePoolSize);
         } catch (Exception e) {
             log.error("initHTablePoolHolder error.", e);
             throw new SimpleHBaseException("initHTablePoolHolder error.", e);

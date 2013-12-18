@@ -236,7 +236,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkNull(t);
 
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(t.getClass());
-        Util.checkVersioned(typeInfo);
+        checkVersioned(typeInfo);
 
         Put put = new Put(rowKey.toBytes());
         for (ColumnInfo columnInfo : typeInfo.getColumnInfos()) {
@@ -266,10 +266,10 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkRowKey(rowKey);
         Util.checkNull(oldT);
         Util.checkNull(newT);
-        Util.checkSameType(oldT, newT);
+        Util.checkIdentityType(oldT, newT);
 
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(newT.getClass());
-        Util.checkVersioned(typeInfo);
+        checkVersioned(typeInfo);
 
         Put put = new Put(rowKey.toBytes());
         try {
@@ -327,7 +327,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         //not check oldVersion,oldVersion can be null¡£
 
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(t.getClass());
-        Util.checkVersioned(typeInfo);
+        checkVersioned(typeInfo);
 
         Put put = new Put(rowKey.toBytes());
         for (ColumnInfo columnInfo : typeInfo.getColumnInfos()) {

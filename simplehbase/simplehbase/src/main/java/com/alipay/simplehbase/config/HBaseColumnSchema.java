@@ -56,15 +56,16 @@ public class HBaseColumnSchema {
      * */
     public void init() {
 
-        StringUtil.checkEmptyString(family);
-        StringUtil.checkEmptyString(qualifier);
-        StringUtil.checkEmptyString(typeName);
+        Util.checkEmptyString(family);
+        Util.checkEmptyString(qualifier);
+        Util.checkEmptyString(typeName);
 
         try {
             familyBytes = Bytes.toBytes(family);
             qualifierBytes = Bytes.toBytes(qualifier);
             type = ClassUtil.forName(typeName);
-
+            Util.checkNull(type);
+            
             if (StringUtil.isEmptyString(typeHandlerName)) {
                 typeHandler = DefaultTypeHandlers.findDefaultHandler(type);
                 typeHandlerName = typeHandler.getClass().getName();

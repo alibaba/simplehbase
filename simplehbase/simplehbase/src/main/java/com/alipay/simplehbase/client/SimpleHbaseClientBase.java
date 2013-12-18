@@ -17,6 +17,7 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.type.TypeHandler;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.ConfigUtil;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * SimpleHbaseClientµÄ¹Ç¼ÜÊµÏÖ¡£
@@ -138,7 +139,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
                 Class<?> fieldType = columnInfo.field.getType();
                 Class<?> schemaType = hbaseColumnSchema.getType();
-                if (!ClassUtil.sameType(fieldType, schemaType)) {
+                if (!ClassUtil.withSameType(fieldType, schemaType)) {
                     throw new SimpleHBaseException(
                             "class does not match. fieldType=" + fieldType
                                     + " schemaType=" + schemaType);
@@ -185,7 +186,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
             Class<?> fieldType = columnInfo.field.getType();
             Class<?> schemaType = hbaseColumnSchema.getType();
-            if (!ClassUtil.sameType(fieldType, schemaType)) {
+            if (!ClassUtil.withSameType(fieldType, schemaType)) {
                 throw new SimpleHBaseException(
                         "class does not match. fieldType=" + fieldType
                                 + " schemaType=" + schemaType);
@@ -195,6 +196,18 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             return typeHandler.toBytes(fieldType, value);
         } catch (Exception e) {
             throw new SimpleHBaseException(e);
+        }
+    }
+
+    /**
+     * Check for typeInfo is versioned typeInfo.
+     * */
+    protected void checkVersioned(TypeInfo typeInfo) {
+        Util.checkNull(typeInfo);
+
+        if (!typeInfo.isVersionedType()) {
+            throw new SimpleHBaseException("not a versioned type. typeInfo = "
+                    + typeInfo);
         }
     }
 

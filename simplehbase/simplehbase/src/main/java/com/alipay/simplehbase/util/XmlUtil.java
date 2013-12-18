@@ -15,6 +15,9 @@ public class XmlUtil {
      * */
     public static String getAttr(Node node, String attrName) {
 
+        Util.checkNull(node);
+        Util.checkEmptyString(attrName);
+
         NamedNodeMap columnAttrs = node.getAttributes();
         if (columnAttrs == null) {
             return null;

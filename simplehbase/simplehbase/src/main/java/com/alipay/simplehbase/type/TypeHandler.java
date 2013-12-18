@@ -1,5 +1,7 @@
 package com.alipay.simplehbase.type;
 
+import com.alipay.simplehbase.core.Nullable;
+
 /**
  * TypeHandler特定于java的class type,处理和hbase相关的格式转换等工作。
  * 
@@ -13,25 +15,21 @@ package com.alipay.simplehbase.type;
  * */
 public interface TypeHandler {
 
-	/**
-	 * 转换value为hbase的列值。
-	 * 
-	 * @param type
-	 *            java的type。
-	 * @param value
-	 *            java的value。
-	 * @return hbase的列值。
-	 * */
-	public byte[] toBytes(Class<?> type, Object value);
+    /**
+     * 转换value为hbase的列值。
+     * 
+     * @param type java的type。
+     * @param value java的value。
+     * @return hbase的列值。
+     * */
+    public byte[] toBytes(Class<?> type, @Nullable Object value);
 
-	/**
-	 * 转换hbase的列值为java的object。
-	 * 
-	 * @param type
-	 *            java的type。
-	 * @param bytes
-	 *            hbase的列值。
-	 * @return java的value。
-	 * */
-	public Object toObject(Class<?> type, byte[] bytes);
+    /**
+     * 转换hbase的列值为java的object。
+     * 
+     * @param type java的type。
+     * @param bytes hbase的列值。
+     * @return java的value。
+     * */
+    public Object toObject(Class<?> type, @Nullable byte[] bytes);
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * POJO和Hbase的映射信息。
@@ -23,9 +24,7 @@ public class TypeInfo {
      * @return 解析出的TypeInfo。
      * */
     public static TypeInfo parse(Class<?> type) {
-        if (type == null) {
-            throw new SimpleHBaseException("type is null.");
-        }
+        Util.checkNull(type);
 
         TypeInfo typeInfo = new TypeInfo();
         typeInfo.type = type;

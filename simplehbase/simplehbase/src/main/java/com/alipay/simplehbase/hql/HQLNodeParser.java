@@ -23,6 +23,7 @@ import com.alipay.simplehbase.hql.node.unary.IsNotNullNodeHandler;
 import com.alipay.simplehbase.hql.node.unary.IsNotPropertyAvailableNodeHandler;
 import com.alipay.simplehbase.hql.node.unary.IsNullNodeHandler;
 import com.alipay.simplehbase.hql.node.unary.IsPropertyAvailableNodeHandler;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * HQLNodeParser¡£
@@ -72,6 +73,8 @@ public class HQLNodeParser {
     }
 
     public static HQLNode parse(Node node) {
+
+        Util.checkNull(node);
 
         HQLNodeType hqlNodeType = HQLNodeType.findHQLNodeType(node);
         HQLNodeHandler hqlNodeHandler = hsqlNodeHandlers.get(hqlNodeType);
