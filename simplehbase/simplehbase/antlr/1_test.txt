@@ -1,1 +1,1 @@
-select where a equal "123" and ( b lessequal "dan"  or c less "zhi" and d greater #p# and e match ".)*?" )
+select where a equal "123" and ( b lessequal "dan"  or c less "zhi" and d greater #p# and e match ".)*?"  and f isnull )

@@ -15,7 +15,7 @@ public class TestFind extends MyRecordTestBase {
     @Test
     public void findObject() {
 
-        MyRecord myRecord = mockMyRecord(0);
+        MyRecord myRecord = mockSlim(0);
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(0);
 
         simpleHbaseClient.putObject(myRecordRowKey, myRecord);
@@ -27,7 +27,7 @@ public class TestFind extends MyRecordTestBase {
 
     @Test
     public void findObjectList() {
-        addMockRecords(8);
+        putMockSlims(8);
 
         MyRecordRowKey startRowKey = new MyRecordRowKey(0);
         MyRecordRowKey endRowKey = new MyRecordRowKey(8);
@@ -43,7 +43,7 @@ public class TestFind extends MyRecordTestBase {
 
     @Test
     public void findObjectList2() {
-        addMockRecords(8);
+        putMockSlims(8);
 
         MyRecordRowKey startRowKey = new MyRecordRowKey(0);
         MyRecordRowKey endRowKey = new MyRecordRowKey(8);

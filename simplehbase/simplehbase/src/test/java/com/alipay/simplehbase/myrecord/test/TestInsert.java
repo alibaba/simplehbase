@@ -12,7 +12,7 @@ public class TestInsert extends MyRecordTestBase {
 
     @Test
     public void insertObject() {
-        MyRecord myRecord = mockMyRecord(0);
+        MyRecord myRecord = mockSlim(0);
 
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(1);
 

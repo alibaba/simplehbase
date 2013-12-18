@@ -18,23 +18,6 @@ import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
  */
 public class TestSpecial extends MyRecordTestBase {
 
-    //hbase默认值为空字节数组。
-    @Test
-    public void defaultIsEmptyBytes() {
-        putSlim("id=0,name=aaa");
-        putSlim("id=1");
-        putSlim("id=2,name=ccc");
-
-        String hql = "select where name less #name#";
-        Map<String, Object> para = new HashMap<String, Object>();
-
-        para.put("name", "ccc");
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
-        Assert.assertTrue(myRecordList.size() == 2);
-    }
-
     //var参数必须有值。
     @Test(expected = SimpleHBaseException.class)
     public void nullParaValue() {
@@ -48,8 +31,9 @@ public class TestSpecial extends MyRecordTestBase {
     @Test(expected = SimpleHBaseException.class)
     public void nullParaConstant() {
         String hql = "select where age less \"\"";
+        Map<String, Object> para = new HashMap<String, Object>();
         simpleHbaseClient.findObjectListByRawHql(new MyRecordRowKey(0),
-                new MyRecordRowKey(100), MyRecord.class, hql, null);
+                new MyRecordRowKey(100), MyRecord.class, hql, para);
     }
 
     //不能处理负数。

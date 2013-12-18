@@ -11,11 +11,14 @@ import com.alipay.simplehbase.core.Nullable;
  */
 public class BytesUtil {
 
+    /** Empty bytes. */
+    public static final byte[] EMPTY = {};
+
     /** bytes [ZERO] */
-    public static final byte[] ZERO = { (byte) 0 };
+    public static final byte[] ZERO  = { (byte) 0 };
 
     /** bytes [ONE] */
-    public static final byte[] ONE  = { (byte) 1 };
+    public static final byte[] ONE   = { (byte) 1 };
 
     /**
      * merge bytes arrays into one bytes array.

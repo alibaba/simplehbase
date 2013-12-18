@@ -9,6 +9,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import com.alipay.simplehbase.client.HBaseColumn;
 import com.alipay.simplehbase.client.HBaseTable;
 import com.alipay.simplehbase.client.HBaseVersion;
+import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.config.Config;
 
 /**
@@ -31,6 +32,21 @@ public class MyRecord {
     @HBaseVersion
     @HBaseColumn(qualifier = "version")
     private long   version;
+
+    public RowKey rowKey() {
+        return new MyRecordRowKey(id);
+    }
+
+    public MyFatRecord toFat() {
+        MyFatRecord result = new MyFatRecord();
+        result.setAge(age);
+        result.setDate(date);
+        result.setGender(gender);
+        result.setId(id);
+        result.setName(name);
+        result.setVersion(version);
+        return result;
+    }
 
     public int getId() {
         return id;

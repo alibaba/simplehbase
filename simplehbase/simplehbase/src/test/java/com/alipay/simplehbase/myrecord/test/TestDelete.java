@@ -14,7 +14,7 @@ public class TestDelete extends MyRecordTestBase {
     @Test
     public void deleteObject() {
 
-        addMockRecords(1);
+        putMockSlims(1);
 
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(0);
 
@@ -29,7 +29,7 @@ public class TestDelete extends MyRecordTestBase {
 
     @Test
     public void deleteObjectList() {
-        addMockRecords(100);
+        putMockSlims(100);
 
         MyRecordRowKey myRecordRowKey1 = new MyRecordRowKey(0);
         MyRecordRowKey myRecordRowKey2 = new MyRecordRowKey(50);

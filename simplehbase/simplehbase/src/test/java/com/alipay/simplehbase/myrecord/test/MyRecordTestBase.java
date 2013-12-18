@@ -2,6 +2,8 @@ package com.alipay.simplehbase.myrecord.test;
 
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 
@@ -25,6 +27,8 @@ import com.alipay.simplehbase.myrecord.MyRecordRowKey;
  */
 public class MyRecordTestBase {
 
+    protected static Log                    log = LogFactory
+                                                        .getLog(MyRecordTestBase.class);
     protected static SimpleHbaseClient      simpleHbaseClient;
     protected static SimpleHbaseAdminClient simpleHbaseAdminClient;
 
@@ -59,39 +63,33 @@ public class MyRecordTestBase {
         simpleHbaseClient.deleteObjectList(start, end);
     }
 
-    protected static MyRecord mockMyRecord(int id) {
-        MyRecord myRecord = new MyRecord();
-        myRecord.setId(id);
-        myRecord.setName("allen_" + id);
-        myRecord.setDate(new Date());
-        myRecord.setVersion(0L);
-        myRecord.setGender(Gender.MALE);
-        return myRecord;
+    protected MyRecord mockSlim(int id) {
+        return parseSlim("id=" + id + ",name=allen_" + id
+                + ",date=2012-01-01,gender=MALE,version=0");
     }
 
-    protected static MyRecord[] mockMyRecords(int size) {
+    protected MyRecord[] mockSlims(int size) {
         MyRecord[] myRecords = new MyRecord[size];
         for (int i = 0; i < myRecords.length; i++) {
-            myRecords[i] = mockMyRecord(i);
+            myRecords[i] = mockSlim(i);
         }
         return myRecords;
     }
 
-    protected static void addMockRecords(int size) {
-        MyRecord[] myRecords = mockMyRecords(size);
+    protected void putMockSlims(int size) {
+        MyRecord[] myRecords = mockSlims(size);
         for (int i = 0; i < myRecords.length; i++) {
-            MyRecordRowKey myRecordRowKey = new MyRecordRowKey(i);
-            simpleHbaseClient.putObject(myRecordRowKey, myRecords[i]);
+            putRecord(mockSlim(i));
         }
     }
 
     protected void putSlim(String str) {
-        MyRecord myRecord = parseMyRecord(str);
+        MyRecord myRecord = parseSlim(str);
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(myRecord.getId());
         simpleHbaseClient.putObject(myRecordRowKey, myRecord);
     }
 
-    protected MyRecord parseMyRecord(String str) {
+    protected MyRecord parseSlim(String str) {
 
         MyRecord record = new MyRecord();
 
@@ -139,13 +137,13 @@ public class MyRecordTestBase {
         return record;
     }
 
-    protected void putFatRecord(String str) {
-        MyFatRecord myRecord = parseFatRecord(str);
+    protected void putFat(String str) {
+        MyFatRecord myRecord = parseFat(str);
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(myRecord.getId());
         simpleHbaseClient.putObject(myRecordRowKey, myRecord);
     }
 
-    protected MyFatRecord parseFatRecord(String str) {
+    protected MyFatRecord parseFat(String str) {
 
         MyFatRecord record = new MyFatRecord();
 
@@ -226,6 +224,16 @@ public class MyRecordTestBase {
         }
 
         return record;
+    }
+
+    protected void putRecord(MyRecord myRecord) {
+        MyRecordRowKey myRecordRowKey = new MyRecordRowKey(myRecord.getId());
+        simpleHbaseClient.putObject(myRecordRowKey, myRecord);
+    }
+
+    protected void putRecord(MyFatRecord myFatRecord) {
+        MyRecordRowKey myRecordRowKey = new MyRecordRowKey(myFatRecord.getId());
+        simpleHbaseClient.putObject(myRecordRowKey, myFatRecord);
     }
 
 }

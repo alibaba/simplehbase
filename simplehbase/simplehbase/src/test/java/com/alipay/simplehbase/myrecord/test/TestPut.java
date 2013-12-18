@@ -13,7 +13,7 @@ public class TestPut extends MyRecordTestBase {
     @Test
     public void putObject() {
 
-        MyRecord myRecord = mockMyRecord(0);
+        MyRecord myRecord = mockSlim(0);
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(0);
 
         simpleHbaseClient.putObject(myRecordRowKey, myRecord);

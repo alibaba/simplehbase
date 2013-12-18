@@ -10,7 +10,7 @@ import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
 /**
  * @author xinzhi
  */
-public class TestCreateAndDelete extends MyRecordTestBase {
+public class TestCreateAndDeleteTable extends MyRecordTestBase {
 
     @Before
     public void before() {

@@ -12,7 +12,7 @@ public class TestUpdate extends MyRecordTestBase {
 
     @Test
     public void updateObjectWithVersion() {
-        MyRecord myRecord = mockMyRecord(0);
+        MyRecord myRecord = mockSlim(0);
         myRecord.setVersion(0L);
 
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(0);
@@ -31,7 +31,7 @@ public class TestUpdate extends MyRecordTestBase {
 
     @Test
     public void updateObject() {
-        MyRecord myRecord = mockMyRecord(0);
+        MyRecord myRecord = mockSlim(0);
         myRecord.setVersion(0L);
 
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(0);

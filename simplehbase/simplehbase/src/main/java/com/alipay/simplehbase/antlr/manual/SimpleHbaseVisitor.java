@@ -35,6 +35,8 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterequalvarContext
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreatervarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InconstantlistContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InvarlistContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.IsnotnullcContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.IsnullcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.LessconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.LessequalconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.LessequalvarContext;
@@ -59,6 +61,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsVisitor;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.util.BytesUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -128,6 +131,24 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
                 constantContext);
 
         return constructFilter(hbaseColumnSchema, CompareOp.EQUAL, object);
+    }
+
+    @Override
+    public Filter visitIsnullc(IsnullcContext ctx) {
+        CidContext cidContext = ctx.cid();
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        return constructFilter(hbaseColumnSchema, CompareOp.EQUAL,
+                BytesUtil.EMPTY);
+    }
+
+    @Override
+    public Filter visitIsnotnullc(IsnotnullcContext ctx) {
+        CidContext cidContext = ctx.cid();
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        return constructFilter(hbaseColumnSchema, CompareOp.NOT_EQUAL,
+                BytesUtil.EMPTY);
     }
 
     @Override
@@ -259,9 +280,17 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
 
     private static Filter constructFilter(HBaseColumnSchema hbaseColumnSchema,
             CompareOp compareOp, Object object) {
+        Util.checkNull(hbaseColumnSchema);
+
         byte[] value = hbaseColumnSchema.getTypeHandler().toBytes(
                 hbaseColumnSchema.getType(), object);
+        return constructFilter(hbaseColumnSchema, compareOp, value);
+    }
 
+    private static Filter constructFilter(HBaseColumnSchema hbaseColumnSchema,
+            CompareOp compareOp, byte[] value) {
+        Util.checkNull(hbaseColumnSchema);
+        Util.checkNull(compareOp);
         Util.checkNull(value);
 
         byte[] familyBytes = hbaseColumnSchema.getFamilyBytes();
@@ -332,7 +361,8 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
     private static Filter constructFilterWithRegex(
             HBaseColumnSchema hbaseColumnSchema, CompareOp compareOp,
             Object object) {
-
+        Util.checkNull(hbaseColumnSchema);
+        Util.checkNull(compareOp);
         Util.checkNull(object);
 
         if (compareOp != CompareOp.EQUAL && compareOp != CompareOp.NOT_EQUAL) {
@@ -425,6 +455,10 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
     private static Filter constructFilterForContain(
             HBaseColumnSchema hbaseColumnSchema, CompareOp compareOp,
             List<Object> list, Operator operator) {
+        Util.checkNull(hbaseColumnSchema);
+        Util.checkNull(compareOp);
+        Util.checkNull(list);
+        Util.checkNull(operator);
 
         List<Filter> filters = new ArrayList<Filter>();
         for (Object obj : list) {
@@ -581,4 +615,5 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
     public Filter visitSelectc(SelectcContext ctx) {
         return null;
     }
+
 }

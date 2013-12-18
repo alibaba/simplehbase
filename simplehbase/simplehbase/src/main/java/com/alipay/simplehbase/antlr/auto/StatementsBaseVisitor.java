@@ -1,4 +1,5 @@
-package com.alipay.simplehbase.antlr.auto;// Generated from Statements.g4 by ANTLR 4.0
+package com.alipay.simplehbase.antlr.auto;
+// Generated from Statements.g4 by ANTLR 4.0
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -22,7 +23,11 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitCountc(StatementsParser.CountcContext ctx) { return visitChildren(ctx); }
 
+	@Override public T visitIsnotnullc(StatementsParser.IsnotnullcContext ctx) { return visitChildren(ctx); }
+
 	@Override public T visitLessconstant(StatementsParser.LessconstantContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitIsnullc(StatementsParser.IsnullcContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitWrapper(StatementsParser.WrapperContext ctx) { return visitChildren(ctx); }
 
