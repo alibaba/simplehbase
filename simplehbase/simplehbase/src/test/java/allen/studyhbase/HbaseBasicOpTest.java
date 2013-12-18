@@ -17,6 +17,8 @@ import org.junit.Assert;
 
 import org.junit.Test;
 
+import com.alipay.simplehbase.util.Util;
+
 public class HbaseBasicOpTest extends HbaseTestBase {
 
     @Test
@@ -52,7 +54,9 @@ public class HbaseBasicOpTest extends HbaseTestBase {
                 .next()) {
             resultRowKeys.add(Bytes.toString(result.getRow()));
         }
-        resultScanner.close();
+
+        Util.close(resultScanner);
+
         Assert.assertTrue(resultRowKeys.size() == 1);
         Assert.assertTrue(resultRowKeys.contains(rowKeyStr1));
     }
@@ -67,7 +71,9 @@ public class HbaseBasicOpTest extends HbaseTestBase {
                 .next()) {
             resultRowKeys.add(Bytes.toString(result.getRow()));
         }
-        resultScanner.close();
+
+        Util.close(resultScanner);
+
         Assert.assertTrue(resultRowKeys.size() == 1);
         Assert.assertTrue(resultRowKeys.contains(rowKeyStr1));
     }
@@ -82,7 +88,9 @@ public class HbaseBasicOpTest extends HbaseTestBase {
                 .next()) {
             resultRowKeys.add(Bytes.toString(result.getRow()));
         }
-        resultScanner.close();
+
+        Util.close(resultScanner);
+
         Assert.assertTrue(resultRowKeys.size() == 4);
         Assert.assertTrue(resultRowKeys.contains(rowKeyStr1));
         Assert.assertTrue(resultRowKeys.contains(rowKeyStr2));
@@ -101,7 +109,9 @@ public class HbaseBasicOpTest extends HbaseTestBase {
                 .next()) {
             resultRowKeys.add(Bytes.toString(result.getRow()));
         }
-        resultScanner.close();
+
+        Util.close(resultScanner);
+
         Assert.assertTrue(resultRowKeys.size() == 3);
         Assert.assertTrue(resultRowKeys.contains(rowKeyStr1));
         Assert.assertTrue(resultRowKeys.contains(rowKeyStr2));

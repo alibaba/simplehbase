@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
-import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**

@@ -5,6 +5,7 @@ import java.util.Map;
 import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.HQLNodeType;
 import com.alipay.simplehbase.util.Util;
+import com.sun.istack.internal.Nullable;
 
 public class StatementNode extends HQLNode {
     protected StatementNode() {
@@ -12,9 +13,8 @@ public class StatementNode extends HQLNode {
     }
 
     @Override
-    public void applyParaMap(Map<String, Object> para, StringBuilder sb,
-            Map<Object, Object> context) {
-        Util.checkNull(para);
+    public void applyParaMap(@Nullable Map<String, Object> para,
+            StringBuilder sb, Map<Object, Object> context) {
         Util.checkNull(sb);
         Util.checkNull(context);
 

@@ -17,6 +17,7 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.hql.HQLNodeParser;
 import com.alipay.simplehbase.util.StringUtil;
+import com.alipay.simplehbase.util.Util;
 import com.alipay.simplehbase.util.XmlUtil;
 
 /**
@@ -40,6 +41,11 @@ public class HBaseTableConfigParser {
     public static void parseTableSchema(String filePath,
             HBaseTableSchema tableSchema,
             List<HBaseColumnSchema> hbaseColumnSchemas) {
+
+        Util.checkEmptyString(filePath);
+        Util.checkNull(tableSchema);
+        Util.checkNull(hbaseColumnSchemas);
+
         Node hbaseTableSchemaNode = findTopLevelNode(filePath,
                 "HBaseTableSchema");
 
@@ -73,6 +79,9 @@ public class HBaseTableConfigParser {
     public static void parseConfigMap(String filePath,
             Map<String, String> configMap) {
 
+        Util.checkEmptyString(filePath);
+        Util.checkNull(configMap);
+
         Node configMapNode = findTopLevelNode(filePath, "configMap");
         if (configMapNode == null) {
             return;
@@ -98,6 +107,8 @@ public class HBaseTableConfigParser {
      * 解析HBaseQuery。
      * */
     public static List<HBaseQuery> parseHBaseQuery(String filePath) {
+        Util.checkEmptyString(filePath);
+
         List<HBaseQuery> hbaseQueries = new ArrayList<HBaseQuery>();
         Node statementsNode = findTopLevelNode(filePath, "statements");
         if (statementsNode == null) {
@@ -129,6 +140,9 @@ public class HBaseTableConfigParser {
      * 查找顶级的Node。
      * */
     private static Node findTopLevelNode(String filePath, String nodeName) {
+        Util.checkEmptyString(filePath);
+        Util.checkEmptyString(nodeName);
+
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setIgnoringElementContentWhitespace(true);

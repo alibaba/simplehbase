@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.myrecord.test.hql;
+package com.alipay.simplehbase.myrecord.test.hql.special;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +12,7 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
+
 /**
  * @author xinzhi
  */
@@ -47,9 +48,8 @@ public class TestSpecial extends MyRecordTestBase {
     @Test(expected = SimpleHBaseException.class)
     public void nullParaConstant() {
         String hql = "select where age less \"\"";
-        Map<String, Object> para = new HashMap<String, Object>();
         simpleHbaseClient.findObjectListByRawHql(new MyRecordRowKey(0),
-                new MyRecordRowKey(100), MyRecord.class, hql, para);
+                new MyRecordRowKey(100), MyRecord.class, hql, null);
     }
 
     //不能处理负数。

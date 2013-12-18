@@ -11,6 +11,7 @@ import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.literal.LiteralValue;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * ContextUtil.
@@ -24,6 +25,9 @@ public class ContextUtil {
      * */
     public static HBaseColumnSchema parseHBaseColumnSchema(
             HBaseTableConfig hbaseTableConfig, CidContext cidContext) {
+        Util.checkNull(hbaseTableConfig);
+        Util.checkNull(cidContext);
+
         String cid = cidContext.TEXT().getText();
 
         String[] parts = cid.toString().split("\\.");
@@ -46,8 +50,11 @@ public class ContextUtil {
      * */
     public static Object parsePara(VarContext varContext,
             Map<String, Object> para) {
+        Util.checkNull(varContext);
+        Util.checkNull(para);
 
         String var = varContext.TEXT().getText();
+        Util.checkEmptyString(var);
 
         return para.get(var);
     }
@@ -57,6 +64,9 @@ public class ContextUtil {
      * */
     public static List<Object> parseParaList(List<VarContext> varContextList,
             Map<String, Object> para) {
+        Util.checkNull(varContextList);
+        Util.checkNull(para);
+
         List<Object> result = new ArrayList<Object>();
         for (VarContext varContext : varContextList) {
             result.add(parsePara(varContext, para));
@@ -69,7 +79,12 @@ public class ContextUtil {
      * */
     public static Object parseConstant(HBaseColumnSchema hbaseColumnSchema,
             ConstantContext constantContext) {
+        Util.checkNull(hbaseColumnSchema);
+        Util.checkNull(constantContext);
+
         String constant = constantContext.TEXT().getText();
+        Util.checkEmptyString(constant);
+
         return LiteralValue.convertToObject(hbaseColumnSchema.getType(),
                 constant);
     }
@@ -80,6 +95,9 @@ public class ContextUtil {
     public static List<Object> parseConstantList(
             HBaseColumnSchema hbaseColumnSchema,
             List<ConstantContext> constantContextList) {
+        Util.checkNull(hbaseColumnSchema);
+        Util.checkNull(constantContextList);
+
         List<Object> result = new ArrayList<Object>();
         for (ConstantContext constantContext : constantContextList) {
             result.add(parseConstant(hbaseColumnSchema, constantContext));

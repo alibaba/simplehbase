@@ -17,7 +17,6 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.type.TypeHandler;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.ConfigUtil;
-import com.alipay.simplehbase.util.Util;
 
 /**
  * SimpleHbaseClientµÄ¹Ç¼ÜÊµÏÖ¡£
@@ -203,7 +202,6 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * Check for typeInfo is versioned typeInfo.
      * */
     protected void checkVersioned(TypeInfo typeInfo) {
-        Util.checkNull(typeInfo);
 
         if (!typeInfo.isVersionedType()) {
             throw new SimpleHBaseException("not a versioned type. typeInfo = "

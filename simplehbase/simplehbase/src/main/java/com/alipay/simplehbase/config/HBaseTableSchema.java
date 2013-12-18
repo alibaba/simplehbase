@@ -90,6 +90,9 @@ public class HBaseTableSchema {
      * 根据family和qualifier查找HBaseColumnSchema。
      * */
     public HBaseColumnSchema findColumnSchema(String family, String qualifier) {
+        Util.checkEmptyString(family);
+        Util.checkEmptyString(qualifier);
+
         return columnSchemas.get(qualifier).get(family);
     }
 
@@ -101,6 +104,8 @@ public class HBaseTableSchema {
      * </pre>
      * */
     public HBaseColumnSchema findColumnSchema(String qualifier) {
+        Util.checkEmptyString(qualifier);
+
         Map<String, HBaseColumnSchema> tem = columnSchemas.get(qualifier);
         if (tem.size() == 1) {
             for (HBaseColumnSchema t : tem.values()) {
@@ -122,6 +127,7 @@ public class HBaseTableSchema {
                 return hbaseColumnSchema;
             }
         }
+
         throw new SimpleHBaseException("no HBaseColumnSchema found.");
     }
 

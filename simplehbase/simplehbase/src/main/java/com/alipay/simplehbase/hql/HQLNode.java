@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alipay.simplehbase.util.Util;
+import com.sun.istack.internal.Nullable;
 
 /**
  * 一个hql的节点。
@@ -31,12 +32,12 @@ abstract public class HQLNode {
      * @param sb StringBuilder，结果收集器。
      * @param context 应用参数解析HQL字符串时的上下文。
      * */
-    public abstract void applyParaMap(Map<String, Object> para,
+    public abstract void applyParaMap(@Nullable Map<String, Object> para,
             StringBuilder sb, Map<Object, Object> context);
 
     protected HQLNode(HQLNodeType hqlNodeType) {
         Util.checkNull(hqlNodeType);
-        
+
         this.hqlNodeType = hqlNodeType;
     }
 

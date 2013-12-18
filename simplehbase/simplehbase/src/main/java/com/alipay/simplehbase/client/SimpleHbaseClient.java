@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
+import com.sun.istack.internal.Nullable;
 
 /**
  * SimpleHbaseClient。
@@ -38,7 +39,7 @@ public interface SimpleHbaseClient {
      * @return POJO。
      * */
     public <T> T findObject(RowKey rowKey, Class<? extends T> type, String id,
-            Map<String, Object> para);
+            @Nullable Map<String, Object> para);
 
     /**
      * 查找rowKey指定的对象。
@@ -51,7 +52,7 @@ public interface SimpleHbaseClient {
      * @return POJO。
      * */
     public <T> T findObjectByRawHql(RowKey rowKey, Class<? extends T> type,
-            String hql, Map<String, Object> para);
+            String hql, @Nullable Map<String, Object> para);
 
     /**
      * 查找[startRowKey,endRowKey)范围的POJO对象列表。
@@ -89,7 +90,8 @@ public interface SimpleHbaseClient {
      * @return POJO对象列表。
      * */
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
-            Class<? extends T> type, String id, Map<String, Object> para);
+            Class<? extends T> type, String id,
+            @Nullable Map<String, Object> para);
 
     /**
      * 动态条件id查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
@@ -106,7 +108,7 @@ public interface SimpleHbaseClient {
      * */
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, long startIndex, long length, String id,
-            Map<String, Object> para);
+            @Nullable Map<String, Object> para);
 
     /**
      * 动态条件hql查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
@@ -121,7 +123,7 @@ public interface SimpleHbaseClient {
      * */
     public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
             RowKey endRowKey, Class<? extends T> type, String hql,
-            Map<String, Object> para);
+            @Nullable Map<String, Object> para);
 
     /**
      * 动态条件hql查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
@@ -138,7 +140,7 @@ public interface SimpleHbaseClient {
      * */
     public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
             RowKey endRowKey, Class<? extends T> type, long startIndex,
-            long length, String hql, Map<String, Object> para);
+            long length, String hql, @Nullable Map<String, Object> para);
 
     /**
      * 统计，统计[startRowKey,endRowKey)范围的记录条数。
@@ -161,7 +163,7 @@ public interface SimpleHbaseClient {
      * @return 记录条数。
      * */
     public long count(RowKey startRowKey, RowKey endRowKey, String id,
-            Map<String, Object> para);
+            @Nullable Map<String, Object> para);
 
     /**
      * 动态条件hql统计，统计[startRowKey,endRowKey)范围的记录条数。
@@ -174,7 +176,7 @@ public interface SimpleHbaseClient {
      * @return 记录条数。
      * */
     public long countByRawHql(RowKey startRowKey, RowKey endRowKey, String hql,
-            Map<String, Object> para);
+            @Nullable Map<String, Object> para);
 
     /**
      * Put POJO。

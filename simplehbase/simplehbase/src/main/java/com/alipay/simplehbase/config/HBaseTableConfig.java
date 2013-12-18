@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.hql.HBaseQuery;
-import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -42,9 +41,9 @@ public class HBaseTableConfig {
     private Map<String, HBaseQuery> queryMap         = new TreeMap<String, HBaseQuery>();
 
     public void init() {
-        try {
-            Util.checkEmptyString(configFilePath);
+        Util.checkEmptyString(configFilePath);
 
+        try {
             List<HBaseColumnSchema> hbaseColumnSchemas = new ArrayList<HBaseColumnSchema>();
             HBaseTableConfigParser.parseTableSchema(configFilePath,
                     hbaseTableSchema, hbaseColumnSchemas);
@@ -59,6 +58,7 @@ public class HBaseTableConfig {
             }
 
             log.info(this);
+
         } catch (Exception e) {
             log.error("parseConfig error.", e);
             throw new SimpleHBaseException("parseConfig error.", e);
