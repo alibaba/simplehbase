@@ -18,9 +18,9 @@ public class TestAnd extends MyRecordTestBase {
 
     @Test
     public void testConstants() {
-        put("id=0,name=aaa,age=10");
-        put("id=1,name=bbb,age=11");
-        put("id=2,name=ccc,age=12");
+        putSlim("id=0,name=aaa,age=10");
+        putSlim("id=1,name=bbb,age=11");
+        putSlim("id=2,name=ccc,age=12");
 
         String hql = "select where name greater \"aaa\" and age less \"12\"";
 
@@ -45,9 +45,9 @@ public class TestAnd extends MyRecordTestBase {
 
     @Test
     public void testVar() {
-        put("id=0,name=aaa,age=10");
-        put("id=1,name=bbb,age=11");
-        put("id=2,name=ccc,age=12");
+        putSlim("id=0,name=aaa,age=10");
+        putSlim("id=1,name=bbb,age=11");
+        putSlim("id=2,name=ccc,age=12");
 
         String hql = "select where name greater #name# and age less #age#";
         Map<String, Object> para = new HashMap<String, Object>();

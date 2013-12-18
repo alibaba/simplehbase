@@ -19,9 +19,9 @@ public class TestIn extends MyRecordTestBase {
 
     @Test
     public void testConstants() {
-        put("id=0,name=aaa");
-        put("id=1,name=bbb");
-        put("id=2,name=bbb");
+        putSlim("id=0,name=aaa");
+        putSlim("id=1,name=bbb");
+        putSlim("id=2,name=bbb");
 
         String hql = "select where name in ( \"aaa\" ) ";
 
@@ -52,9 +52,9 @@ public class TestIn extends MyRecordTestBase {
 
     @Test
     public void testVar() {
-        put("id=0,name=aaa");
-        put("id=1,name=bbb");
-        put("id=2,name=bbb");
+        putSlim("id=0,name=aaa");
+        putSlim("id=1,name=bbb");
+        putSlim("id=2,name=bbb");
 
         String hql = "select where name in #nameList#";
         Map<String, Object> para = new HashMap<String, Object>();

@@ -21,9 +21,9 @@ public class TestSpecial extends MyRecordTestBase {
     //hbase默认值为空字节数组。
     @Test
     public void defaultIsEmptyBytes() {
-        put("id=0,name=aaa");
-        put("id=1");
-        put("id=2,name=ccc");
+        putSlim("id=0,name=aaa");
+        putSlim("id=1");
+        putSlim("id=2,name=ccc");
 
         String hql = "select where name less #name#";
         Map<String, Object> para = new HashMap<String, Object>();
@@ -55,9 +55,9 @@ public class TestSpecial extends MyRecordTestBase {
     //不能处理负数。
     @Test
     public void cannotHandleNegative() {
-        put("id=0,age=100");
-        put("id=1,age=0");
-        put("id=2,age=-100");
+        putSlim("id=0,age=100");
+        putSlim("id=1,age=0");
+        putSlim("id=2,age=-100");
 
         String hql = "select where age greaterequal \"0\"";
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(

@@ -16,7 +16,7 @@ public class TestFind extends MyRecordTestBase {
     @Test
     public void testFind() {
 
-        put("id=0,name=aaa");
+        putSlim("id=0,name=aaa");
 
         MyRecord myRecord = simpleHbaseClient.findObject(new MyRecordRowKey(0),
                 MyRecord.class);

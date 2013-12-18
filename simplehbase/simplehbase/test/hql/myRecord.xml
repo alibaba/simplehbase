@@ -8,6 +8,15 @@
 		<HBaseColumnSchema qualifier="gender"
 			typeName="com.alipay.simplehbase.myrecord.Gender" />
 		<HBaseColumnSchema qualifier="version" typeName="long" />
+		
+		<HBaseColumnSchema qualifier="fatid" typeName="int" />
+		<HBaseColumnSchema qualifier="fatname" typeName="string" />
+		<HBaseColumnSchema qualifier="fatage" typeName="long" />
+		<HBaseColumnSchema qualifier="fatdate" typeName="date" />
+		<HBaseColumnSchema qualifier="fatgender"
+			typeName="com.alipay.simplehbase.myrecord.Gender" />
+		<HBaseColumnSchema qualifier="fatversion" typeName="long" />
+		
 	</HBaseTableSchema>
 
 	<configMap>

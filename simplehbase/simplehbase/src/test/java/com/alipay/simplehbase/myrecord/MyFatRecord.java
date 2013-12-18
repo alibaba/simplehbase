@@ -15,7 +15,7 @@ import com.alipay.simplehbase.config.Config;
  * @author xinzhi
  */
 @HBaseTable(defaultFamily = Config.ColumnFamilyName)
-public class MyRecord {
+public class MyFatRecord {
 
     @HBaseColumn(qualifier = "id")
     private int    id;
@@ -27,10 +27,70 @@ public class MyRecord {
     private Gender gender;
     @HBaseColumn(qualifier = "age")
     private long   age;
-
     @HBaseVersion
     @HBaseColumn(qualifier = "version")
     private long   version;
+
+    @HBaseColumn(qualifier = "fatid")
+    private int    fatid;
+    @HBaseColumn(qualifier = "fatname")
+    private String fatname;
+    @HBaseColumn(qualifier = "fatdate")
+    private Date   fatdate;
+    @HBaseColumn(qualifier = "fatgender")
+    private Gender fatgender;
+    @HBaseColumn(qualifier = "fatage")
+    private long   fatage;
+    @HBaseColumn(qualifier = "fatversion")
+    private long   fatversion;
+
+    public long getFatversion() {
+        return fatversion;
+    }
+
+    public void setFatversion(long fatversion) {
+        this.fatversion = fatversion;
+    }
+
+    public int getFatid() {
+        return fatid;
+    }
+
+    public void setFatid(int fatid) {
+        this.fatid = fatid;
+    }
+
+    public String getFatname() {
+        return fatname;
+    }
+
+    public void setFatname(String fatname) {
+        this.fatname = fatname;
+    }
+
+    public Date getFatdate() {
+        return fatdate;
+    }
+
+    public void setFatdate(Date fatdate) {
+        this.fatdate = fatdate;
+    }
+
+    public Gender getFatgender() {
+        return fatgender;
+    }
+
+    public void setFatgender(Gender fatgender) {
+        this.fatgender = fatgender;
+    }
+
+    public long getFatage() {
+        return fatage;
+    }
+
+    public void setFatage(long fatage) {
+        this.fatage = fatage;
+    }
 
     public int getId() {
         return id;

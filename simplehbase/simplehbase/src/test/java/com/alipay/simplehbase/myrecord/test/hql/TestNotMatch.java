@@ -18,9 +18,9 @@ public class TestNotMatch extends MyRecordTestBase {
 
     @Test
     public void testConstants() {
-        put("id=0,name=abc");
-        put("id=1,name=bca");
-        put("id=2,name=cab");
+        putSlim("id=0,name=abc");
+        putSlim("id=1,name=bca");
+        putSlim("id=2,name=cab");
 
         String hql = "select where name notmatch \".*ab.*\"";
 
@@ -45,9 +45,9 @@ public class TestNotMatch extends MyRecordTestBase {
 
     @Test
     public void testVar() {
-        put("id=0,name=abc");
-        put("id=1,name=bca");
-        put("id=2,name=cab");
+        putSlim("id=0,name=abc");
+        putSlim("id=1,name=bca");
+        putSlim("id=2,name=cab");
 
         String hql = "select where name notmatch #name#";
         Map<String, Object> para = new HashMap<String, Object>();

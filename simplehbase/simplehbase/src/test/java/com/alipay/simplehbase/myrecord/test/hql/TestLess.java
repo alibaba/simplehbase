@@ -18,9 +18,9 @@ public class TestLess extends MyRecordTestBase {
 
     @Test
     public void testConstants() {
-        put("id=0,name=aaa");
-        put("id=1,name=bbb");
-        put("id=2,name=ccc");
+        putSlim("id=0,name=aaa");
+        putSlim("id=1,name=bbb");
+        putSlim("id=2,name=ccc");
 
         String hql = "select where name less \"aaa\"";
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
@@ -50,9 +50,9 @@ public class TestLess extends MyRecordTestBase {
 
     @Test
     public void testVar() {
-        put("id=0,name=aaa");
-        put("id=1,name=bbb");
-        put("id=2,name=ccc");
+        putSlim("id=0,name=aaa");
+        putSlim("id=1,name=bbb");
+        putSlim("id=2,name=ccc");
 
         String hql = "select where name less #name#";
         Map<String, Object> para = new HashMap<String, Object>();
