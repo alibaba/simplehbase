@@ -1,0 +1,25 @@
+<SimpleHbase>
+
+	<HBaseTableSchema tableName="MyRecord" defaultFamily="MyRecordFamily">
+		<HBaseColumnSchema qualifier="id" typeName="int" />
+		<HBaseColumnSchema qualifier="name" typeName="string" />
+		<HBaseColumnSchema qualifier="date" typeName="date" />
+		<HBaseColumnSchema qualifier="gender" typeName="allen.sample.Gender" />
+		<HBaseColumnSchema qualifier="age" typeName="int" />
+	</HBaseTableSchema>
+
+	<statements>	
+		<statement id="queryByNameAndAge">
+			select where id greater #id#
+			<isPropertyAvailable prepend="and" property="name">
+				name equal #name#
+			</isPropertyAvailable>
+			<isPropertyAvailable prepend="and" property="age">
+				age greater #age#
+			</isPropertyAvailable>
+		</statement>		
+	</statements>	
+</SimpleHbase>   
+
+
+
