@@ -51,7 +51,7 @@ public class HBaseDataSource {
     @ConfigAttr
     private String              id;
     /**
-     * hbase原生配置文件路径。
+     * hbase原生配置文件路径。如hbase,zk配置文件。
      * */
     @ConfigAttr
     private List<String>        hbaseConfigFilePaths;

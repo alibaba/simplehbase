@@ -7,7 +7,11 @@
 		<HBaseColumnSchema qualifier="gender" typeName="allen.sample.Gender" />
 		<HBaseColumnSchema qualifier="age" typeName="int" />
 	</HBaseTableSchema>
-
+	
+	<configMap>
+		<config key="SCAN_CACHING" value="20" />
+		<config key="DELETE_BATCH" value="20" />
+	</configMap>
 	<statements>	
 		<statement id="queryByNameAndAge">
 			select where id greater #id#
