@@ -7,7 +7,6 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.hadoop.hbase.filter.Filter;
 
-import com.alipay.simplehbase.antlr.auto.StatementsLexer;
 import com.alipay.simplehbase.antlr.auto.StatementsParser;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConditioncContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CountclContext;
@@ -33,9 +32,11 @@ public class TreeUtil {
 
         try {
             ANTLRInputStream input = new ANTLRInputStream(new StringReader(hql));
-            StatementsLexer lexer = new StatementsLexer(input);
+            SimpleHbaseStatementsLexer lexer = new SimpleHbaseStatementsLexer(
+                    input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             StatementsParser parser = new StatementsParser(tokens);
+            parser.setErrorHandler(SimpleHbaseErrorStrategy.instance);
             ProgContext progContext = parser.prog();
             return progContext;
         } catch (Exception e) {
