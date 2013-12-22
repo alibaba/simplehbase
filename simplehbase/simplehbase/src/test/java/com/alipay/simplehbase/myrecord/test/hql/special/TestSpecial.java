@@ -18,7 +18,7 @@ import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
  */
 public class TestSpecial extends MyRecordTestBase {
 
-    //var参数必须有值。
+    //var parameter should have value.
     @Test(expected = SimpleHBaseException.class)
     public void nullParaValue() {
         String hql = "select where name less #name#";
@@ -27,7 +27,7 @@ public class TestSpecial extends MyRecordTestBase {
                 new MyRecordRowKey(100), MyRecord.class, hql, para);
     }
 
-    //constant参数必须有值。
+    //constant parameter should have value.
     @Test(expected = SimpleHBaseException.class)
     public void nullParaConstant() {
         String hql = "select where age less \"\"";
@@ -36,7 +36,6 @@ public class TestSpecial extends MyRecordTestBase {
                 new MyRecordRowKey(100), MyRecord.class, hql, para);
     }
 
-    //不能处理负数。
     @Test
     public void cannotHandleNegative() {
         putSlim("id=0,age=100");

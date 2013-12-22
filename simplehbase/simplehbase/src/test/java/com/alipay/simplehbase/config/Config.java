@@ -83,15 +83,11 @@ public class Config {
     }
 
     static {
-        //        System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
-        //                "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
-        //        System.setProperty("javax.xml.parsers.SAXParserFactory",
-        //                "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
         HBaseDataSource hbaseDataSource = new HBaseDataSource();
 
         List<String> hbaseConfigFilePaths = new ArrayList<String>();
-        //如果是在hbase上跑测试，则修改以下2个配置文件。
-        //如果是在hbase standalone模式下跑测试，则注释掉以下2行。
+        //If run on hbase cluster, modify the following config files.
+        //If run on hbase stand alone mode, comment out the following config files.
         hbaseConfigFilePaths.add(Config.HbaseSiteFile);
         hbaseConfigFilePaths.add(Config.ZkConfigFile);
         hbaseDataSource.setHbaseConfigFilePaths(hbaseConfigFilePaths);

@@ -26,11 +26,9 @@ import com.alipay.simplehbase.hql.node.unary.IsPropertyAvailableNodeHandler;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * HQLNodeParser¡£
- * 
+ * HQLNodeParser.
  * 
  * @author xinzhi
- * @version $Id: HQLNodeParser.java 2013-09-11 ÉÏÎç11:27:31 xinzhi $
  * */
 public class HQLNodeParser {
 

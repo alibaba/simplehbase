@@ -8,29 +8,30 @@ import com.alipay.simplehbase.util.Util;
 import com.sun.istack.internal.Nullable;
 
 /**
- * 一个hql的节点。
+ * One HQL Node.
  * 
  * @author xinzhi
- * @version $Id: HQLNode.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 abstract public class HQLNode {
-    /** BlankSpace。 */
+
+    /** BlankSpace. */
     protected static final String BlankSpace  = " ";
 
-    /** parent hql 节点。 */
+    /** parent hql node. */
     protected HQLNode             parent;
-    /** HQLNodeType。 */
+
+    /** HQLNodeType. */
     protected HQLNodeType         hqlNodeType;
 
-    /** 子节点列表。 */
+    /** Children nodes list. */
     protected List<HQLNode>       subNodeList = new ArrayList<HQLNode>();
 
     /**
-     * 应用参数map后，该节点的HQL字符串。
+     * After apply the parameter map, the hql string value of this HQL node.
      * 
-     * @param para 参数map。
-     * @param sb StringBuilder，结果收集器。
-     * @param context 应用参数解析HQL字符串时的上下文。
+     * @param para parameter map.
+     * @param sb result collector.
+     * @param context the context.
      * */
     public abstract void applyParaMap(@Nullable Map<String, Object> para,
             StringBuilder sb, Map<Object, Object> context);

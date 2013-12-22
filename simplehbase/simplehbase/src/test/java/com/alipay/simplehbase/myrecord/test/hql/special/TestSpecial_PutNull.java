@@ -17,7 +17,7 @@ import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
  */
 public class TestSpecial_PutNull extends MyRecordTestBase {
 
-    //hbase默认值为空字节数组。
+    //hbase default to empty bytes.
     @Test
     public void less() {
         putSlim("id=0,name=aaa");

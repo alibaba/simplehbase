@@ -7,6 +7,7 @@ import org.junit.Test;
 import com.alipay.simplehbase.myrecord.Gender;
 
 import junit.framework.Assert;
+
 /**
  * @author xinzhi
  */
@@ -83,7 +84,6 @@ public class TestConvert {
     @Test
     public void testString() {
         testConvert(String.class, "hello");
-        testConvert(String.class, "пеж╝");
     }
 
     @Test

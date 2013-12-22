@@ -14,14 +14,14 @@ public class BytesUtil {
     /** Empty bytes. */
     public static final byte[] EMPTY = {};
 
-    /** bytes [ZERO] */
+    /** Bytes [ZERO]. */
     public static final byte[] ZERO  = { (byte) 0 };
 
-    /** bytes [ONE] */
+    /** Bytes [ONE]. */
     public static final byte[] ONE   = { (byte) 1 };
 
     /**
-     * merge bytes arrays into one bytes array.
+     * Merge bytes arrays into one bytes array.
      */
     public static byte[] merge(@Nullable byte[]... bytesArray) {
         byte[] result = new byte[] {};

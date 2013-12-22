@@ -45,7 +45,6 @@ public class ConfigUtil {
 
     /**
      * Load config file.
-     * 
      * */
     public static Map<String, String> loadConfigFile(@Nullable String filePath)
             throws IOException {

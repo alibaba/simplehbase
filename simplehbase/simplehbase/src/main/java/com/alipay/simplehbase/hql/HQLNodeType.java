@@ -6,26 +6,25 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * HQL的node type。
+ * HQL node type.
  * 
  * @author xinzhi
- * @version $Id: HQLNodeType.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public enum HQLNodeType {
-    //Text
+    //text.
     CDATASection("#cdata-section"),
 
     Text("#text"),
 
     Comment("#comment"),
 
-    //顶级statement。
+    //top level statement.
     Statement("statement"),
 
-    //动态节点。
+    //dynamic node.
     Dynamic("dynamic"),
 
-    //二元条件节点。
+    //binary condition node.
     IsEqual("isEqual"),
 
     IsNotEqual("isNotEqual"),
@@ -38,7 +37,7 @@ public enum HQLNodeType {
 
     IsLessEqual("isLessEqual"),
 
-    //一元条件节点。
+    //unary condition node.
     IsNull("isNull"),
 
     IsNotNull("isNotNull"),
@@ -54,7 +53,7 @@ public enum HQLNodeType {
     ;
 
     /**
-     * xml中node的name。
+     * The name of xml's node.
      * */
     private String xmlNodeName;
 

@@ -9,10 +9,9 @@ import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * Ä¬ÈÏµÄTypeHandler¡£
+ * Default TypeHandler.
  * 
  * @author xinzhi
- * @version $Id: DefaultTypeHandlers.java 2013-09-11 ÉÏÎç11:27:31 xinzhi $
  * */
 public class DefaultTypeHandlers {
     private static EnumHandler                enumHandler     = new EnumHandler();

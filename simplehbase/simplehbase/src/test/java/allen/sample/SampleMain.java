@@ -22,15 +22,15 @@ public class SampleMain {
     private static SimpleHbaseClient getSimpleHbaseClient() {
         HBaseDataSource hbaseDataSource = new HBaseDataSource();
         List<String> hbaseConfigFilePaths = new ArrayList<String>();
-        //hbase配置文件。
+        //hbase config file.
         hbaseConfigFilePaths.add("sample\\hbase_site");
-        //zk配置文件。
+        //zk config file.
         hbaseConfigFilePaths.add("sample\\zk_conf");
         hbaseDataSource.setHbaseConfigFilePaths(hbaseConfigFilePaths);
         hbaseDataSource.init();
 
         HBaseTableConfig hbaseTableConfig = new HBaseTableConfig();
-        //simplehbase配置文件。
+        //simplehbase config file.
         hbaseTableConfig.setConfigFilePath("sample\\myRecord.xml");
         hbaseTableConfig.init();
 
@@ -45,7 +45,7 @@ public class SampleMain {
 
         SimpleHbaseClient simpleHbaseClient = getSimpleHbaseClient();
 
-        //插入一条记录。
+        //insert one record.
         Person one = new Person();
         one.setId(1);
         one.setName("allen");
@@ -53,7 +53,7 @@ public class SampleMain {
         one.setGender(Gender.MALE);
         simpleHbaseClient.putObject(new PersonRowKey(1), one);
 
-        //插入一条记录。
+        //insert another record.
         Person two = new Person();
         two.setId(2);
         two.setName("dan");
@@ -61,31 +61,31 @@ public class SampleMain {
         two.setGender(Gender.FEMALE);
         simpleHbaseClient.putObject(new PersonRowKey(2), two);
 
-        //按照主键查询。
+        //search by row key.
         Person result = simpleHbaseClient.findObject(new PersonRowKey(1),
                 Person.class);
         log.info(result);
 
-        //按照范围查询
+        //search by range.
         List<Person> resultList = simpleHbaseClient.findObjectList(
                 new PersonRowKey(1), new PersonRowKey(3), Person.class);
         log.info(resultList);
 
-        //动态语句查询
+        //dynamic query.
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("id", 0);
         resultList = simpleHbaseClient.findObjectList(new PersonRowKey(1),
                 new PersonRowKey(3), Person.class, "queryByNameAndAge", para);
         log.info(resultList);
 
-        //动态语句查询
+        //dynamic query.
         para.put("name", "allen");
         para.put("age", 0);
         resultList = simpleHbaseClient.findObjectList(new PersonRowKey(1),
                 new PersonRowKey(3), Person.class, "queryByNameAndAge", para);
         log.info(resultList);
 
-        //删除批量数据。
+        //batch delete.
         simpleHbaseClient.deleteObjectList(new PersonRowKey(0),
                 new PersonRowKey(100));
 

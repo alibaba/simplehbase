@@ -1,14 +1,13 @@
 package com.alipay.simplehbase.exception;
 
 /**
- * SimpleHbase的通用异常。
+ * SimpleHbase exception.
  * 
  * <pre>
- * 所有simplehbase框架的异常都应该继承此类。
+ * All the exception should extends this exception.
  * </pre>
  * 
  * @author xinzhi
- * @version $Id: SimpleHBaseException.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class SimpleHBaseException extends RuntimeException {
 

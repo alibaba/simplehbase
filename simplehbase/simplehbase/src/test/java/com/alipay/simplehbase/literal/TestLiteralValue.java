@@ -26,8 +26,6 @@ public class TestLiteralValue {
     public void testString() {
         Object object = LiteralValue.convertToObject(String.class, "abc");
         Assert.assertEquals("abc", object);
-        object = LiteralValue.convertToObject(String.class, "信之");
-        Assert.assertEquals("信之", object);
     }
 
     @Test

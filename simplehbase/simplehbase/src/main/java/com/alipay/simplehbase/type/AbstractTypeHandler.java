@@ -5,15 +5,14 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * TypeHandler的骨架实现。
+ * The abstract implementation of TypeHandler.
  * 
  * @author xinzhi
- * @version $Id: AbstractTypeHandler.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 abstract public class AbstractTypeHandler implements TypeHandler {
 
     /**
-     * 该Handler是否处理该java的class type。
+     * Should this handler to handle specified java type?
      * */
     abstract protected boolean aboutToHandle(Class<?> type);
 

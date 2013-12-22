@@ -13,7 +13,7 @@ abstract public class ConditionNode extends PrependNode {
     }
 
     /**
-     * 条件是否满足。
+     * isConditionSatisfied.
      * */
     abstract protected boolean isConditionSatisfied(Map<String, Object> para);
 
@@ -21,7 +21,8 @@ abstract public class ConditionNode extends PrependNode {
     final public void applyParaMap(Map<String, Object> para, StringBuilder sb,
             Map<Object, Object> context) {
         if (isConditionSatisfied(para)) {
-            //如果是dynamicNode的子节点，则第一次满足条件时，用dynamicNode的非空prepend覆盖当前的prepend。
+            //if this is dynamic node's child node, when the first time isConditionSatisfied to be true,
+            //use dynamic node's non-empty prepend value to override this node's prepend value.
             String prepend = getPrependValue();
 
             HQLNode parent = this.getParent();

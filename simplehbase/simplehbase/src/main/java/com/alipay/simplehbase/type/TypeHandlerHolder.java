@@ -8,23 +8,22 @@ import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * TypeHandler实例的Holder类。
+ * The holder of typeHandler's instance.
  * 
  * @author xinzhi
- * @version $Id: TypeHandlerHolder.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class TypeHandlerHolder {
 
     /**
-     * TypeHandler的Type -> TypeHandler的实例。
+     * TypeHandler'Type -> TypeHandler's instance cache.
      * */
     private static ConcurrentMap<String, TypeHandler> typeHandlerCache = new ConcurrentHashMap<String, TypeHandler>();
 
     /**
-     * 由TypeHandler的Type得到TypeHandler的实例。
+     * Find TypeHandler instance using type's class name.
      * 
-     * @param type TypeHandler的Type。
-     * @return TypeHandler的实例。
+     * @param type TypeHandler's class name.
+     * @return TypeHandler instance.
      * */
     public static TypeHandler findTypeHandler(String type) {
         Util.checkEmptyString(type);

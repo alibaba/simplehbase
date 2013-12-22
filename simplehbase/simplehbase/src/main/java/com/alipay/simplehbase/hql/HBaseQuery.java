@@ -3,10 +3,9 @@ package com.alipay.simplehbase.hql;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * HBaseQuery¡£
+ * HBaseQuery.
  * 
  * @author xinzhi
- * @version $Id: HBaseQuery.java 2013-09-11 ÉÏÎç11:27:31 xinzhi $
  * */
 public class HBaseQuery {
 

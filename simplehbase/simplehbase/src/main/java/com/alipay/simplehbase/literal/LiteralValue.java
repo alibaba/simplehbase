@@ -10,10 +10,9 @@ import com.alipay.simplehbase.util.DateUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * 字面常量解释器。
+ * Literal value interpreter.
  * 
  * @author xinzhi
- * @version $Id: LiteralValue.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class LiteralValue {
 
@@ -28,7 +27,7 @@ public class LiteralValue {
     }
 
     /**
-     * 转换字面常量字符串为指定类型的对象。
+     * Convert literal value to specified java object with type.
      * */
     public static Object convertToObject(Class type, String literalValue) {
         Util.checkNull(type);
