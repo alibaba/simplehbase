@@ -74,7 +74,6 @@ public class SampleMain {
         //¶¯Ì¬Óï¾ä²éÑ¯
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("id", 0);
-
         resultList = simpleHbaseClient.findObjectList(new PersonRowKey(1),
                 new PersonRowKey(3), Person.class, "queryByNameAndAge", para);
         log.info(resultList);
