@@ -20,17 +20,17 @@ public class TestCount extends MyRecordTestBase {
         putSlim("id=1,name=bbb,age=11");
         putSlim("id=2,name=ccc,age=12");
 
-        String hql = "count name greater \"aaa\" and age less \"12\"";
+        String hql = "count where name greater \"aaa\" and age less \"12\"";
         long result = simpleHbaseClient.countByRawHql(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), hql, null);
         Assert.assertTrue(result == 1);
 
-        hql = "count name greater \"bbb\" and age less \"12\"";
+        hql = "count where name greater \"bbb\" and age less \"12\"";
         result = simpleHbaseClient.countByRawHql(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), hql, null);
         Assert.assertTrue(result == 0);
 
-        hql = "count name greater \"ccc\" and age less \"12\"";
+        hql = "count where name greater \"ccc\" and age less \"12\"";
         result = simpleHbaseClient.countByRawHql(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), hql, null);
         Assert.assertTrue(result == 0);
