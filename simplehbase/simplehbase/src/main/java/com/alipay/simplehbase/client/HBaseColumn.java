@@ -6,31 +6,30 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * simpleHbase的POJO-Hbase映射配置类。
+ * simpleHbase's POJO-Hbase column mapping.
  * 
  * <pre>
- * 作用于POJO的field。
- * HBaseColumn配置的family会自动覆盖通过HBaseTable配置的family。
+ * Applied on POJO's field.
+ * The family of HBaseColumn will override HBaseTable's family.
  * </pre>
  * 
  * @author xinzhi
- * @version $Id: HBaseColumn.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HBaseColumn {
 
     /**
-     * family name。
+     * family name.
      * 
-     * @return family。
+     * @return family.
      */
     public String family() default "";
 
     /**
-     * qualifier name。
+     * qualifier name.
      * 
-     * @return qualifier。
+     * @return qualifier.
      */
     public String qualifier();
 }

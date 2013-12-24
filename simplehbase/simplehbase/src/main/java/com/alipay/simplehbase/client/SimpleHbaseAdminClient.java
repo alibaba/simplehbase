@@ -5,11 +5,9 @@ import org.apache.hadoop.hbase.HTableDescriptor;
 import com.alipay.simplehbase.config.HBaseDataSource;
 
 /**
- * SimpleHbaseAdminClient。
- * 
+ * SimpleHbaseAdminClient.
  * 
  * @author xinzhi
- * @version $Id: SimpleHbaseAdminClient.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public interface SimpleHbaseAdminClient {
 
@@ -24,16 +22,16 @@ public interface SimpleHbaseAdminClient {
     public void deleteTable(final String tableName);
 
     /**
-     * 得到HBaseDataSource。
+     * Get HaseDataSource.
      * 
-     * @return HBaseDataSource。
+     * @return HBaseDataSource.
      * */
     public HBaseDataSource getHBaseDataSource();
 
     /**
-     * 设置HBaseDataSource。
+     * Set HBaseDataSource.
      * 
-     * @param hbaseDataSource HBaseDataSource。
+     * @param hbaseDataSource HBaseDataSource.
      * */
     public void setHBaseDataSource(HBaseDataSource hbaseDataSource);
 }

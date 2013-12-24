@@ -10,18 +10,17 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * POJO和Hbase的映射信息。
+ * POJO and Hbase mapping info.
  * 
  * @author xinzhi
- * @version $Id: TypeInfo.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class TypeInfo {
 
     /**
-     * 根据POJO的type解析TypeInfo。
+     * Parse TypeInfo by POJO's type.
      * 
-     * @param type POJO的type。
-     * @return 解析出的TypeInfo。
+     * @param type POJO's type.
+     * @return TypeInfo.
      * */
     public static TypeInfo parse(Class<?> type) {
         Util.checkNull(type);
@@ -63,19 +62,17 @@ public class TypeInfo {
         return typeInfo;
     }
 
-    /** POJO的type。 */
+    /** POJO's type. */
     private Class<?>         type;
-    /** 该POJO的ColumnInfo列表。 */
+    /** POJO's ColumnInfo list. */
     private List<ColumnInfo> columnInfos = new ArrayList<ColumnInfo>();
-    /** 该POJO的版本号field对应的ColumnInfo,可以为null。 */
+    /** Versioned ColumnInfo, can be null. */
     private ColumnInfo       versionedColumnInfo;
-    /** 该Type使用的所有family名称。 */
+    /** All the family name of this type info. */
     private Set<String>      families    = new HashSet<String>();
 
     /**
-     * 是否是带版本号的typeInfo。
-     * 
-     * @return 是否是带版本号的typeInfo。
+     * Is Versioned TypeInfo.
      * */
     public boolean isVersionedType() {
         return versionedColumnInfo != null;

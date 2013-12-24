@@ -2,7 +2,6 @@ package com.alipay.simplehbase.client;
 
 import java.util.Set;
 
-import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
@@ -19,17 +18,16 @@ import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.ConfigUtil;
 
 /**
- * SimpleHbaseClient的骨架实现。
+ * SimpleHbaseClient's skeleton implementation.
  * 
  * @author xinzhi
- * @version $Id: SimpleHbaseClientBase.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     protected HBaseTableConfig hbaseTableConfig;
     protected HBaseDataSource  dataSource;
 
     /**
-     * 获取一个HTableInterface的引用。
+     * Get HTableInterface.
      * */
     protected HTableInterface htableInterface() {
         return dataSource.getHTable(hbaseTableConfig.getHbaseTableSchema()
@@ -37,7 +35,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * 获取一个AggregationClient。
+     * Get AggregationClient.
      * */
     protected AggregationClient aggregationClient() {
         AggregationClient aggregationClient = new AggregationClient(
@@ -46,14 +44,14 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * 获取tablename bytes.
+     * Get table name bytes.
      **/
     protected byte[] tableNameBytes() {
         return hbaseTableConfig.getHbaseTableSchema().getTableNameBytes();
     }
 
     /**
-     * 根据family和qualifier查找HBaseColumnSchema。
+     * Find HBaseColumnSchema by family and qualifier.
      * */
     protected HBaseColumnSchema columnSchema(String family, String qualifier) {
         return hbaseTableConfig.getHbaseTableSchema().findColumnSchema(family,
@@ -61,7 +59,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * 根据qualifier查找HBaseColumnSchema。
+     * Find HBaseColumnSchema by qualifier.
      * */
     protected HBaseColumnSchema columnSchema(String qualifier) {
         return hbaseTableConfig.getHbaseTableSchema().findColumnSchema(
@@ -69,14 +67,14 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * 查找一个HBaseColumnSchema。
-     * */
+     * Find HBaseColumnSchema by qualifier.
+     */
     protected HBaseColumnSchema columnSchema() {
         return hbaseTableConfig.getHbaseTableSchema().findOneColumnSchema();
     }
 
     /**
-     * Scan的caching大小。
+     * Get scan's caching size.
      * */
     protected int getScanCaching() {
         return ConfigUtil.parsePositiveInt(hbaseTableConfig.getConfigMap(),
@@ -85,7 +83,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * 批量删除时批量大小。
+     * Get batch size when do delete.
      * */
     protected int getDeleteBatch() {
         return ConfigUtil.parsePositiveInt(hbaseTableConfig.getConfigMap(),
@@ -93,18 +91,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * 给get请求apply要请求的family(防止多family的table，返回不需要的数据)。
-     * */
-    protected <T> void applyRequestFamily(Class<? extends T> type, Get get) {
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
-        Set<String> families = typeInfo.getFamilies();
-        for (String s : families) {
-            get.addFamily(Bytes.toBytes(s));
-        }
-    }
-
-    /**
-     * 给scan请求apply要请求的family(防止多family的table，返回不需要的数据)。
+     * Apply family to scan request, to prevent return more family result than
+     * we need.
      * */
     protected <T> void applyRequestFamily(Class<? extends T> type, Scan scan) {
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
@@ -115,12 +103,12 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * 转换hbase结果为POJO。
+     * Convert hbase result to POJO.
      * 
-     * @param result result。
-     * @param type POJO type。
+     * @param result result.
+     * @param type POJO type.
      * 
-     * @return POJO。
+     * @return POJO.
      * */
     protected <T> T convert(Result result, Class<? extends T> type) {
 
@@ -164,7 +152,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * 转换t的field为bytes。
+     * Convert t's field to bytes.
      * */
     protected <T> byte[] convertPOJOFieldToBytes(T t, ColumnInfo columnInfo) {
         try {
@@ -176,7 +164,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * 转换value为bytes。
+     * Convert value to bytes.
      * */
     protected byte[] convertValueToBytes(Object value, ColumnInfo columnInfo) {
         try {

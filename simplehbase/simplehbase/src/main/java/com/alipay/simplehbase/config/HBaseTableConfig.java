@@ -12,18 +12,16 @@ import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * HbaseTable的配置信息。
+ * HbaseTable's config info.
  * 
  * <pre>
- * 包含如下3类信息。
- * 1 hbaseTableSchema Table的schema。
- * 2 configMap 运行时的config。
- * 3 queryMap 查询语句集合。
+ * Including following info.
+ * 1 hbaseTableSchema Table's schema.
+ * 2 configMap runtime config.
+ * 3 queryMap HQL collection.
  * </pre>
  * 
  * @author xinzhi
- * @version $Id: HBaseTableConfig.java 2013-09-11 上午11:27:31 xinzhi $
- * 
  * */
 public class HBaseTableConfig {
     /** log. */
@@ -31,7 +29,7 @@ public class HBaseTableConfig {
 
     //------------bean config-------------------
     /**
-     * 配置文件。
+     * Config file.
      * */
     @ConfigAttr
     private String                  configFilePath;

@@ -8,19 +8,18 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.StringUtil;
 
 /**
- * POJO的field和Hbase的列映射信息。
+ * POJO's field and Hbase's column mappping.
  * 
  * @author xinzhi
- * @version $Id: ColumnInfo.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class ColumnInfo {
 
     /**
-     * 从POJO的field解析出ColumnInfo。
+     * Parse ColumnInfo from POJO's field.
      * 
-     * @param type POJO的class type。
-     * @param field POJO的field。
-     * @return 解析出的ColumnInfo。
+     * @param type POJO's class type.
+     * @param field POJO' field.
+     * @return ColumnInfo.
      * */
     public static ColumnInfo parse(Class<?> type, Field field) {
         String defaultFamily = null;
@@ -63,17 +62,17 @@ public class ColumnInfo {
         return columnInfo;
     }
 
-    /** POJO的class type。 */
+    /** POJO's class type. */
     Class<?> type;
-    /** POJO的field。 */
+    /** POJO's field. */
     Field    field;
-    /** hbase的family。 */
+    /** hbase's family. */
     String   family;
-    /** hbase的family。 */
+    /** hbase's family bytes. */
     byte[]   familyBytes;
-    /** hbase的qualifier。 */
+    /** hbase's qualifier. */
     String   qualifier;
-    /** hbase的qualifier。 */
+    /** hbase's qualifier bytes. */
     byte[]   qualifierBytes;
 
     private ColumnInfo() {

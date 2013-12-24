@@ -11,15 +11,13 @@ import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * HbaseTable的schema。
+ * HbaseTable's schema.
  * 
  * <pre>
- * 包含所有hbaseTable的元信息。
+ * Including meta data of hbasetable.
  * </pre>
  * 
  * @author xinzhi
- * @version $Id: HBaseTableSchema.java 2013-09-11 上午11:27:31 xinzhi $
- * 
  * */
 public class HBaseTableSchema {
 
@@ -30,7 +28,7 @@ public class HBaseTableSchema {
     @ConfigAttr
     private String                                      tableName;
     /**
-     * 默认的Family。
+     * default family.
      * */
     @ConfigAttr
     private String                                      defaultFamily;
@@ -42,17 +40,17 @@ public class HBaseTableSchema {
     private byte[]                                      tableNameBytes;
 
     /**
-     * 默认的Family。
+     * default family bytes.
      * */
     private byte[]                                      defaultFamilyBytes;
 
     /**
-     * Qualifier->Family-> HBaseColumnSchema。
+     * Qualifier->Family-> HBaseColumnSchema.
      * */
     private Map<String, Map<String, HBaseColumnSchema>> columnSchemas = new TreeMap<String, Map<String, HBaseColumnSchema>>();
 
     /**
-     * 初始化。
+     * init.
      * */
     public void init(List<HBaseColumnSchema> hbaseColumnSchemas) {
 
@@ -87,7 +85,7 @@ public class HBaseTableSchema {
     }
 
     /**
-     * 根据family和qualifier查找HBaseColumnSchema。
+     * Find HBaseColumnSchema by family and qualifier.
      * */
     public HBaseColumnSchema findColumnSchema(String family, String qualifier) {
         Util.checkEmptyString(family);
@@ -97,10 +95,10 @@ public class HBaseTableSchema {
     }
 
     /**
-     * 根据qualifier查找HBaseColumnSchema。
+     * Find HBaseColumnSchema by qualifier.
      * 
      * <pre>
-     * 该HBaseTableSchema不存在多个family有相同的qualifier。
+     * The HBaseTableSchema doesn't have more than one family with same qualifier.
      * </pre>
      * */
     public HBaseColumnSchema findColumnSchema(String qualifier) {
@@ -118,8 +116,7 @@ public class HBaseTableSchema {
     }
 
     /**
-     * 查找一个HBaseColumnSchema。
-     * 
+     * Find HBaseColumnSchema by random.
      * */
     public HBaseColumnSchema findOneColumnSchema() {
         for (Map<String, HBaseColumnSchema> t : columnSchemas.values()) {

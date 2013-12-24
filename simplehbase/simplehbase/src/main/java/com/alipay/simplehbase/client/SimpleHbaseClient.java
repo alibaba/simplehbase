@@ -8,266 +8,245 @@ import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.sun.istack.internal.Nullable;
 
 /**
- * SimpleHbaseClient。
+ * SimpleHbaseClient.
  * 
  * <pre>
- * 使用simpleHbase的client。
+ * A client interface which can operate on hbase.
  * </pre>
  * 
  * @author xinzhi
- * @version $Id: SimpleHbaseClient.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public interface SimpleHbaseClient {
 
     /**
-     * 查找rowKey指定的对象。
+     * Find object with row key.
      * 
-     * @param rowKey rowKey。
-     * @param type POJO type。
-     * @return POJO。
+     * @param rowKey rowKey.
+     * @param type POJO type.
+     * @return POJO.
      * */
     public <T> T findObject(RowKey rowKey, Class<? extends T> type);
 
     /**
-     * 查找rowKey指定的对象。
+     * Find object with row key.
      * 
-     * @param rowKey rowKey。
-     * @param type POJO type。
-     * @param id 动态语句id。
-     * @param para 参数。
+     * @param rowKey rowKey.
+     * @param type POJO type.
+     * @param id dynamic query id.
+     * @param para parameter map.
      * 
-     * @return POJO。
+     * @return POJO.
      * */
     public <T> T findObject(RowKey rowKey, Class<? extends T> type, String id,
             @Nullable Map<String, Object> para);
 
     /**
-     * 查找rowKey指定的对象。
+     * Find object with row key.
      * 
-     * @param rowKey rowKey。
-     * @param type POJO type。
-     * @param hql 原生hql。
-     * @param para 参数。
+     * @param rowKey rowKey.
+     * @param type POJO type.
+     * @param hql raw hql.
+     * @param para parameter map.
      * 
-     * @return POJO。
+     * @return POJO.
      * */
     public <T> T findObjectByRawHql(RowKey rowKey, Class<? extends T> type,
             String hql, @Nullable Map<String, Object> para);
 
     /**
-     * 查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * Find POJO list with range in [startRowKey,endRowKey).
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
-     * @param type POJO type。
-     * @return POJO对象列表。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
+     * @param type POJO type.
+     * @return POJO list.
      * */
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type);
 
     /**
-     * 查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * Find POJO list with range in [startRowKey,endRowKey).
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
-     * @param type POJO type。
-     * @param startIndex 结果开始索引，0-based。
-     * @param length 结果列表size限制。
-     * @return POJO对象列表。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
+     * @param type POJO type.
+     * @param startIndex result start index, 0-based.
+     * @param length result size.
+     * @return POJO list.
      * */
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, long startIndex, long length);
 
     /**
-     * 动态条件id查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * Dynamic query POJO list with range in [startRowKey,endRowKey).
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
-     * @param type POJO type。
-     * @param id 动态语句id。
-     * @param para 参数。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
+     * @param type POJO type.
+     * @param id dynamic query id.
+     * @param para parameter map.
      * 
-     * @return POJO对象列表。
+     * @return POJO list.
      * */
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, String id,
             @Nullable Map<String, Object> para);
 
     /**
-     * 动态条件id查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * Dynamic query POJO list with range in [startRowKey,endRowKey).
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
-     * @param type POJO type。
-     * @param startIndex 结果开始索引，0-based。
-     * @param length 结果列表size限制。
-     * @param id 动态语句id。
-     * @param para 参数。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
+     * @param type POJO type.
+     * @param startIndex result start index, 0-based.
+     * @param length result size.
+     * @param id dynamic query id.
+     * @param para parameter map.
      * 
-     * @return POJO对象列表。
+     * @return POJO list.
      * */
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, long startIndex, long length, String id,
             @Nullable Map<String, Object> para);
 
     /**
-     * 动态条件hql查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * Raw query POJO list with range in [startRowKey,endRowKey).
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
-     * @param type POJO type。
-     * @param hql 原生hql。
-     * @param para 参数。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
+     * @param type POJO type.
+     * @param hql raw hql.
+     * @param para parameter map.
      * 
-     * @return POJO对象列表。
+     * @return POJO list.
      * */
     public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
             RowKey endRowKey, Class<? extends T> type, String hql,
             @Nullable Map<String, Object> para);
 
     /**
-     * 动态条件hql查询，查找[startRowKey,endRowKey)范围的POJO对象列表。
+     * Raw query POJO list with range in [startRowKey,endRowKey).
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
-     * @param type POJO type。
-     * @param startIndex 结果开始索引，0-based。
-     * @param length 结果列表size限制。
-     * @param hql 原生hql。
-     * @param para 参数。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
+     * @param type POJO type.
+     * @param startIndex result start index, 0-based.
+     * @param length result size.
+     * @param hql raw hql.
+     * @param para parameter map.
      * 
-     * @return POJO对象列表。
+     * @return POJO list.
      * */
     public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
             RowKey endRowKey, Class<? extends T> type, long startIndex,
             long length, String hql, @Nullable Map<String, Object> para);
 
     /**
-     * 统计，统计[startRowKey,endRowKey)范围的记录条数。
+     * Count POJO with range in [startRowKey,endRowKey).
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
      * 
-     * @return 记录条数。
+     * @return count result.
      * */
     public long count(RowKey startRowKey, RowKey endRowKey);
 
     /**
-     * 动态条件hql统计，统计[startRowKey,endRowKey)范围的记录条数。
+     * Dynamic query count POJO with range in [startRowKey,endRowKey).
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
-     * @param id 动态语句id。
-     * @param para 参数。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
+     * @param id dynamic query id.
+     * @param para parameter map.
      * 
-     * @return 记录条数。
+     * @return count result.
      * */
     public long count(RowKey startRowKey, RowKey endRowKey, String id,
             @Nullable Map<String, Object> para);
 
     /**
-     * 动态条件hql统计，统计[startRowKey,endRowKey)范围的记录条数。
+     * Raw query count POJO with range in [startRowKey,endRowKey).
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
-     * @param hql 原生hql。
-     * @param para 参数。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
+     * @param hql raw hql.
+     * @param para parameter map.
      * 
-     * @return 记录条数。
+     * @return count result.
      * */
     public long countByRawHql(RowKey startRowKey, RowKey endRowKey, String hql,
             @Nullable Map<String, Object> para);
 
     /**
-     * Put POJO。
+     * Put POJO.
      * 
-     * @param rowKey rowKey。
-     * @param t POJO。
+     * @param rowKey rowKey.
+     * @param t POJO.
      * */
     public <T> void putObject(RowKey rowKey, T t);
 
     /**
-     * Delete POJO。
+     * Delete POJO.
      * 
-     * @param rowKey rowKey。
+     * @param rowKey rowKey.
      * */
     public void deleteObject(RowKey rowKey);
 
     /**
-     * Delete POJOList。
+     * Delete POJOList.
      * 
-     * @param startRowKey startRowKey。
-     * @param endRowKey endRowKey。
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
      * 
      * */
     public void deleteObjectList(RowKey startRowKey, RowKey endRowKey);
 
-    //-----------------------以下方法只适用于带版本号的POJO。-----------------------
+    //-----------------------Only would be applied on versioned POJO.-----------------------
     /**
-     * 插入POJO。
+     * Insert POJO.
      * 
      * <pre>
-     * rowKey对应的POJO版本为null时(数据不存在)插入成功。
+     * If POJO's version object is null(data doesn't exist), the insert operation would success.
      * </pre>
      * 
-     * @param rowKey rowKey。
+     * @param rowKey rowKey.
      * @param t POJO
-     * @return 是否插入成功。
+     * @return whether insert success.
      * */
     public <T> boolean insertObject(RowKey rowKey, T t);
 
     /**
-     * 更新POJO。
+     * Update POJO.
      * 
      * <pre>
-     * oldT中的版本号为老版本号。
-     * newT中的版本号为新版本号。
+     * oldT's version object is old version.
+     * newT's version object is new version.
      * </pre>
      * 
-     * @param rowKey rowKey。
-     * @param oldT oldT。
-     * @param newT newT。
-     * @return 是否更新成功。
+     * @param rowKey rowKey.
+     * @param oldT oldT.
+     * @param newT newT.
+     * @return whether update success.
      * */
     public <T> boolean updateObject(RowKey rowKey, T oldT, T newT);
 
     /**
-     * 更新POJO。
+     * Update POJO.
      * 
-     * @param rowKey rowKey。
-     * @param t POJO。
-     * @param oldVersion 老版本。
-     * @return 是否更新成功。
+     * @param rowKey rowKey.
+     * @param t POJO.
+     * @param oldVersion old version object.
+     * @return whether update success.
      * */
     public <T> boolean updateObjectWithVersion(RowKey rowKey, T t,
             Object oldVersion);
 
-    /**
-     * 得到HBaseDataSource。
-     * 
-     * @return HBaseDataSource。
-     * */
     public HBaseDataSource getHBaseDataSource();
 
-    /**
-     * 设置HBaseDataSource。
-     * 
-     * @param hbaseDataSource HBaseDataSource。
-     * */
     public void setHBaseDataSource(HBaseDataSource hbaseDataSource);
 
-    /**
-     * 得到HBaseTableConfig。
-     * 
-     * @return HBaseTableConfig。
-     * */
     public HBaseTableConfig getHbaseTableConfig();
 
-    /**
-     * 设置HBaseTableConfig。
-     * 
-     * @param hbaseTableConfig HBaseTableConfig。
-     * */
     public void setHbaseTableConfig(HBaseTableConfig hbaseTableConfig);
 
 }

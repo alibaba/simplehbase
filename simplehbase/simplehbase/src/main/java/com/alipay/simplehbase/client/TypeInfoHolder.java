@@ -7,10 +7,9 @@ import org.apache.log4j.Logger;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * TypeInfo的Holder类。
+ * TypeInfoHolder.
  * 
  * @author xinzhi
- * @version $Id: TypeInfoHolder.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class TypeInfoHolder {
 
@@ -21,10 +20,10 @@ public class TypeInfoHolder {
     private static ConcurrentHashMap<Class<?>, TypeInfo> typeInfos = new ConcurrentHashMap<Class<?>, TypeInfo>();
 
     /**
-     * 从type得到TypeInfo。
+     * Find type info by type.
      * 
-     * @param type POJO的type。
-     * @return TypeInfo。
+     * @param type POJO's type.
+     * @return TypeInfo.
      */
     public static TypeInfo findTypeInfo(Class<?> type) {
         Util.checkNull(type);

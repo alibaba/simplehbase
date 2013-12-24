@@ -11,25 +11,24 @@ import org.apache.log4j.Logger;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 
 /**
- * SimpleHbaseClient的工厂类。
+ * SimpleHbaseClient's factory.
  * 
  * <pre>
- * 通过该工厂类的工厂方法，可以给原有的client增加以下功能。
- * simpleHbase的普通日志。
- * simpleHbase的性能日志。
- * simpleHbase的异常转换。
+ * Using method of this class, we can add following function to SimpleHbaseClient.
+ * simpleHbase's log.
+ * simpleHbase's preformance log.
+ * simpleHbase's exception transform.
  * </pre>
  * 
  * @author xinzhi
- * @version $Id: SimpleHbaseClientFactory.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class SimpleHbaseClientFactory {
 
     /**
-     * 封装SimpleHbaseClient。
+     * Encapsulate SimpleHbaseClient.
      * 
-     * @param simpleHbaseClient simpleHbaseClient。
-     * @return 封装后的SimpleHbaseClient。
+     * @param simpleHbaseClient simpleHbaseClient.
+     * @return encapsulated SimpleHbaseClient.
      * */
     public static SimpleHbaseClient getSimpleHbaseClient(
             SimpleHbaseClient simpleHbaseClient) {
@@ -41,20 +40,19 @@ public class SimpleHbaseClientFactory {
     }
 
     private static class ClientInvocationHandler implements InvocationHandler {
-
-        /** log。 */
+        /** log. */
         private static Logger     log       = Logger.getLogger(ClientInvocationHandler.class);
 
-        /** 性能日志。 */
+        /** performance digest log. */
         private static Logger     digestLog = Logger.getLogger("simplehbase.digest");
 
         /**
-         * SimpleHbaseClient。
+         * SimpleHbaseClient.
          * */
         private SimpleHbaseClient simpleHbaseClient;
 
         /**
-         * ClientInvocationHandler。
+         * ClientInvocationHandler.
          * */
         public ClientInvocationHandler(SimpleHbaseClient simpleHbaseClient) {
             this.simpleHbaseClient = simpleHbaseClient;
@@ -95,13 +93,13 @@ public class SimpleHbaseClientFactory {
         }
 
         /**
-         * 构建日志字符串。
+         * Construct log string.
          * 
-         * @param method method。
-         * @param args args。
-         * @param result result。
-         * @param ex 异常。
-         * @return 日志字符串。
+         * @param method method.
+         * @param args args.
+         * @param result result.
+         * @param ex exception.
+         * @return log string.
          * */
         private String buildLogInfo(Method method, Object[] args,
                 Object result, Exception ex) {

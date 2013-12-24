@@ -21,10 +21,9 @@ import com.alipay.simplehbase.util.Util;
 import com.alipay.simplehbase.util.XmlUtil;
 
 /**
- * HBaseTableConfig的配置解析器。
+ * HBaseTableConfig parser.
  * 
  * @author xinzhi
- * @version $Id: HBaseTableConfigParser.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class HBaseTableConfigParser {
 
@@ -32,10 +31,10 @@ public class HBaseTableConfigParser {
     private static Logger log = Logger.getLogger(HBaseTableConfigParser.class);
 
     /**
-     * 解析HBaseTableSchema。
+     * Parse HBaseTableSchema.
      * 
      * <pre>
-     * 该步只解析config，不解析runtime。
+     * Only parse static config data, not runtime config data.
      * </pre>
      * */
     public static void parseTableSchema(String filePath,
@@ -74,7 +73,7 @@ public class HBaseTableConfigParser {
     }
 
     /**
-     * 解析configMap。
+     * Parse config map.
      * */
     public static void parseConfigMap(String filePath,
             Map<String, String> configMap) {
@@ -104,7 +103,7 @@ public class HBaseTableConfigParser {
     }
 
     /**
-     * 解析HBaseQuery。
+     * Parse HBaseQuery.
      * */
     public static List<HBaseQuery> parseHBaseQuery(String filePath) {
         Util.checkEmptyString(filePath);
@@ -137,7 +136,7 @@ public class HBaseTableConfigParser {
     }
 
     /**
-     * 查找顶级的Node。
+     * Find top level node.
      * */
     private static Node findTopLevelNode(String filePath, String nodeName) {
         Util.checkEmptyString(filePath);

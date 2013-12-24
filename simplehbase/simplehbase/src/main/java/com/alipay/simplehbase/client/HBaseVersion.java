@@ -6,20 +6,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * simpleHbase的POJO-Hbase映射配置类。
+ * simpleHbase's POJO-Hbase mapping.
  * 
  * <pre>
- * 作用于POJO的field。
- * 用于标示该field为POJO的版本号对象。
- * 标示为HBaseVersion的field必须同时标示为HBaseColumn，否则无效。
- * 1个POJO只能有至多1个field使用该标示。
+ * Applied on POJO's field.
+ * Flag to indicate this field is POJO's version object.
+ * The field flagged with HBaseVersion should be flagged with HBaseColumn.
+ * One POJO would have 0 or 1 HBaseVersion flagged field.
  * </pre>
  * 
  * @author xinzhi
- * @version $Id: HBaseVersion.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HBaseVersion {
-
 }

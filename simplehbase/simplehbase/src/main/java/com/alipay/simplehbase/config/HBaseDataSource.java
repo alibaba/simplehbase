@@ -17,28 +17,9 @@ import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * HbaseDataSource表示一个hbase数据源。
- * 
- * <pre>
- * 1 配置相关信息：hbase主要有2类配置项：
- * 
- * hbase原生配置项：可以通过配置文件路径hbaseConfigFilePaths或者本对象的属性hbaseConfig来配置。
- * 当key相同时，hbaseConfig的优先级高于hbaseConfigFilePaths。
- * 
- * simpleHbase私有配置项：可以通过配置文件路径dataSourceConfigFilePath或者本对象的属性dataSourceConfig来配置。
- * 当key相同时，dataSourceConfig的优先级高于dataSourceConfigFilePath。
- * 
- * 配置文件的格式：每一行为key=value。
- * 
- * 
- * 2 使用方式：
- * 目前使用HbaseDataSource主要有2种方式:
- *   1 使用spring配置。配置时，应该使用init方法初始化HBaseDataSource。
- *   2 应用设置HBaseDataSource的属性，调用init方法进行初始化。
- * </pre>
+ * HbaseDataSource represent one hbase data source.
  * 
  * @author xinzhi
- * @version $Id: HBaseDataSource.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class HBaseDataSource {
 
@@ -46,43 +27,43 @@ public class HBaseDataSource {
     private static Logger       log                   = Logger.getLogger(HBaseDataSource.class);
     //----------config--------------
     /**
-     * dataSource唯一id。
+     * dataSource id.
      * */
     @ConfigAttr
     private String              id;
     /**
-     * hbase原生配置文件路径。如hbase,zk配置文件。
+     * hbase's config file path, such as hbase zk config file.
      * */
     @ConfigAttr
     private List<String>        hbaseConfigFilePaths;
     /**
-     * hbase原生配置项。
+     * hbase's original config map.
      * */
     @ConfigAttr
     private Map<String, String> hbaseConfig;
     /**
-     * simplehbase的datasource配置文件路径。
+     * simplehbase's private config file path.
      * */
     @ConfigAttr
     private String              dataSourceConfigFilePath;
     /**
-     * simplehbase的datasource配置项。
+     * simplehbase's private config map.
      * */
     @ConfigAttr
     private Map<String, String> dataSourceConfig;
 
     //---------------------------runtime-------------------------
     /**
-     * 最终hbase的配置项。
+     * final hbase's config item.
      * */
     private Map<String, String> finalHbaseConfig      = new HashMap<String, String>();
     /**
-     * 最终simplehbase的配置项。
+     * final simplehbase's config item.
      * */
     private Map<String, String> finalDataSourceConfig = new HashMap<String, String>();
 
     /**
-     * hbase配置。
+     * hbase Configuration.
      * */
     private Configuration       hbaseConfiguration;
 
@@ -92,7 +73,7 @@ public class HBaseDataSource {
     private HTablePool          htablePool;
 
     /**
-     * 初始化dataSource。
+     * init dataSource.
      * */
     public void init() {
         try {
@@ -106,10 +87,10 @@ public class HBaseDataSource {
     }
 
     /**
-     * 得到指定表名的HTableInterface。
+     * Get HTableInterface by table Name.
      * 
-     * @param tableName 表名。
-     * @return HTableInterface。
+     * @param tableName tableName.
+     * @return HTableInterface.
      * */
     public HTableInterface getHTable(String tableName) {
         Util.checkEmptyString(tableName);
@@ -117,7 +98,7 @@ public class HBaseDataSource {
     }
 
     /**
-     * 得到一个HBaseAdmin。
+     * Get one HBaseAdmin.
      * */
     public HBaseAdmin getHBaseAdmin() {
         try {
@@ -129,7 +110,7 @@ public class HBaseDataSource {
     }
 
     /**
-     * 解析配置项。
+     * Parse config.
      * */
     private void parseConfig() {
         try {

@@ -26,10 +26,9 @@ import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * SimpleHbaseClient的实现。
+ * SimpleHbaseClient default implementation.
  * 
  * @author xinzhi
- * @version $Id: SimpleHbaseClientImpl.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
@@ -218,7 +217,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                 Util.close(htableInterface);
             }
 
-            //成功的删除操作会清空deletes列表中的元素。
+            //successful delete will clear the items of deletes list.
             if (deletes.size() > 0) {
                 throw new SimpleHBaseException(
                         "deleteObjectList fail. deletes=" + deletes);
@@ -324,7 +323,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             Object oldVersion) {
         Util.checkRowKey(rowKey);
         Util.checkNull(t);
-        //not check oldVersion,oldVersion can be null。
+        //not check oldVersion,oldVersion can be null.
 
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(t.getClass());
         checkVersioned(typeInfo);

@@ -12,47 +12,44 @@ import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * HbaseTable的列的schema。
+ * HbaseTable's column's schema.
  * 
  * <pre>
- * 包含所有hbaseTable的列元信息。
+ * Including all meta data of hbaseTable column.
  * </pre>
  * 
  * @author xinzhi
- * @version $Id: HBaseColumnSchema.java 2013-09-11 上午11:27:31 xinzhi $
- * 
  * */
 public class HBaseColumnSchema {
-
     /** log. */
     private static Logger log = Logger.getLogger(HBaseColumnSchema.class);
 
     // ----------config------
-    /** hbase的family。 */
+    /** hbase's family. */
     @ConfigAttr
     private String        family;
-    /** hbase的qualifier。 */
+    /** hbase's qualifier. */
     @ConfigAttr
     private String        qualifier;
-    /** 对应的javaType。 */
+    /** javaType. */
     @ConfigAttr
     private String        typeName;
-    /** typeHandler的type。 */
+    /** typeHandler's type. */
     @ConfigAttr
     private String        typeHandlerName;
 
     // -----------runtime------
-    /** hbase的family。 */
+    /** hbase's family. */
     private byte[]        familyBytes;
-    /** hbase的qualifier。 */
+    /** hbase's qualifier. */
     private byte[]        qualifierBytes;
-    /** 对应的javaType。 */
+    /** javaType. */
     private Class<?>      type;
-    /** TypeHandler。 */
+    /** TypeHandler. */
     private TypeHandler   typeHandler;
 
     /**
-     * 初始化。
+     * Init.
      * */
     public void init() {
 
@@ -65,7 +62,7 @@ public class HBaseColumnSchema {
             qualifierBytes = Bytes.toBytes(qualifier);
             type = ClassUtil.forName(typeName);
             Util.checkNull(type);
-            
+
             if (StringUtil.isEmptyString(typeHandlerName)) {
                 typeHandler = DefaultTypeHandlers.findDefaultHandler(type);
                 typeHandlerName = typeHandler.getClass().getName();

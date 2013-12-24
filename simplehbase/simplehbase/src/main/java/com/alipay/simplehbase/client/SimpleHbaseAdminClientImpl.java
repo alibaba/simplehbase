@@ -9,17 +9,16 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * SimpleHbaseAdminClient的实现。
+ * SimpleHbaseAdminClient's implementation.
  * 
  * @author xinzhi
- * @version $Id: SimpleHbaseAdminClientImpl.java 2013-09-11 上午11:27:31 xinzhi $
  * */
 public class SimpleHbaseAdminClientImpl implements SimpleHbaseAdminClient {
 
     /** log. */
     private static Logger   log = Logger.getLogger(SimpleHbaseAdminClientImpl.class);
     /**
-     * HBaseDataSource。
+     * HBaseDataSource.
      * */
     private HBaseDataSource hbaseDataSource;
 
