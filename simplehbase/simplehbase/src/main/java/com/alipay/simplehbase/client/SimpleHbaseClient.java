@@ -11,7 +11,7 @@ import com.sun.istack.internal.Nullable;
  * SimpleHbaseClient.
  * 
  * <pre>
- * A client interface which can operate on hbase.
+ * The main entry point to use SimpleHbase framework.
  * </pre>
  * 
  * @author xinzhi
@@ -23,12 +23,13 @@ public interface SimpleHbaseClient {
      * 
      * @param rowKey rowKey.
      * @param type POJO type.
+     * 
      * @return POJO.
      * */
     public <T> T findObject(RowKey rowKey, Class<? extends T> type);
 
     /**
-     * Find object with row key.
+     * Dynamic query to find POJO.
      * 
      * @param rowKey rowKey.
      * @param type POJO type.
@@ -41,7 +42,7 @@ public interface SimpleHbaseClient {
             @Nullable Map<String, Object> para);
 
     /**
-     * Find object with row key.
+     * Raw hql query to find object.
      * 
      * @param rowKey rowKey.
      * @param type POJO type.
@@ -72,13 +73,14 @@ public interface SimpleHbaseClient {
      * @param type POJO type.
      * @param startIndex result start index, 0-based.
      * @param length result size.
+     * 
      * @return POJO list.
      * */
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, long startIndex, long length);
 
     /**
-     * Dynamic query POJO list with range in [startRowKey,endRowKey).
+     * Dynamic query to find POJO list with range in [startRowKey,endRowKey).
      * 
      * @param startRowKey startRowKey.
      * @param endRowKey endRowKey.
@@ -93,7 +95,7 @@ public interface SimpleHbaseClient {
             @Nullable Map<String, Object> para);
 
     /**
-     * Dynamic query POJO list with range in [startRowKey,endRowKey).
+     * Dynamic query to find POJO list with range in [startRowKey,endRowKey).
      * 
      * @param startRowKey startRowKey.
      * @param endRowKey endRowKey.
@@ -110,7 +112,7 @@ public interface SimpleHbaseClient {
             @Nullable Map<String, Object> para);
 
     /**
-     * Raw query POJO list with range in [startRowKey,endRowKey).
+     * Raw hql query to find POJO list with range in [startRowKey,endRowKey).
      * 
      * @param startRowKey startRowKey.
      * @param endRowKey endRowKey.
@@ -125,7 +127,7 @@ public interface SimpleHbaseClient {
             @Nullable Map<String, Object> para);
 
     /**
-     * Raw query POJO list with range in [startRowKey,endRowKey).
+     * Raw hql query to find POJO list with range in [startRowKey,endRowKey).
      * 
      * @param startRowKey startRowKey.
      * @param endRowKey endRowKey.
@@ -152,7 +154,7 @@ public interface SimpleHbaseClient {
     public long count(RowKey startRowKey, RowKey endRowKey);
 
     /**
-     * Dynamic query count POJO with range in [startRowKey,endRowKey).
+     * Dynamic query to count POJO with range in [startRowKey,endRowKey).
      * 
      * @param startRowKey startRowKey.
      * @param endRowKey endRowKey.
@@ -165,7 +167,7 @@ public interface SimpleHbaseClient {
             @Nullable Map<String, Object> para);
 
     /**
-     * Raw query count POJO with range in [startRowKey,endRowKey).
+     * Raw hql query to count POJO with range in [startRowKey,endRowKey).
      * 
      * @param startRowKey startRowKey.
      * @param endRowKey endRowKey.
@@ -193,7 +195,7 @@ public interface SimpleHbaseClient {
     public void deleteObject(RowKey rowKey);
 
     /**
-     * Delete POJOList.
+     * Batch delete POJO list.
      * 
      * @param startRowKey startRowKey.
      * @param endRowKey endRowKey.
@@ -201,12 +203,12 @@ public interface SimpleHbaseClient {
      * */
     public void deleteObjectList(RowKey startRowKey, RowKey endRowKey);
 
-    //-----------------------Only would be applied on versioned POJO.-----------------------
+    //-----------------------Only would be used on versioned POJO.-----------------------
     /**
      * Insert POJO.
      * 
      * <pre>
-     * If POJO's version object is null(data doesn't exist), the insert operation would success.
+     * If POJO's version object is null(data doesn't exist), the insert operation would be success.
      * </pre>
      * 
      * @param rowKey rowKey.

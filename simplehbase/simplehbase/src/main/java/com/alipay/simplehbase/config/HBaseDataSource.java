@@ -32,7 +32,7 @@ public class HBaseDataSource {
     @ConfigAttr
     private String              id;
     /**
-     * hbase's config file path, such as hbase zk config file.
+     * hbase's config file path, such as hbase zk config file path.
      * */
     @ConfigAttr
     private List<String>        hbaseConfigFilePaths;
@@ -61,12 +61,10 @@ public class HBaseDataSource {
      * final simplehbase's config item.
      * */
     private Map<String, String> finalDataSourceConfig = new HashMap<String, String>();
-
     /**
      * hbase Configuration.
      * */
     private Configuration       hbaseConfiguration;
-
     /**
      * HTablePool.
      * */

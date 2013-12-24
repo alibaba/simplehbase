@@ -10,14 +10,14 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * POJO and Hbase mapping info.
+ * POJO type and Hbase table mapping info.
  * 
  * @author xinzhi
  * */
 public class TypeInfo {
 
     /**
-     * Parse TypeInfo by POJO's type.
+     * Parse TypeInfo from POJO's type.
      * 
      * @param type POJO's type.
      * @return TypeInfo.
@@ -72,7 +72,7 @@ public class TypeInfo {
     private Set<String>      families    = new HashSet<String>();
 
     /**
-     * Is Versioned TypeInfo.
+     * Is versioned TypeInfo.
      * */
     public boolean isVersionedType() {
         return versionedColumnInfo != null;

@@ -10,7 +10,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.VarContext;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
-import com.alipay.simplehbase.literal.LiteralValue;
+import com.alipay.simplehbase.literal.LiteralValueInterpreter;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -21,7 +21,7 @@ import com.alipay.simplehbase.util.Util;
 public class ContextUtil {
 
     /**
-     * Parse column schema from cidContext.
+     * Parse HBaseColumnSchema from cidContext.
      * */
     public static HBaseColumnSchema parseHBaseColumnSchema(
             HBaseTableConfig hbaseTableConfig, CidContext cidContext) {
@@ -46,7 +46,7 @@ public class ContextUtil {
     }
 
     /**
-     * Parse para from varContext.
+     * Parse parameter from varContext.
      * */
     public static Object parsePara(VarContext varContext,
             Map<String, Object> para) {
@@ -60,7 +60,7 @@ public class ContextUtil {
     }
 
     /**
-     * Parse para list from varContext list.
+     * Parse parameter list from varContext list.
      * */
     public static List<Object> parseParaList(List<VarContext> varContextList,
             Map<String, Object> para) {
@@ -85,7 +85,7 @@ public class ContextUtil {
         String constant = constantContext.TEXT().getText();
         Util.checkEmptyString(constant);
 
-        return LiteralValue.convertToObject(hbaseColumnSchema.getType(),
+        return LiteralValueInterpreter.convertToObject(hbaseColumnSchema.getType(),
                 constant);
     }
 

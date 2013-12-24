@@ -323,7 +323,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             Object oldVersion) {
         Util.checkRowKey(rowKey);
         Util.checkNull(t);
-        //not check oldVersion,oldVersion can be null.
+        //not check oldVersion, oldVersion can be null.
 
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(t.getClass());
         checkVersioned(typeInfo);

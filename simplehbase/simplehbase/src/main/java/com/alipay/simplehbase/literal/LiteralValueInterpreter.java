@@ -14,7 +14,7 @@ import com.alipay.simplehbase.util.Util;
  * 
  * @author xinzhi
  * */
-public class LiteralValue {
+public class LiteralValueInterpreter {
 
     private static List<String> dateFormats = new ArrayList<String>();
 

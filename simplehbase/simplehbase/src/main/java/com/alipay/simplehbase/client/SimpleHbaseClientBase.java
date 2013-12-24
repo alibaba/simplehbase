@@ -91,8 +91,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * Apply family to scan request, to prevent return more family result than
-     * we need.
+     * Apply family to scan request, to prevent return more family than we need.
      * */
     protected <T> void applyRequestFamily(Class<? extends T> type, Scan scan) {
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
@@ -105,7 +104,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     /**
      * Convert hbase result to POJO.
      * 
-     * @param result result.
+     * @param result hbase result.
      * @param type POJO type.
      * 
      * @return POJO.

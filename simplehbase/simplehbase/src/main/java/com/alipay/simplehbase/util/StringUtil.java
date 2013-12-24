@@ -27,7 +27,7 @@ public class StringUtil {
     }
 
     /**
-     * Appends msg and value to StringBuiler.
+     * Appends message and value to StringBuiler.
      * */
     public static void append(StringBuilder sb, @Nullable String msg,
             @Nullable Object value) {
@@ -37,7 +37,7 @@ public class StringUtil {
     }
 
     /**
-     * Appends msg and map to StringBuilder.
+     * Appends message and map to StringBuilder.
      * */
     public static void append(StringBuilder sb, @Nullable String msg,
             @Nullable Map<String, String> map) {
@@ -52,7 +52,7 @@ public class StringUtil {
     }
 
     /**
-     * Appends msg and list to StringBuilder.
+     * Appends message and list to StringBuilder.
      * */
     public static void append(StringBuilder sb, @Nullable String msg,
             @Nullable List<String> list) {

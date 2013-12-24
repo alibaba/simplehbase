@@ -1,19 +1,12 @@
 package com.alipay.simplehbase.config;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.hql.HQLNodeParser;
 import com.alipay.simplehbase.util.StringUtil;
@@ -26,9 +19,6 @@ import com.alipay.simplehbase.util.XmlUtil;
  * @author xinzhi
  * */
 public class HBaseTableConfigParser {
-
-    /** log. */
-    private static Logger log = Logger.getLogger(HBaseTableConfigParser.class);
 
     /**
      * Parse HBaseTableSchema.
@@ -45,7 +35,7 @@ public class HBaseTableConfigParser {
         Util.checkNull(tableSchema);
         Util.checkNull(hbaseColumnSchemas);
 
-        Node hbaseTableSchemaNode = findTopLevelNode(filePath,
+        Node hbaseTableSchemaNode = XmlUtil.findTopLevelNode(filePath,
                 "HBaseTableSchema");
 
         tableSchema.setTableName(XmlUtil.getAttr(hbaseTableSchemaNode,
@@ -73,7 +63,7 @@ public class HBaseTableConfigParser {
     }
 
     /**
-     * Parse config map.
+     * Parse simplehbase private config map.
      * */
     public static void parseConfigMap(String filePath,
             Map<String, String> configMap) {
@@ -81,7 +71,7 @@ public class HBaseTableConfigParser {
         Util.checkEmptyString(filePath);
         Util.checkNull(configMap);
 
-        Node configMapNode = findTopLevelNode(filePath, "configMap");
+        Node configMapNode = XmlUtil.findTopLevelNode(filePath, "configMap");
         if (configMapNode == null) {
             return;
         }
@@ -109,7 +99,7 @@ public class HBaseTableConfigParser {
         Util.checkEmptyString(filePath);
 
         List<HBaseQuery> hbaseQueries = new ArrayList<HBaseQuery>();
-        Node statementsNode = findTopLevelNode(filePath, "statements");
+        Node statementsNode = XmlUtil.findTopLevelNode(filePath, "statements");
         if (statementsNode == null) {
             return hbaseQueries;
         }
@@ -133,35 +123,6 @@ public class HBaseTableConfigParser {
 
         return hbaseQueries;
 
-    }
-
-    /**
-     * Find top level node.
-     * */
-    private static Node findTopLevelNode(String filePath, String nodeName) {
-        Util.checkEmptyString(filePath);
-        Util.checkEmptyString(nodeName);
-
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setIgnoringElementContentWhitespace(true);
-            dbf.setIgnoringComments(true);
-
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new File(filePath));
-            Node rootNode = doc.getDocumentElement();
-            NodeList childNodes = rootNode.getChildNodes();
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                if (childNodes.item(i).getNodeName().equals(nodeName)) {
-                    return childNodes.item(i);
-                }
-            }
-        } catch (Exception e) {
-            log.error("parse error.", e);
-            throw new SimpleHBaseException("parse error.", e);
-        }
-
-        return null;
     }
 
 }

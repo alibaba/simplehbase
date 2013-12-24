@@ -56,7 +56,7 @@ public class ClassUtil {
      * 
      * <pre>
      * class name would be native type such as int/Int, boolean/Boolean.
-     * class name would be ab name, such as strin/String,date/Date.
+     * class name would be ab name, such as string/String,date/Date.
      * class name would be java full class name.
      * </pre>
      * 

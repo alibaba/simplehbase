@@ -21,17 +21,7 @@ public interface SimpleHbaseAdminClient {
      */
     public void deleteTable(final String tableName);
 
-    /**
-     * Get HaseDataSource.
-     * 
-     * @return HBaseDataSource.
-     * */
     public HBaseDataSource getHBaseDataSource();
 
-    /**
-     * Set HBaseDataSource.
-     * 
-     * @param hbaseDataSource HBaseDataSource.
-     * */
     public void setHBaseDataSource(HBaseDataSource hbaseDataSource);
 }

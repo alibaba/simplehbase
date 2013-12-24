@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * simpleHbase POJO-Hbase mapping config.
+ * SimpleHbase POJO-Hbase annotation.
  * 
  * <pre>
  * Applied on POJO type.
- * The family of HBaseColumn will override HBaseTable's family.
+ * The family of @HBaseColumn(if not empty) will override @HBaseTable's family.
  * </pre>
  * 
  * @author xinzhi
@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
 public @interface HBaseTable {
 
     /**
-     * default family name.
+     * Default family name.
      * 
      * @return default family.
      */

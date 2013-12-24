@@ -5,14 +5,14 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * The abstract implementation of TypeHandler.
+ * The skeleton implementation of TypeHandler.
  * 
  * @author xinzhi
  * */
 abstract public class AbstractTypeHandler implements TypeHandler {
 
     /**
-     * Should this handler to handle specified java type?
+     * Should this handler handle specified java type?
      * */
     abstract protected boolean aboutToHandle(Class<?> type);
 

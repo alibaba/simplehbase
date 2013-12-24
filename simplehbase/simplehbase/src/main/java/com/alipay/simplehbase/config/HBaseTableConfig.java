@@ -17,7 +17,7 @@ import com.alipay.simplehbase.util.Util;
  * <pre>
  * Including following info.
  * 1 hbaseTableSchema Table's schema.
- * 2 configMap runtime config.
+ * 2 configMap simplehbase private config map.
  * 3 queryMap HQL collection.
  * </pre>
  * 

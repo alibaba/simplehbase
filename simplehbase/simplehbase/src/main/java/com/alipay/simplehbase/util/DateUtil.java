@@ -18,7 +18,8 @@ public class DateUtil {
     public static final String DayFormat    = "yyyy-MM-dd";
 
     /**
-     * Returns date by parsing str with format, or null if parsing fails.
+     * Returns date by parsing string with specified format, or null if parsing
+     * fails.
      * */
     public static Date parse(String str, String format) {
         Util.checkEmptyString(str);

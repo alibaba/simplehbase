@@ -8,7 +8,7 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.StringUtil;
 
 /**
- * POJO's field and Hbase's column mappping.
+ * POJO's field and Hbase table's column mapping info.
  * 
  * @author xinzhi
  * */

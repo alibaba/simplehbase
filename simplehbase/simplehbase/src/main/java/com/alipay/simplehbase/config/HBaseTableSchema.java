@@ -14,7 +14,7 @@ import com.alipay.simplehbase.util.Util;
  * HbaseTable's schema.
  * 
  * <pre>
- * Including meta data of hbasetable.
+ * Including all meta data of hbase table.
  * </pre>
  * 
  * @author xinzhi
@@ -28,14 +28,14 @@ public class HBaseTableSchema {
     @ConfigAttr
     private String                                      tableName;
     /**
-     * default family.
+     * default family. can be null.
      * */
     @ConfigAttr
     private String                                      defaultFamily;
 
     // ------------runtime-------------------
     /**
-     * tablename bytes.
+     * table name bytes.
      * */
     private byte[]                                      tableNameBytes;
 
@@ -98,7 +98,7 @@ public class HBaseTableSchema {
      * Find HBaseColumnSchema by qualifier.
      * 
      * <pre>
-     * The HBaseTableSchema doesn't have more than one family with same qualifier.
+     * We can use this method if HBaseTableSchema doesn't have more than one family with same qualifier.
      * </pre>
      * */
     public HBaseColumnSchema findColumnSchema(String qualifier) {
@@ -116,7 +116,7 @@ public class HBaseTableSchema {
     }
 
     /**
-     * Find HBaseColumnSchema by random.
+     * Find one HBaseColumnSchema by random.
      * */
     public HBaseColumnSchema findOneColumnSchema() {
         for (Map<String, HBaseColumnSchema> t : columnSchemas.values()) {

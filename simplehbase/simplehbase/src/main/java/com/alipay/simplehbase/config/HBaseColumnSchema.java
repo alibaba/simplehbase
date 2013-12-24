@@ -39,13 +39,13 @@ public class HBaseColumnSchema {
     private String        typeHandlerName;
 
     // -----------runtime------
-    /** hbase's family. */
+    /** hbase's family bytes. */
     private byte[]        familyBytes;
-    /** hbase's qualifier. */
+    /** hbase's qualifier bytes. */
     private byte[]        qualifierBytes;
     /** javaType. */
     private Class<?>      type;
-    /** TypeHandler. */
+    /** TypeHandler instance. */
     private TypeHandler   typeHandler;
 
     /**

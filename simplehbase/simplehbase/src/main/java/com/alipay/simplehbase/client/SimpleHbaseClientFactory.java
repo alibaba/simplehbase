@@ -15,9 +15,9 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
  * 
  * <pre>
  * Using method of this class, we can add following function to SimpleHbaseClient.
- * simpleHbase's log.
- * simpleHbase's preformance log.
- * simpleHbase's exception transform.
+ * SimpleHbase's log.
+ * SimpleHbase's performance digest log.
+ * SimpleHbase's exception transform.
  * </pre>
  * 
  * @author xinzhi

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Flag to indicate java attr is a config attr.
+ * Flag to indicate java attribute is a configuration attribute.
  * 
  * @author xinzhi
  * */

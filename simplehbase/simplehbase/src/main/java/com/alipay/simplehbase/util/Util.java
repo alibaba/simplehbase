@@ -15,7 +15,7 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 public class Util {
 
     /**
-     * Check bool is NOT false.
+     * Check boolean is NOT false.
      * */
     public static void check(boolean bool) {
         if (bool == false) {
@@ -33,7 +33,7 @@ public class Util {
     }
 
     /**
-     * Check for str is NOT null or empty string.
+     * Check for string is NOT null or empty string.
      * */
     public static void checkEmptyString(String str) {
         if (StringUtil.isEmptyString(str)) {
@@ -42,7 +42,7 @@ public class Util {
     }
 
     /**
-     * check the value's length.
+     * Check the value's length.
      * */
     public static void checkLength(byte[] values, int length) {
         Util.checkNull(values);
