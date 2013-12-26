@@ -1,6 +1,6 @@
 simplehbase
 ===========
-Simplehbase is a lightweight middleware between java app and hbase.
+Simplehbase is a lightweight ORM framework between java app and hbase.
 
 The main feature of it are following:
 
