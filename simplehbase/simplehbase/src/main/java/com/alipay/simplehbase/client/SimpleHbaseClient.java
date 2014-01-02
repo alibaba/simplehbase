@@ -3,6 +3,8 @@ package com.alipay.simplehbase.client;
 import java.util.List;
 import java.util.Map;
 
+import com.alipay.simplehbase.client.service.AggregateService;
+import com.alipay.simplehbase.client.service.VersionedService;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.sun.istack.internal.Nullable;
@@ -16,7 +18,7 @@ import com.sun.istack.internal.Nullable;
  * 
  * @author xinzhi
  * */
-public interface SimpleHbaseClient {
+public interface SimpleHbaseClient extends VersionedService, AggregateService {
 
     /**
      * Find object with row key.
@@ -144,42 +146,6 @@ public interface SimpleHbaseClient {
             long length, String hql, @Nullable Map<String, Object> para);
 
     /**
-     * Count POJO with range in [startRowKey,endRowKey).
-     * 
-     * @param startRowKey startRowKey.
-     * @param endRowKey endRowKey.
-     * 
-     * @return count result.
-     * */
-    public long count(RowKey startRowKey, RowKey endRowKey);
-
-    /**
-     * Dynamic query to count POJO with range in [startRowKey,endRowKey).
-     * 
-     * @param startRowKey startRowKey.
-     * @param endRowKey endRowKey.
-     * @param id dynamic query id.
-     * @param para parameter map.
-     * 
-     * @return count result.
-     * */
-    public long count(RowKey startRowKey, RowKey endRowKey, String id,
-            @Nullable Map<String, Object> para);
-
-    /**
-     * Raw hql query to count POJO with range in [startRowKey,endRowKey).
-     * 
-     * @param startRowKey startRowKey.
-     * @param endRowKey endRowKey.
-     * @param hql raw hql.
-     * @param para parameter map.
-     * 
-     * @return count result.
-     * */
-    public long countByRawHql(RowKey startRowKey, RowKey endRowKey, String hql,
-            @Nullable Map<String, Object> para);
-
-    /**
      * Put POJO.
      * 
      * @param rowKey rowKey.
@@ -202,46 +168,6 @@ public interface SimpleHbaseClient {
      * 
      * */
     public void deleteObjectList(RowKey startRowKey, RowKey endRowKey);
-
-    //-----------------------Only would be used on versioned POJO.-----------------------
-    /**
-     * Insert POJO.
-     * 
-     * <pre>
-     * If POJO's version object is null(data doesn't exist), the insert operation would be success.
-     * </pre>
-     * 
-     * @param rowKey rowKey.
-     * @param t POJO
-     * @return whether insert success.
-     * */
-    public <T> boolean insertObject(RowKey rowKey, T t);
-
-    /**
-     * Update POJO.
-     * 
-     * <pre>
-     * oldT's version object is old version.
-     * newT's version object is new version.
-     * </pre>
-     * 
-     * @param rowKey rowKey.
-     * @param oldT oldT.
-     * @param newT newT.
-     * @return whether update success.
-     * */
-    public <T> boolean updateObject(RowKey rowKey, T oldT, T newT);
-
-    /**
-     * Update POJO.
-     * 
-     * @param rowKey rowKey.
-     * @param t POJO.
-     * @param oldVersion old version object.
-     * @return whether update success.
-     * */
-    public <T> boolean updateObjectWithVersion(RowKey rowKey, T t,
-            Object oldVersion);
 
     public HBaseDataSource getHBaseDataSource();
 

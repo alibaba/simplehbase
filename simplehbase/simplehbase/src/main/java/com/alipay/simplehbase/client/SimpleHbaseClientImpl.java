@@ -34,12 +34,25 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
     @Override
     public <T> T findObject(RowKey rowKey, Class<? extends T> type) {
-        List<T> result = findObjectList(rowKey, rowKey, type);
+        List<T> result = findObjectList_internal(rowKey, rowKey, type);
         if (result.isEmpty()) {
             return null;
         } else {
             return result.get(0);
         }
+    }
+
+    @Override
+    public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
+            Class<? extends T> type) {
+        return findObjectList_internal(startRowKey, endRowKey, type);
+    }
+
+    @Override
+    public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
+            Class<? extends T> type, long startIndex, long length) {
+        return findObjectList_internal(startRowKey, endRowKey, type,
+                startIndex, length);
     }
 
     @Override
@@ -51,30 +64,6 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         } else {
             return result.get(0);
         }
-    }
-
-    @Override
-    public <T> T findObjectByRawHql(RowKey rowKey, Class<? extends T> type,
-            String hql, Map<String, Object> para) {
-        List<T> result = findObjectListByRawHql(rowKey, rowKey, type, hql, para);
-        if (result.isEmpty()) {
-            return null;
-        } else {
-            return result.get(0);
-        }
-    }
-
-    @Override
-    public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
-            Class<? extends T> type) {
-        return findObjectList(startRowKey, endRowKey, type, 0L, Long.MAX_VALUE);
-    }
-
-    @Override
-    public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
-            Class<? extends T> type, long startIndex, long length) {
-        return findObjectList(startRowKey, endRowKey, type, startIndex, length,
-                null);
     }
 
     @Override
@@ -103,6 +92,17 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     }
 
     @Override
+    public <T> T findObjectByRawHql(RowKey rowKey, Class<? extends T> type,
+            String hql, Map<String, Object> para) {
+        List<T> result = findObjectListByRawHql(rowKey, rowKey, type, hql, para);
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            return result.get(0);
+        }
+    }
+
+    @Override
     public <T> List<T> findObjectListByRawHql(RowKey startRowKey,
             RowKey endRowKey, Class<? extends T> type, String hql,
             Map<String, Object> para) {
@@ -116,15 +116,83 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             long length, String hql, Map<String, Object> para) {
 
         if (StringUtil.isEmptyString(hql)) {
-            return findObjectList(startRowKey, endRowKey, type);
+            return findObjectList_internal(startRowKey, endRowKey, type,
+                    startIndex, length);
         }
 
         ProgContext progContext = TreeUtil.parse(hql);
         Filter filter = TreeUtil.parseSelectFilter(progContext,
                 hbaseTableConfig, para);
 
-        return findObjectList(startRowKey, endRowKey, type, startIndex, length,
-                filter);
+        return findObjectList_internal(startRowKey, endRowKey, type,
+                startIndex, length, filter);
+    }
+
+    private <T> List<T> findObjectList_internal(RowKey startRowKey,
+            RowKey endRowKey, Class<? extends T> type) {
+        return findObjectList_internal(startRowKey, endRowKey, type, 0L,
+                Long.MAX_VALUE, null);
+    }
+
+    private <T> List<T> findObjectList_internal(RowKey startRowKey,
+            RowKey endRowKey, Class<? extends T> type, long startIndex,
+            long length) {
+        return findObjectList_internal(startRowKey, endRowKey, type,
+                startIndex, length, null);
+    }
+
+    private <T> List<T> findObjectList_internal(RowKey startRowKey,
+            RowKey endRowKey, Class<? extends T> type, long startIndex,
+            long length, Filter filter) {
+        Util.checkRowKey(startRowKey);
+        Util.checkRowKey(endRowKey);
+        Util.checkNull(type);
+        if (startIndex < 0) {
+            throw new SimpleHBaseException("startIndex is invalid. startIndex="
+                    + startIndex);
+        }
+        if (length < 1) {
+            throw new SimpleHBaseException("length is invalid. length="
+                    + length);
+        }
+
+        Scan scan = new Scan();
+        scan.setStartRow(startRowKey.toBytes());
+        scan.setStopRow(endRowKey.toBytes());
+        scan.setCaching(getScanCaching());
+        scan.setFilter(filter);
+        applyRequestFamily(type, scan);
+
+        HTableInterface htableInterface = htableInterface();
+        ResultScanner resultScanner = null;
+
+        List<T> resultList = new LinkedList<T>();
+        try {
+            resultScanner = htableInterface.getScanner(scan);
+            long ignoreCounter = startIndex;
+            long resultCounter = 0L;
+            Result result = null;
+            while ((result = resultScanner.next()) != null) {
+                if (ignoreCounter-- > 0) {
+                    continue;
+                }
+
+                resultList.add(convert(result, type));
+
+                if (++resultCounter >= length) {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            throw new SimpleHBaseException(
+                    "findObjectList. startRowKey=" + startRowKey
+                            + " endRowKey=" + endRowKey + " type=" + type, e);
+        } finally {
+            Util.close(resultScanner);
+            Util.close(htableInterface);
+        }
+
+        return resultList;
     }
 
     @Override
@@ -231,33 +299,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
     @Override
     public <T> boolean insertObject(RowKey rowKey, T t) {
-        Util.checkRowKey(rowKey);
-        Util.checkNull(t);
-
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(t.getClass());
-        checkVersioned(typeInfo);
-
-        Put put = new Put(rowKey.toBytes());
-        for (ColumnInfo columnInfo : typeInfo.getColumnInfos()) {
-            byte[] value = convertPOJOFieldToBytes(t, columnInfo);
-            put.add(columnInfo.familyBytes, columnInfo.qualifierBytes, value);
-        }
-
-        HTableInterface htableInterface = htableInterface();
-
-        boolean result = false;
-        ColumnInfo versionedColumnInfo = typeInfo.getVersionedColumnInfo();
-        try {
-            result = htableInterface.checkAndPut(rowKey.toBytes(),
-                    versionedColumnInfo.familyBytes,
-                    versionedColumnInfo.qualifierBytes, null, put);
-        } catch (IOException e) {
-            throw new SimpleHBaseException("insertObject. rowkey=" + rowKey
-                    + " t=" + t, e);
-        } finally {
-            Util.close(htableInterface);
-        }
-        return result;
+        return updateObjectWithVersion(rowKey, t, null);
     }
 
     @Override
@@ -270,51 +312,16 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(newT.getClass());
         checkVersioned(typeInfo);
 
-        Put put = new Put(rowKey.toBytes());
+        ColumnInfo versionedColumnInfo = typeInfo.getVersionedColumnInfo();
+
+        Object oldVersion;
         try {
-            boolean needUpdate = false;
-            for (ColumnInfo columnInfo : typeInfo.getColumnInfos()) {
-                Object oldValue = columnInfo.field.get(oldT);
-                Object newValue = columnInfo.field.get(newT);
-                if (newValue == null && oldValue == null) {
-                    continue;
-                } else if (newValue == null || oldValue == null
-                        || !newValue.equals(oldValue)) {
-                    byte[] value = convertPOJOFieldToBytes(newT, columnInfo);
-                    put.add(columnInfo.familyBytes, columnInfo.qualifierBytes,
-                            value);
-                    needUpdate = true;
-                } else {
-                    continue;
-                }
-            }
-            if (!needUpdate) {
-                return true;
-            }
+            oldVersion = versionedColumnInfo.field.get(oldT);
         } catch (Exception e) {
             throw new SimpleHBaseException("updateObject. rowKey=" + rowKey
-                    + " oldT=" + oldT + " newT=" + newT, e);
+                    + " oldT=" + oldT, e);
         }
-
-        ColumnInfo versionedColumnInfo = typeInfo.getVersionedColumnInfo();
-        byte[] oldValueOfVersion = convertPOJOFieldToBytes(oldT,
-                versionedColumnInfo);
-
-        HTableInterface htableInterface = htableInterface();
-
-        boolean result = false;
-        try {
-            result = htableInterface.checkAndPut(rowKey.toBytes(),
-                    versionedColumnInfo.familyBytes,
-                    versionedColumnInfo.qualifierBytes, oldValueOfVersion, put);
-        } catch (IOException e) {
-            throw new SimpleHBaseException("updateObject. rowKey=" + rowKey
-                    + " oldT=" + oldT + " newT=" + newT, e);
-        } finally {
-            Util.close(htableInterface);
-        }
-
-        return result;
+        return updateObjectWithVersion(rowKey, newT, oldVersion);
 
     }
 
@@ -354,62 +361,9 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         return result;
     }
 
-    private <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
-            Class<? extends T> type, long startIndex, long length, Filter filter) {
-        Util.checkRowKey(startRowKey);
-        Util.checkRowKey(endRowKey);
-        Util.checkNull(type);
-        if (startIndex < 0) {
-            throw new SimpleHBaseException("startIndex is invalid. startIndex="
-                    + startIndex);
-        }
-        if (length < 1) {
-            throw new SimpleHBaseException("length is invalid. length="
-                    + length);
-        }
-
-        Scan scan = new Scan();
-        scan.setStartRow(startRowKey.toBytes());
-        scan.setStopRow(endRowKey.toBytes());
-        scan.setCaching(getScanCaching());
-        scan.setFilter(filter);
-        applyRequestFamily(type, scan);
-
-        HTableInterface htableInterface = htableInterface();
-        ResultScanner resultScanner = null;
-
-        List<T> resultList = new LinkedList<T>();
-        try {
-            resultScanner = htableInterface.getScanner(scan);
-            long ignoreCounter = startIndex;
-            long resultCounter = 0L;
-            Result result = null;
-            while ((result = resultScanner.next()) != null) {
-                if (ignoreCounter-- > 0) {
-                    continue;
-                }
-
-                resultList.add(convert(result, type));
-
-                if (++resultCounter >= length) {
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            throw new SimpleHBaseException(
-                    "findObjectList. startRowKey=" + startRowKey
-                            + " endRowKey=" + endRowKey + " type=" + type, e);
-        } finally {
-            Util.close(resultScanner);
-            Util.close(htableInterface);
-        }
-
-        return resultList;
-    }
-
     @Override
     public long count(RowKey startRowKey, RowKey endRowKey) {
-        return count(startRowKey, endRowKey, null);
+        return count_internal(startRowKey, endRowKey, null);
     }
 
     @Override
@@ -433,17 +387,18 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             Map<String, Object> para) {
 
         if (StringUtil.isEmptyString(hql)) {
-            return count(startRowKey, endRowKey);
+            return count_internal(startRowKey, endRowKey, null);
         }
 
         ProgContext progContext = TreeUtil.parse(hql);
         Filter filter = TreeUtil.parseCountFilter(progContext,
                 hbaseTableConfig, para);
 
-        return count(startRowKey, endRowKey, filter);
+        return count_internal(startRowKey, endRowKey, filter);
     }
 
-    private long count(RowKey startRowKey, RowKey endRowKey, Filter filter) {
+    private long count_internal(RowKey startRowKey, RowKey endRowKey,
+            Filter filter) {
         Util.checkRowKey(startRowKey);
         Util.checkRowKey(endRowKey);
 
@@ -455,7 +410,6 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         HBaseColumnSchema hbaseColumnSchema = columnSchema();
         scan.addColumn(hbaseColumnSchema.getFamilyBytes(),
                 hbaseColumnSchema.getQualifierBytes());
-        scan.setFilter(filter);
 
         LongColumnInterpreter columnInterpreter = new LongColumnInterpreter();
         AggregationClient aggregationClient = aggregationClient();
