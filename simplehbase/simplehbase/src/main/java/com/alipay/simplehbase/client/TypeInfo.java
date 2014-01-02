@@ -2,10 +2,11 @@ package com.alipay.simplehbase.client;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.Util;
 
@@ -49,6 +50,13 @@ public class TypeInfo {
             }
 
             typeInfo.families.add(columnInfo.family);
+
+            if (!typeInfo.columnInfosMap.containsKey(columnInfo.qualifier)) {
+                typeInfo.columnInfosMap.put(columnInfo.qualifier,
+                        new HashMap<String, ColumnInfo>());
+            }
+            typeInfo.columnInfosMap.get(columnInfo.qualifier).put(
+                    columnInfo.family, columnInfo);
         }
 
         if (versionFieldCounter > 1) {
@@ -63,19 +71,33 @@ public class TypeInfo {
     }
 
     /** POJO's type. */
-    private Class<?>         type;
+    private Class<?>                             type;
     /** POJO's ColumnInfo list. */
-    private List<ColumnInfo> columnInfos = new ArrayList<ColumnInfo>();
+    private List<ColumnInfo>                     columnInfos    = new ArrayList<ColumnInfo>();
     /** Versioned ColumnInfo, can be null. */
-    private ColumnInfo       versionedColumnInfo;
+    private ColumnInfo                           versionedColumnInfo;
     /** All the family name of this type info. */
-    private Set<String>      families    = new HashSet<String>();
+    private Set<String>                          families       = new HashSet<String>();
+    /**
+     * Qualifier->Family-> ColumnInfo.
+     * */
+    private Map<String, Map<String, ColumnInfo>> columnInfosMap = new HashMap<String, Map<String, ColumnInfo>>();
 
     /**
      * Is versioned TypeInfo.
      * */
     public boolean isVersionedType() {
         return versionedColumnInfo != null;
+    }
+
+    /**
+     * Find ColumnInfo by family and qualifier.
+     * */
+    public ColumnInfo findColumnInfo(String family, String qualifier) {
+        Util.checkEmptyString(family);
+        Util.checkEmptyString(qualifier);
+
+        return columnInfosMap.get(qualifier).get(family);
     }
 
     public Class<?> getType() {

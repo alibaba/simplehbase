@@ -11,6 +11,7 @@ import org.junit.Test;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
+
 /**
  * @author xinzhi
  */
@@ -22,24 +23,22 @@ public class TestNotMatch extends MyRecordTestBase {
         putSlim("id=1,name=bca");
         putSlim("id=2,name=cab");
 
-        String hql = "select where name notmatch \".*ab.*\"";
+        addHql("select where name notmatch \".*ab.*\"");
 
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
+                TestHqlId, null);
 
         Assert.assertTrue(myRecordList.size() == 1);
 
-        hql = "select where name notmatch \"abc\"";
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
+        addHql("select where name notmatch \"abc\"");
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 2);
 
-        hql = "select where name notmatch \"a\"";
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
+        addHql("select where name notmatch \"a\"");
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 0);
     }
 
@@ -49,25 +48,23 @@ public class TestNotMatch extends MyRecordTestBase {
         putSlim("id=1,name=bca");
         putSlim("id=2,name=cab");
 
-        String hql = "select where name notmatch #name#";
+        addHql("select where name notmatch #name#");
         Map<String, Object> para = new HashMap<String, Object>();
 
         para.put("name", ".*ab.*");
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
+                TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 1);
 
         para.put("name", "abc");
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 2);
 
         para.put("name", "a");
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 0);
     }
 

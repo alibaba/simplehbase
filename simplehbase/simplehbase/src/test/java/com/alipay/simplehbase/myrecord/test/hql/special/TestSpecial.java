@@ -21,19 +21,19 @@ public class TestSpecial extends MyRecordTestBase {
     //var parameter should have value.
     @Test(expected = SimpleHBaseException.class)
     public void nullParaValue() {
-        String hql = "select where name less #name#";
+        addHql("select where name less #name#");
         Map<String, Object> para = new HashMap<String, Object>();
-        simpleHbaseClient.findObjectListByRawHql(new MyRecordRowKey(0),
-                new MyRecordRowKey(100), MyRecord.class, hql, para);
+        simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
     }
 
     //constant parameter should have value.
     @Test(expected = SimpleHBaseException.class)
     public void nullParaConstant() {
-        String hql = "select where age less \"\"";
+        addHql("select where age less \"\"");
         Map<String, Object> para = new HashMap<String, Object>();
-        simpleHbaseClient.findObjectListByRawHql(new MyRecordRowKey(0),
-                new MyRecordRowKey(100), MyRecord.class, hql, para);
+        simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
     }
 
     @Test
@@ -42,10 +42,10 @@ public class TestSpecial extends MyRecordTestBase {
         putSlim("id=1,age=0");
         putSlim("id=2,age=-100");
 
-        String hql = "select where age greaterequal \"0\"";
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        addHql("select where age greaterequal \"0\"");
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
+                TestHqlId, null);
         //should be 2, but result is 3.
         Assert.assertTrue(myRecordList.size() == 3);
     }

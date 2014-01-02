@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.myrecord.test.hql;
+package com.alipay.simplehbase.client.service.aggregateService;
 
 import java.util.HashMap;
 import java.util.Map;

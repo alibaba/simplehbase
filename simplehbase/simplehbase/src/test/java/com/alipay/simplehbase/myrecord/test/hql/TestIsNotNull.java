@@ -18,12 +18,11 @@ public class TestIsNotNull extends MyRecordTestBase {
         putSlim("id=1,name=bbb");
         putSlim("id=2");
 
-        String hql = "select where name isnotnull";
+        addHql("select where name isnotnull");
 
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
-
+                TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 2);
     }
 

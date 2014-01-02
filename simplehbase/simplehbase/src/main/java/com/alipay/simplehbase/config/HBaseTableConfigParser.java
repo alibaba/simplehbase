@@ -59,7 +59,6 @@ public class HBaseTableConfigParser {
 
             hbaseColumnSchemas.add(columnSchema);
         }
-
     }
 
     /**
@@ -97,9 +96,30 @@ public class HBaseTableConfigParser {
      * */
     public static List<HBaseQuery> parseHBaseQuery(String filePath) {
         Util.checkEmptyString(filePath);
-
-        List<HBaseQuery> hbaseQueries = new ArrayList<HBaseQuery>();
         Node statementsNode = XmlUtil.findTopLevelNode(filePath, "statements");
+        return parseHBaseQueryList(statementsNode);
+    }
+
+    /**
+     * Parse HBaseQuery.
+     * */
+    public static List<HBaseQuery> parseHBaseQueryWithRawHQL(String hql,
+            String id) {
+
+        Util.checkEmptyString(hql);
+        String content = "<SimpleHbase><statements><statement id=\"" + id
+                + "\">";
+        content = content + hql;
+        content = content + "</statement></statements></SimpleHbase>";
+
+        Node statementsNode = XmlUtil.findTopLevelNodeInString(content,
+                "statements");
+
+        return parseHBaseQueryList(statementsNode);
+    }
+
+    private static List<HBaseQuery> parseHBaseQueryList(Node statementsNode) {
+        List<HBaseQuery> hbaseQueries = new ArrayList<HBaseQuery>();
         if (statementsNode == null) {
             return hbaseQueries;
         }
@@ -122,7 +142,5 @@ public class HBaseTableConfigParser {
         }
 
         return hbaseQueries;
-
     }
-
 }

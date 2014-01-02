@@ -1,7 +1,12 @@
 package com.alipay.simplehbase.client;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
+import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
@@ -102,52 +107,74 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * Convert hbase result to POJO.
+     * Convert hbase result to SimpleHbaseDOResult.
      * 
-     * @param result hbase result.
+     * @param hbaseResult hbase result.
      * @param type POJO type.
      * 
-     * @return POJO.
+     * @return SimpleHbaseDOResult list, timestamp desc ordered.
      * */
-    protected <T> T convert(Result result, Class<? extends T> type) {
+    protected <T> List<SimpleHbaseDOResult<T>> convertToSimpleHbaseDOResult(
+            Result hbaseResult, Class<? extends T> type) {
 
-        if (result.isEmpty()) {
-            return null;
+        KeyValue[] keyValues = hbaseResult.raw();
+        if (keyValues == null || keyValues.length == 0) {
+            return new ArrayList<SimpleHbaseDOResult<T>>();
         }
 
+        TreeMap<Long, T> temMap = new TreeMap<Long, T>(
+                Collections.reverseOrder());
+
+        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+
         try {
-            T t = type.newInstance();
-            TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
-            for (ColumnInfo columnInfo : typeInfo.getColumnInfos()) {
+            for (KeyValue keyValue : keyValues) {
+                byte[] familyBytes = keyValue.getFamily();
+                byte[] qualifierBytes = keyValue.getQualifier();
+                byte[] hbaseValue = keyValue.getValue();
+                long ts = keyValue.getTimestamp();
+
+                if (!temMap.containsKey(ts)) {
+                    temMap.put(ts, type.newInstance());
+                }
+
+                ColumnInfo columnInfo = typeInfo.findColumnInfo(
+                        Bytes.toString(familyBytes),
+                        Bytes.toString(qualifierBytes));
 
                 HBaseColumnSchema hbaseColumnSchema = columnSchema(
                         columnInfo.family, columnInfo.qualifier);
 
                 Class<?> fieldType = columnInfo.field.getType();
                 Class<?> schemaType = hbaseColumnSchema.getType();
+
                 if (!ClassUtil.withSameType(fieldType, schemaType)) {
                     throw new SimpleHBaseException(
                             "class does not match. fieldType=" + fieldType
                                     + " schemaType=" + schemaType);
                 }
 
-                byte[] hbaseColumnValue = result.getValue(
-                        columnInfo.familyBytes, columnInfo.qualifierBytes);
-
                 TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
                 Object value = typeHandler.toObject(
-                        hbaseColumnSchema.getType(), hbaseColumnValue);
+                        hbaseColumnSchema.getType(), hbaseValue);
 
                 if (value != null) {
-                    columnInfo.field.set(t, value);
+                    columnInfo.field.set(temMap.get(ts), value);
                 }
             }
-
-            return t;
         } catch (Exception e) {
             throw new SimpleHBaseException("convert result exception. result="
-                    + result + " type=" + type, e);
+                    + hbaseResult + " type=" + type, e);
         }
+
+        List<SimpleHbaseDOResult<T>> result = new ArrayList<SimpleHbaseDOResult<T>>();
+        for (Long ts : temMap.keySet()) {
+            SimpleHbaseDOResult<T> r = new SimpleHbaseDOResult<T>();
+            r.setTimestamp(ts);
+            r.setT(temMap.get(ts));
+            result.add(r);
+        }
+        return result;
     }
 
     /**

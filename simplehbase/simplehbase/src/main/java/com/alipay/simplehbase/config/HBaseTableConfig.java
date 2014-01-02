@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
 
@@ -25,18 +27,18 @@ import com.alipay.simplehbase.util.Util;
  * */
 public class HBaseTableConfig {
     /** log. */
-    private static Logger           log              = Logger.getLogger(HBaseTableConfig.class);
+    private static Logger                     log              = Logger.getLogger(HBaseTableConfig.class);
 
     //------------bean config-------------------
     /**
      * Config file.
      * */
     @ConfigAttr
-    private String                  configFilePath;
+    private String                            configFilePath;
     //------------bean config-------------------
-    private HBaseTableSchema        hbaseTableSchema = new HBaseTableSchema();
-    private Map<String, String>     configMap        = new TreeMap<String, String>();
-    private Map<String, HBaseQuery> queryMap         = new TreeMap<String, HBaseQuery>();
+    private HBaseTableSchema                  hbaseTableSchema = new HBaseTableSchema();
+    private Map<String, String>               configMap        = new TreeMap<String, String>();
+    private ConcurrentMap<String, HBaseQuery> queryMap         = new ConcurrentHashMap<String, HBaseQuery>();
 
     public void init() {
         Util.checkEmptyString(configFilePath);
@@ -51,15 +53,23 @@ public class HBaseTableConfig {
 
             List<HBaseQuery> hbaseQueries = HBaseTableConfigParser
                     .parseHBaseQuery(configFilePath);
-            for (HBaseQuery hBaseQuery : hbaseQueries) {
-                queryMap.put(hBaseQuery.getId(), hBaseQuery);
-            }
+
+            addHBaseQueryList(hbaseQueries);
 
             log.info(this);
 
         } catch (Exception e) {
             log.error("parseConfig error.", e);
             throw new SimpleHBaseException("parseConfig error.", e);
+        }
+    }
+
+    /**
+     * add hbaseQueryList.
+     * */
+    public void addHBaseQueryList(List<HBaseQuery> hbaseQueryList) {
+        for (HBaseQuery hBaseQuery : hbaseQueryList) {
+            queryMap.put(hBaseQuery.getId(), hBaseQuery);
         }
     }
 

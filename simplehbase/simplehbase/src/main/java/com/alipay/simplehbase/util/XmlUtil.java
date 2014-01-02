@@ -1,5 +1,6 @@
 package com.alipay.simplehbase.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -36,6 +37,37 @@ public class XmlUtil {
 
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new File(filePath));
+            Node rootNode = doc.getDocumentElement();
+            NodeList childNodes = rootNode.getChildNodes();
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                if (childNodes.item(i).getNodeName().equals(nodeName)) {
+                    return childNodes.item(i);
+                }
+            }
+        } catch (Exception e) {
+            log.error("parse error.", e);
+            throw new SimpleHBaseException("parse error.", e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Find top level node.
+     * */
+    public static Node findTopLevelNodeInString(String content, String nodeName) {
+        Util.checkEmptyString(content);
+        Util.checkEmptyString(nodeName);
+
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setIgnoringElementContentWhitespace(true);
+            dbf.setIgnoringComments(true);
+
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db
+                    .parse(new ByteArrayInputStream(content.getBytes()));
+
             Node rootNode = doc.getDocumentElement();
             NodeList childNodes = rootNode.getChildNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {

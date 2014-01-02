@@ -24,13 +24,13 @@ public class TestSpecial_MissingColumn extends MyRecordTestBase {
         putFat("id=1,fatname=aaa");
         putFat("id=2,fatname=bbb");
 
-        String hql = "select where fatname less #name#";
+        addHql("select where fatname less #name#");
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("name", "ccc");
 
-        List<MyFatRecord> myRecordList = simpleHbaseClient
-                .findObjectListByRawHql(new MyRecordRowKey(0),
-                        new MyRecordRowKey(100), MyFatRecord.class, hql, para);
+        List<MyFatRecord> myRecordList = simpleHbaseClient.findObjectList(
+                new MyRecordRowKey(0), new MyRecordRowKey(100),
+                MyFatRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 2);
     }
 
@@ -40,13 +40,13 @@ public class TestSpecial_MissingColumn extends MyRecordTestBase {
         putFat("id=1,fatname=aaa");
         putFat("id=2,fatname=bbb");
 
-        String hql = "select where fatname equal #name#";
+        addHql("select where fatname equal #name#");
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("name", "");
 
-        List<MyFatRecord> myRecordList = simpleHbaseClient
-                .findObjectListByRawHql(new MyRecordRowKey(0),
-                        new MyRecordRowKey(100), MyFatRecord.class, hql, para);
+        List<MyFatRecord> myRecordList = simpleHbaseClient.findObjectList(
+                new MyRecordRowKey(0), new MyRecordRowKey(100),
+                MyFatRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 0);
     }
 
@@ -56,13 +56,13 @@ public class TestSpecial_MissingColumn extends MyRecordTestBase {
         putFat("id=1,fatname=aaa");
         putFat("id=2,fatname=bbb");
 
-        String hql = "select where fatname notequal #name#";
+        addHql("select where fatname notequal #name#");
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("name", "");
 
-        List<MyFatRecord> myRecordList = simpleHbaseClient
-                .findObjectListByRawHql(new MyRecordRowKey(0),
-                        new MyRecordRowKey(100), MyFatRecord.class, hql, para);
+        List<MyFatRecord> myRecordList = simpleHbaseClient.findObjectList(
+                new MyRecordRowKey(0), new MyRecordRowKey(100),
+                MyFatRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 2);
     }
 
@@ -72,11 +72,11 @@ public class TestSpecial_MissingColumn extends MyRecordTestBase {
         putFat("id=1,fatname=aaa");
         putFat("id=2,fatname=bbb");
 
-        String hql = "select where fatname isnull";
+        addHql("select where fatname isnull");
 
-        List<MyFatRecord> myRecordList = simpleHbaseClient
-                .findObjectListByRawHql(new MyRecordRowKey(0),
-                        new MyRecordRowKey(100), MyFatRecord.class, hql, null);
+        List<MyFatRecord> myRecordList = simpleHbaseClient.findObjectList(
+                new MyRecordRowKey(0), new MyRecordRowKey(100),
+                MyFatRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 0);
     }
 
@@ -86,11 +86,11 @@ public class TestSpecial_MissingColumn extends MyRecordTestBase {
         putFat("id=1,fatname=aaa");
         putFat("id=2,fatname=bbb");
 
-        String hql = "select where fatname isnotnull";
+        addHql("select where fatname isnotnull");
 
-        List<MyFatRecord> myRecordList = simpleHbaseClient
-                .findObjectListByRawHql(new MyRecordRowKey(0),
-                        new MyRecordRowKey(100), MyFatRecord.class, hql, null);
+        List<MyFatRecord> myRecordList = simpleHbaseClient.findObjectList(
+                new MyRecordRowKey(0), new MyRecordRowKey(100),
+                MyFatRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 2);
     }
 }

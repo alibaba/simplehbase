@@ -3,17 +3,17 @@ package com.alipay.simplehbase.client.service;
 import com.alipay.simplehbase.client.RowKey;
 
 /**
- * VersionedService.
+ * SimpleHbaseVersionedService.
  * 
  * <pre>
- * VersionedService can be used only on JOPO with @HBaseVersion.
+ * SimpleHbaseVersionedService can be used only on JOPO with @HBaseVersion.
  * HBase only provides put operation. 
  * This service can provide insert and update service on hbase.
  * </pre>
  * 
  * @author xinzhi.zhang
  * */
-public interface VersionedService {
+public interface SimpleHbaseVersionedService {
     /**
      * Insert POJO.
      * 

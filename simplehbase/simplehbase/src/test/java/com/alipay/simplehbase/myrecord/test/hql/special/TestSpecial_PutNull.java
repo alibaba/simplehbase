@@ -24,13 +24,13 @@ public class TestSpecial_PutNull extends MyRecordTestBase {
         putSlim("id=1");
         putSlim("id=2,name=ccc");
 
-        String hql = "select where name less #name#";
+        addHql("select where name less #name#");
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("name", "ccc");
 
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
+                TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 2);
     }
 
@@ -40,13 +40,13 @@ public class TestSpecial_PutNull extends MyRecordTestBase {
         putSlim("id=1");
         putSlim("id=2,name=ccc");
 
-        String hql = "select where name equal #name#";
+        addHql("select where name equal #name#");
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("name", "");
 
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
+                TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 1);
     }
 
@@ -56,13 +56,13 @@ public class TestSpecial_PutNull extends MyRecordTestBase {
         putSlim("id=1");
         putSlim("id=2,name=ccc");
 
-        String hql = "select where name notequal #name#";
+        addHql("select where name notequal #name#");
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("name", "");
 
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
+                TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 2);
     }
 
@@ -72,11 +72,11 @@ public class TestSpecial_PutNull extends MyRecordTestBase {
         putSlim("id=1");
         putSlim("id=2,name=ccc");
 
-        String hql = "select where name isnull";
+        addHql("select where name isnull");
 
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
+                TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 1);
     }
 
@@ -86,11 +86,11 @@ public class TestSpecial_PutNull extends MyRecordTestBase {
         putSlim("id=1");
         putSlim("id=2,name=ccc");
 
-        String hql = "select where name isnotnull";
+        addHql("select where name isnotnull");
 
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
+                TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 2);
     }
 

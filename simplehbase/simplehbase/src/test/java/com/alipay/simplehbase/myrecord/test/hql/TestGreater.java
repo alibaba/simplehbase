@@ -11,6 +11,7 @@ import org.junit.Test;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
+
 /**
  * @author xinzhi
  */
@@ -22,24 +23,20 @@ public class TestGreater extends MyRecordTestBase {
         putSlim("id=1,name=bbb");
         putSlim("id=2,name=ccc");
 
-        String hql = "select where name greater \"aaa\"";
-
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        addHql("select where name greater \"aaa\"");
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
-
+                TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 2);
 
-        hql = "select where name greater \"bbb\"";
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
+        addHql("select where name greater \"bbb\"");
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 1);
 
-        hql = "select where name greater \"ccc\"";
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, null);
+        addHql("select where name greater \"ccc\"");
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 0);
     }
 
@@ -49,25 +46,23 @@ public class TestGreater extends MyRecordTestBase {
         putSlim("id=1,name=bbb");
         putSlim("id=2,name=ccc");
 
-        String hql = "select where name greater #name#";
+        addHql("select where name greater #name#");
         Map<String, Object> para = new HashMap<String, Object>();
 
         para.put("name", "aaa");
-        List<MyRecord> myRecordList = simpleHbaseClient.findObjectListByRawHql(
+        List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
+                TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 2);
 
         para.put("name", "bbb");
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 1);
 
         para.put("name", "ccc");
-        myRecordList = simpleHbaseClient.findObjectListByRawHql(
-                new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
-                hql, para);
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 0);
 
     }

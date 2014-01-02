@@ -2,14 +2,14 @@ package com.alipay.simplehbase.client;
 
 import org.apache.hadoop.hbase.HTableDescriptor;
 
-import com.alipay.simplehbase.config.HBaseDataSource;
+import com.alipay.simplehbase.client.service.HBaseDataSourceAware;
 
 /**
  * SimpleHbaseAdminClient.
  * 
  * @author xinzhi
  * */
-public interface SimpleHbaseAdminClient {
+public interface SimpleHbaseAdminClient extends HBaseDataSourceAware {
 
     /**
      * Creates a new table. Synchronous operation.
@@ -20,8 +20,4 @@ public interface SimpleHbaseAdminClient {
      * Deletes a table. Synchronous operation.
      */
     public void deleteTable(final String tableName);
-
-    public HBaseDataSource getHBaseDataSource();
-
-    public void setHBaseDataSource(HBaseDataSource hbaseDataSource);
 }
