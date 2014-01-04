@@ -1,11 +1,11 @@
-package com.alipay.simplehbase.myrecord.test.hql.special;
+package com.alipay.simplehbase.myrecord.test.special;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.alipay.simplehbase.config.Config;
-import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
+import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
 /**
  * @author xinzhi

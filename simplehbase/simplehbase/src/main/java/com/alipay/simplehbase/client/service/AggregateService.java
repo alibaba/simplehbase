@@ -3,7 +3,7 @@ package com.alipay.simplehbase.client.service;
 import java.util.Map;
 
 import com.alipay.simplehbase.client.RowKey;
-import com.sun.istack.internal.Nullable;
+import com.alipay.simplehbase.core.Nullable;
 
 /**
  * AggregateService.
@@ -38,16 +38,4 @@ public interface AggregateService {
     public long count(RowKey startRowKey, RowKey endRowKey, String id,
             @Nullable Map<String, Object> para);
 
-    /**
-     * Raw hql query to count POJO with range in [startRowKey,endRowKey).
-     * 
-     * @param startRowKey startRowKey.
-     * @param endRowKey endRowKey.
-     * @param hql raw hql.
-     * @param para parameter map.
-     * 
-     * @return count result.
-     * */
-    public long countByRawHql(RowKey startRowKey, RowKey endRowKey, String hql,
-            @Nullable Map<String, Object> para);
 }

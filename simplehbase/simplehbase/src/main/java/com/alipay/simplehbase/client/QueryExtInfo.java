@@ -1,16 +1,22 @@
 package com.alipay.simplehbase.client;
 
+import java.util.Date;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * QueryExtInfo
  * 
  * <pre>
- * Extra info when do query.
+ * Extra info when do query. So far, the following info can be supplied.
+ * maxVersions
+ * minTimeStamp and maxTimeStamp
+ * startIndex and length when do scan, startIndex is 0-based.
  * </pre>
  * 
  * @author xinzhi.zhang
@@ -38,6 +44,21 @@ public class QueryExtInfo {
         }
         this.maxVersions = maxVersions;
         this.isMaxVersionSet = true;
+    }
+
+    public void setTimeStamp(Date ts) {
+        Util.checkNull(ts);
+        setTimeStamp(ts.getTime());
+    }
+
+    public void setTimeStamp(long ts) {
+        setTimeRange(ts, ts + 1);
+    }
+
+    public void setTimeRange(Date minStamp, Date maxStamp) {
+        Util.checkNull(minStamp);
+        Util.checkNull(maxStamp);
+        setTimeRange(minStamp.getTime(), maxStamp.getTime());
     }
 
     public void setTimeRange(long minStamp, long maxStamp) {

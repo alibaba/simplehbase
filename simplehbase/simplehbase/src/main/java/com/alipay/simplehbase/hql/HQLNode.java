@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.util.Util;
-import com.sun.istack.internal.Nullable;
 
 /**
  * One HQL Node.

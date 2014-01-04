@@ -2,10 +2,10 @@ package com.alipay.simplehbase.hql.node;
 
 import java.util.Map;
 
+import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.HQLNodeType;
 import com.alipay.simplehbase.util.Util;
-import com.sun.istack.internal.Nullable;
 
 public class StatementNode extends HQLNode {
     protected StatementNode() {

@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.myrecord.test.hql.special;
+package com.alipay.simplehbase.myrecord.test.special;
 
 import junit.framework.Assert;
 
@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.alipay.simplehbase.myrecord.MyFatRecord;
 import com.alipay.simplehbase.myrecord.MyRecord;
-import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
+import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
 public class TestBasic extends MyRecordTestBase {
 

@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.myrecord.test;
+package com.alipay.simplehbase.myrecord;
 
 import java.util.Date;
 import java.util.List;
@@ -13,17 +13,14 @@ import org.junit.BeforeClass;
 
 import com.alipay.simplehbase.client.SimpleHbaseAdminClient;
 import com.alipay.simplehbase.client.SimpleHbaseClient;
+import com.alipay.simplehbase.client.rowkey.RowKeyUtil;
 
 import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.config.HBaseTableConfigParser;
 
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.literal.LiteralValueInterpreter;
-import com.alipay.simplehbase.myrecord.Gender;
-import com.alipay.simplehbase.myrecord.MyFatRecord;
-import com.alipay.simplehbase.myrecord.MyRecord;
 
-import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 
 /**
  * @author xinzhi
@@ -62,9 +59,8 @@ public class MyRecordTestBase {
     }
 
     private void deleteRecords() {
-        MyRecordRowKey start = new MyRecordRowKey(0);
-        MyRecordRowKey end = new MyRecordRowKey(Integer.MAX_VALUE);
-        simpleHbaseClient.deleteObjectList(start, end);
+        simpleHbaseClient.deleteObjectList(RowKeyUtil.START_ROW,
+                RowKeyUtil.END_ROW);
     }
 
     protected void addHql(String hql) {
@@ -247,4 +243,10 @@ public class MyRecordTestBase {
         simpleHbaseClient.putObject(myRecordRowKey, myFatRecord);
     }
 
+    protected void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+        }
+    }
 }

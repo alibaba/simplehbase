@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.myrecord.test.hql.special;
+package com.alipay.simplehbase.myrecord.test.special;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +9,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.alipay.simplehbase.myrecord.MyFatRecord;
+import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
-import com.alipay.simplehbase.myrecord.test.MyRecordTestBase;
 
 /**
  * @author xinzhi
