@@ -11,6 +11,10 @@ The main feature of it are following:
 	hbase query language: using hbase filter, simplehbase can use sql-like style to operate on hbase.
 	
 	dynamic query: like myibatis, simplehbase can use xml config file to define dynamic query to operate on hbase.
+	
+	insert update support: provide insert, update on top of checkAndPut.
+	
+	multiple version support: provide interface to operation on hbase's multiple version.
 
 
 
