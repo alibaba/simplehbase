@@ -42,6 +42,8 @@ conditionc : LB conditionc RB        # wrapper
 	| cid NOTBETWEEN var AND var           # notbetweenvar	
 	| cid ISNULL                           # isnullc
 	| cid ISNOTNULL                        # isnotnullc
+	| cid ISMISSING                        # ismissingc
+	| cid ISNOTMISSING                     # isnotmissingc
 	;
 
 constantList : LB constant ( ',' constant) * RB ;
@@ -88,6 +90,8 @@ NOTBETWEEN : 'notbetween' ;
 ISNULL : 'isnull' ;
 ISNOTNULL : 'isnotnull' ;
 
+ISMISSING : 'ismissing' ;
+ISNOTMISSING : 'isnotmissing' ;
   
 TEXT :  [a-zA-Z0-9_\<\(\[\{\\\^\-\=\$\!\|\]\}\)\?\*\+\.\>]+ ;
 

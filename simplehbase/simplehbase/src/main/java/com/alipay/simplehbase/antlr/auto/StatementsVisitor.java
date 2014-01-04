@@ -1,5 +1,4 @@
-package com.alipay.simplehbase.antlr.auto;
-// Generated from Statements.g4 by ANTLR 4.0
+package com.alipay.simplehbase.antlr.auto;// Generated from Statements.g4 by ANTLR 4.0
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Token;
 
@@ -16,6 +15,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitEqualvar(StatementsParser.EqualvarContext ctx);
 
+	T visitIsnotmissingc(StatementsParser.IsnotmissingcContext ctx);
+
 	T visitNotinconstantlist(StatementsParser.NotinconstantlistContext ctx);
 
 	T visitBetweenvar(StatementsParser.BetweenvarContext ctx);
@@ -25,6 +26,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	T visitIsnotnullc(StatementsParser.IsnotnullcContext ctx);
 
 	T visitLessconstant(StatementsParser.LessconstantContext ctx);
+
+	T visitIsmissingc(StatementsParser.IsmissingcContext ctx);
 
 	T visitIsnullc(StatementsParser.IsnullcContext ctx);
 

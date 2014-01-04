@@ -35,6 +35,8 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterequalvarContext
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreatervarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InconstantlistContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InvarlistContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.IsmissingcContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.IsnotmissingcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.IsnotnullcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.IsnullcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.LessconstantContext;
@@ -139,7 +141,7 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
         HBaseColumnSchema hbaseColumnSchema = ContextUtil
                 .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
         return constructFilter(hbaseColumnSchema, CompareOp.EQUAL,
-                BytesUtil.EMPTY);
+                BytesUtil.EMPTY, true);
     }
 
     @Override
@@ -148,7 +150,7 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
         HBaseColumnSchema hbaseColumnSchema = ContextUtil
                 .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
         return constructFilter(hbaseColumnSchema, CompareOp.NOT_EQUAL,
-                BytesUtil.EMPTY);
+                BytesUtil.EMPTY, true);
     }
 
     @Override
@@ -284,11 +286,11 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
 
         byte[] value = hbaseColumnSchema.getTypeHandler().toBytes(
                 hbaseColumnSchema.getType(), object);
-        return constructFilter(hbaseColumnSchema, compareOp, value);
+        return constructFilter(hbaseColumnSchema, compareOp, value, true);
     }
 
     private static Filter constructFilter(HBaseColumnSchema hbaseColumnSchema,
-            CompareOp compareOp, byte[] value) {
+            CompareOp compareOp, byte[] value, boolean filterIfMissing) {
         Util.checkNull(hbaseColumnSchema);
         Util.checkNull(compareOp);
         Util.checkNull(value);
@@ -298,10 +300,28 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
 
         SingleColumnValueFilter singleColumnValueFilter = new SingleColumnValueFilter(
                 familyBytes, qualifierBytes, compareOp, value);
-        singleColumnValueFilter.setFilterIfMissing(true);
+        singleColumnValueFilter.setFilterIfMissing(filterIfMissing);
 
         return singleColumnValueFilter;
 
+    }
+
+    @Override
+    public Filter visitIsnotmissingc(IsnotmissingcContext ctx) {
+        CidContext cidContext = ctx.cid();
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        return constructFilter(hbaseColumnSchema, CompareOp.GREATER_OR_EQUAL,
+                BytesUtil.EMPTY, true);
+    }
+
+    @Override
+    public Filter visitIsmissingc(IsmissingcContext ctx) {
+        CidContext cidContext = ctx.cid();
+        HBaseColumnSchema hbaseColumnSchema = ContextUtil
+                .parseHBaseColumnSchema(hbaseTableConfig, cidContext);
+        return constructFilter(hbaseColumnSchema, CompareOp.LESS,
+                BytesUtil.EMPTY, false);
     }
 
     @Override
