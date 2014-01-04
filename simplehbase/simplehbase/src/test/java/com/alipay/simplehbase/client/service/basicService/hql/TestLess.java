@@ -1,6 +1,5 @@
-package com.alipay.simplehbase.hql.condition;
+package com.alipay.simplehbase.client.service.basicService.hql;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,68 +15,67 @@ import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 /**
  * @author xinzhi
  */
-public class TestIn extends MyRecordTestBase {
+public class TestLess extends MyRecordTestBase {
 
     @Test
     public void testConstants() {
         putSlim("id=0,name=aaa");
         putSlim("id=1,name=bbb");
-        putSlim("id=2,name=bbb");
+        putSlim("id=2,name=ccc");
 
-        addHql("select where name in ( \"aaa\" ) ");
-
+        addHql("select where name less \"aaa\"");
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 TestHqlId, null);
+        Assert.assertTrue(myRecordList.size() == 0);
 
+        addHql("select where name less \"bbb\"");
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 1);
 
-        addHql("select where name in ( \"bbb\" ) ");
+        addHql("select where name less \"ccc\"");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 2);
 
-        addHql("select where name in ( \"aaa\" , \"bbb\" ) ");
+        addHql("select where name less \"ddd\"");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 3);
 
-        addHql("select where name in ( \"ccc\" ) ");
-        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
-                new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
-        Assert.assertTrue(myRecordList.size() == 0);
     }
 
     @Test
     public void testVar() {
         putSlim("id=0,name=aaa");
         putSlim("id=1,name=bbb");
-        putSlim("id=2,name=bbb");
+        putSlim("id=2,name=ccc");
 
-        addHql("select where name in #nameList#");
+        addHql("select where name less #name#");
         Map<String, Object> para = new HashMap<String, Object>();
 
-        para.put("nameList", Arrays.asList("aaa"));
-
+        para.put("name", "aaa");
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 TestHqlId, para);
+        Assert.assertTrue(myRecordList.size() == 0);
+
+        para.put("name", "bbb");
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 1);
 
-        para.put("nameList", Arrays.asList("bbb"));
+        para.put("name", "ccc");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 2);
 
-        para.put("nameList", Arrays.asList("aaa", "bbb"));
+        para.put("name", "ddd");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 3);
 
-        para.put("nameList", Arrays.asList("ccc"));
-        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
-                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
-        Assert.assertTrue(myRecordList.size() == 0);
     }
 
 }

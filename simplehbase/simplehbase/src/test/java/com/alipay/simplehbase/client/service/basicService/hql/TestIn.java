@@ -1,5 +1,6 @@
-package com.alipay.simplehbase.hql.condition;
+package com.alipay.simplehbase.client.service.basicService.hql;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,15 +16,15 @@ import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 /**
  * @author xinzhi
  */
-public class TestBetween extends MyRecordTestBase {
+public class TestIn extends MyRecordTestBase {
 
     @Test
     public void testConstants() {
         putSlim("id=0,name=aaa");
         putSlim("id=1,name=bbb");
-        putSlim("id=2,name=ccc");
+        putSlim("id=2,name=bbb");
 
-        addHql("select where name between \"aaa\" and \"aaa\" ");
+        addHql("select where name in ( \"aaa\" ) ");
 
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
@@ -31,66 +32,52 @@ public class TestBetween extends MyRecordTestBase {
 
         Assert.assertTrue(myRecordList.size() == 1);
 
-        addHql("select where name between \"aaa\" and \"bbb\" ");
+        addHql("select where name in ( \"bbb\" ) ");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 2);
 
-        addHql("select where name between \"aaa\" and \"ccc\" ");
+        addHql("select where name in ( \"aaa\" , \"bbb\" ) ");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 3);
 
-        addHql("select where name between \"aaa\" and \"ddd\" ");
+        addHql("select where name in ( \"ccc\" ) ");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
-        Assert.assertTrue(myRecordList.size() == 3);
-
-        addHql("select where name between \"bbb\" and \"ddd\" ");
-        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
-                new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
-        Assert.assertTrue(myRecordList.size() == 2);
+        Assert.assertTrue(myRecordList.size() == 0);
     }
 
     @Test
     public void testVar() {
         putSlim("id=0,name=aaa");
         putSlim("id=1,name=bbb");
-        putSlim("id=2,name=ccc");
+        putSlim("id=2,name=bbb");
 
-        addHql("select where name between #start# and #end#");
-
+        addHql("select where name in #nameList#");
         Map<String, Object> para = new HashMap<String, Object>();
-        para.put("start", "aaa");
-        para.put("end", "aaa");
+
+        para.put("nameList", Arrays.asList("aaa"));
 
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 1);
 
-        para.put("start", "aaa");
-        para.put("end", "bbb");
+        para.put("nameList", Arrays.asList("bbb"));
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 2);
 
-        para.put("start", "aaa");
-        para.put("end", "ccc");
+        para.put("nameList", Arrays.asList("aaa", "bbb"));
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 3);
 
-        para.put("start", "aaa");
-        para.put("end", "ddd");
+        para.put("nameList", Arrays.asList("ccc"));
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
-        Assert.assertTrue(myRecordList.size() == 3);
-
-        para.put("start", "bbb");
-        para.put("end", "ddd");
-        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
-                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
-        Assert.assertTrue(myRecordList.size() == 2);
+        Assert.assertTrue(myRecordList.size() == 0);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.hql.condition;
+package com.alipay.simplehbase.client.service.basicService.hql;
 
 import java.util.HashMap;
 import java.util.List;

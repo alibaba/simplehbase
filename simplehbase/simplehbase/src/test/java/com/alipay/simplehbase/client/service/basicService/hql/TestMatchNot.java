@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.hql.condition;
+package com.alipay.simplehbase.client.service.basicService.hql;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,7 @@ import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 /**
  * @author xinzhi
  */
-public class TestNotMatch extends MyRecordTestBase {
+public class TestMatchNot extends MyRecordTestBase {
 
     @Test
     public void testConstants() {

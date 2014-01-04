@@ -1,5 +1,6 @@
-package com.alipay.simplehbase.hql.condition;
+package com.alipay.simplehbase.client.service.basicService.hql;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,60 +16,68 @@ import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 /**
  * @author xinzhi
  */
-public class TestAnd extends MyRecordTestBase {
+public class TestInNot extends MyRecordTestBase {
 
     @Test
     public void testConstants() {
-        putSlim("id=0,name=aaa,age=10");
-        putSlim("id=1,name=bbb,age=11");
-        putSlim("id=2,name=ccc,age=12");
+        putSlim("id=0,name=aaa");
+        putSlim("id=1,name=bbb");
+        putSlim("id=2,name=bbb");
 
-        addHql("select where name greater \"aaa\" and age less \"12\"");
+        addHql("select where name notin ( \"aaa\" ) ");
 
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 TestHqlId, null);
+
+        Assert.assertTrue(myRecordList.size() == 2);
+
+        addHql("select where name notin ( \"bbb\" ) ");
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 1);
 
-        addHql("select where name greater \"bbb\" and age less \"12\"");
+        addHql("select where name notin ( \"aaa\" , \"bbb\" ) ");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
         Assert.assertTrue(myRecordList.size() == 0);
 
-        addHql("select where name greater \"ccc\" and age less \"12\"");
+        addHql("select where name notin ( \"ccc\" ) ");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, null);
-        Assert.assertTrue(myRecordList.size() == 0);
+        Assert.assertTrue(myRecordList.size() == 3);
     }
 
     @Test
     public void testVar() {
-        putSlim("id=0,name=aaa,age=10");
-        putSlim("id=1,name=bbb,age=11");
-        putSlim("id=2,name=ccc,age=12");
+        putSlim("id=0,name=aaa");
+        putSlim("id=1,name=bbb");
+        putSlim("id=2,name=bbb");
 
-        addHql("select where name greater #name# and age less #age#");
+        addHql("select where name notin #nameList#");
         Map<String, Object> para = new HashMap<String, Object>();
 
-        para.put("name", "aaa");
-        para.put("age", 12L);
+        para.put("nameList", Arrays.asList("aaa"));
 
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 TestHqlId, para);
+        Assert.assertTrue(myRecordList.size() == 2);
+
+        para.put("nameList", Arrays.asList("bbb"));
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 1);
 
-        para.put("name", "bbb");
-        para.put("age", 12L);
+        para.put("nameList", Arrays.asList("aaa", "bbb"));
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 0);
 
-        para.put("name", "ccc");
-        para.put("age", 12L);
+        para.put("nameList", Arrays.asList("ccc"));
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyRecord.class, TestHqlId, para);
-        Assert.assertTrue(myRecordList.size() == 0);
-
+        Assert.assertTrue(myRecordList.size() == 3);
     }
+
 }

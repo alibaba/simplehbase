@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.hql.condition;
+package com.alipay.simplehbase.client.service.basicService.hql;
 
 import java.util.List;
 
@@ -10,19 +10,20 @@ import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
-public class TestIsNotNull extends MyRecordTestBase {
+public class TestIsNull extends MyRecordTestBase {
 
     @Test
     public void testIsNull() {
         putSlim("id=0,name=aaa");
-        putSlim("id=1,name=bbb");
+        putSlim("id=1");
         putSlim("id=2");
 
-        addHql("select where name isnotnull");
+        addHql("select where name isnull");
 
         List<MyRecord> myRecordList = simpleHbaseClient.findObjectList(
                 new MyRecordRowKey(0), new MyRecordRowKey(100), MyRecord.class,
                 TestHqlId, null);
+
         Assert.assertTrue(myRecordList.size() == 2);
     }
 
