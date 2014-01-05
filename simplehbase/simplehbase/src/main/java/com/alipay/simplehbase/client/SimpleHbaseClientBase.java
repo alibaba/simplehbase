@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
@@ -221,6 +222,16 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             throw new SimpleHBaseException("not a versioned type. typeInfo = "
                     + typeInfo);
         }
+    }
+
+    @Override
+    public HTableInterface getTable(String tableName) {
+        return dataSource.getHTable(tableName);
+    }
+
+    @Override
+    public HBaseAdmin getHBaseAdmin() {
+        return dataSource.getHBaseAdmin();
     }
 
     @Override
