@@ -35,23 +35,39 @@
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
 		</dependency>
-
+<!--
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase</artifactId>
 			<version>0.94-adh3u2.2</version>
 		</dependency>
+	-->		
+		
+		<dependency>
+                <groupId>org.apache.hbase</groupId>
+                <artifactId>hbase</artifactId>  
+                <version>0.94.0</version>				
+        </dependency>	
 
+		<!--	
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-core</artifactId>
-			<version>0.20.2-cdh3u3</version>
+			<version>0.20.2-cdh3u3</version>			
 		</dependency>
+		-->
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-core</artifactId>
+			<version>0.20.2</version>			
+		</dependency>
+		
+
 
 		<dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
-			<version>3.3.2</version>
+			<version>3.3.2</version>			
 			<exclusions>
 				<exclusion>
 					<groupId>com.sun.jmx</groupId>
@@ -68,17 +84,20 @@
 			</exclusions>
 		</dependency>
 
+
+
 		<dependency>
 			<groupId>org.apache.hadoop.thirdparty.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>r09-jarjar</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr</artifactId>
-			<version>4.0-complete</version>
-		</dependency>
+
+        <dependency>
+	        <groupId>org.antlr</groupId>
+	        <artifactId>antlr4</artifactId>
+	        <version>4.0</version>
+         </dependency>
 
 	</dependencies>
   
