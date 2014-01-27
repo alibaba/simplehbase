@@ -15,7 +15,7 @@ countc: COUNT wherec;
 
 wherec: WHERE conditionc;
 
-conditionc : LB conditionc RB        # wrapper
+conditionc : LB conditionc RB          # conditionwrapper
 	| conditionc AND conditionc        # andcondition
 	| conditionc OR conditionc         # orcondition
 	| cid EQUAL constant               # equalconstant
@@ -51,7 +51,7 @@ conditionc : LB conditionc RB        # wrapper
 	
 rowkeyexp : LB rowkeyexp RB        # rowkeywrapper
 	| funcname LB rowkeyexp ( ',' rowkeyexp) * RB     # rowkeyfunc
-	| funcname LB constant RB      # rowkeyfunc_constant
+	| funcname LB constant RB      # rowkeyfuncconstant
     ;
 
 tsexp: constant ;
@@ -61,6 +61,7 @@ cidList : LB cid (',' cid) * RB ;
 
 tablename : TEXT ;	
 cid : TEXT ;
+
 constant: '"' TEXT '"';	
 var : '#' TEXT '#' ;
 

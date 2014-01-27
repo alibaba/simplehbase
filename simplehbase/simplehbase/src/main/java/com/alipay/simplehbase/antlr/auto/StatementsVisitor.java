@@ -19,8 +19,6 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitSelectc(StatementsParser.SelectcContext ctx);
 
-	T visitWrapper(StatementsParser.WrapperContext ctx);
-
 	T visitIsnullc(StatementsParser.IsnullcContext ctx);
 
 	T visitInsertconstantList(StatementsParser.InsertconstantListContext ctx);
@@ -38,8 +36,6 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	T visitCid(StatementsParser.CidContext ctx);
 
 	T visitAndcondition(StatementsParser.AndconditionContext ctx);
-
-	T visitRowkeyfunc_constant(StatementsParser.Rowkeyfunc_constantContext ctx);
 
 	T visitBetweenconstant(StatementsParser.BetweenconstantContext ctx);
 
@@ -63,6 +59,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitLessconstant(StatementsParser.LessconstantContext ctx);
 
+	T visitConditionwrapper(StatementsParser.ConditionwrapperContext ctx);
+
 	T visitRowkeyfunc(StatementsParser.RowkeyfuncContext ctx);
 
 	T visitEqualconstant(StatementsParser.EqualconstantContext ctx);
@@ -80,6 +78,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	T visitOrcondition(StatementsParser.OrconditionContext ctx);
 
 	T visitInvarlist(StatementsParser.InvarlistContext ctx);
+
+	T visitRowkeyfuncconstant(StatementsParser.RowkeyfuncconstantContext ctx);
 
 	T visitNotequalconstant(StatementsParser.NotequalconstantContext ctx);
 

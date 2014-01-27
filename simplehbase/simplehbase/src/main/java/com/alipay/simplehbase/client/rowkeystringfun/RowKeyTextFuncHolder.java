@@ -10,41 +10,41 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.Util;
 
-public class RowKeyStringFuncHolder {
+public class RowKeyTextFuncHolder {
 
     /** log. */
-    private static Logger                                      log             = Logger.getLogger(RowKeyStringFuncHolder.class);
+    private static Logger                                    log             = Logger.getLogger(RowKeyTextFuncHolder.class);
 
     /** BIF. */
-    private static List<RowKeyStringFunc>                      buildInFuncList = new ArrayList<RowKeyStringFunc>();
+    private static List<RowKeyTextFunc>                      buildInFuncList = new ArrayList<RowKeyTextFunc>();
 
-    /** String->RowKeyStringFunc map. */
-    private static ConcurrentHashMap<String, RowKeyStringFunc> funcs           = new ConcurrentHashMap<String, RowKeyStringFunc>();
+    /** String->RowKeyTextFunc map. */
+    private static ConcurrentHashMap<String, RowKeyTextFunc> funcs           = new ConcurrentHashMap<String, RowKeyTextFunc>();
 
     static {
 
-        buildInFuncList.add(new IntStringFunc());
+        buildInFuncList.add(new IntTextFunc());
 
-        for (RowKeyStringFunc func : buildInFuncList) {
+        for (RowKeyTextFunc func : buildInFuncList) {
             Util.checkEmptyString(func.funcName());
             funcs.put(func.funcName(), func);
-            log.info("register RowKeyStringFunc : funcName=" + func.funcName()
+            log.info("register RowKeyTextFunc : funcName=" + func.funcName()
                     + " type=" + func.getClass().getCanonicalName());
         }
 
     }
 
     /**
-     * Register a RowKeyStringFunc.
+     * Register a RowKeyTextFunc.
      * */
     public static void register(String type) {
         Util.checkEmptyString(type);
         try {
             Class<?> c = ClassUtil.forName(type);
-            RowKeyStringFunc func = (RowKeyStringFunc) c.newInstance();
+            RowKeyTextFunc func = (RowKeyTextFunc) c.newInstance();
             funcs.put(func.funcName(), func);
 
-            log.info("register RowKeyStringFunc : funcName=" + func.funcName()
+            log.info("register RowKeyTextFunc : funcName=" + func.funcName()
                     + " type=" + c.getCanonicalName());
 
         } catch (Exception e) {
@@ -54,12 +54,12 @@ public class RowKeyStringFuncHolder {
     }
 
     /**
-     * Find RowKeyStringFunc by name.
+     * Find RowKeyTextFunc by name.
      * 
      * @param funcName funcName.
-     * @return RowKeyStringFunc.
+     * @return RowKeyTextFunc.
      */
-    public static RowKeyStringFunc findRowKeyStringFunc(String funcName) {
+    public static RowKeyTextFunc findRowKeyTextFunc(String funcName) {
         Util.checkEmptyString(funcName);
         return funcs.get(funcName);
     }

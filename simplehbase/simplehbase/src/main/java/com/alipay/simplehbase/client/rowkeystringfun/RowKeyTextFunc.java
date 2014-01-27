@@ -3,11 +3,11 @@ package com.alipay.simplehbase.client.rowkeystringfun;
 import com.alipay.simplehbase.client.RowKey;
 
 /**
- * RowKeyStringFunc.
+ * RowKeyTextFunc.
  * 
  * @author xinzhi.zhang
  * */
-public interface RowKeyStringFunc {
+public interface RowKeyTextFunc {
 
     /**
      * Convert string text to one row key.

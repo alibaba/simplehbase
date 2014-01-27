@@ -32,6 +32,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterequalvarContext
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreatervarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InconstantlistContext;
 
+import com.alipay.simplehbase.antlr.auto.StatementsParser.ConditionwrapperContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InvarlistContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.IsmissingcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.IsnotmissingcContext;
@@ -54,8 +55,6 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.NotmatchvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.OrconditionContext;
 
 import com.alipay.simplehbase.antlr.auto.StatementsParser.VarContext;
-
-import com.alipay.simplehbase.antlr.auto.StatementsParser.WrapperContext;
 
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseTableConfig;
@@ -104,7 +103,7 @@ public class SimpleHbaseFilterVisitor extends StatementsBaseVisitor<Filter> {
     }
 
     @Override
-    public Filter visitWrapper(WrapperContext ctx) {
+    public Filter visitConditionwrapper(ConditionwrapperContext ctx) {
         return ctx.conditionc().accept(this);
     }
 

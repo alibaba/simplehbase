@@ -30,7 +30,7 @@ public class TreeUtil {
     /**
      * Parse ProgContext from hql string.
      * */
-    public static ProgContext parse(String hql) {
+    public static ProgContext parseProgContext(String hql) {
         Util.checkEmptyString(hql);
 
         try {

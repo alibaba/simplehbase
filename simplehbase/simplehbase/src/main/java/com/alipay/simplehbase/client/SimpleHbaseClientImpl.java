@@ -22,6 +22,8 @@ import org.apache.hadoop.hbase.filter.Filter;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertconstantListContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.RowkeyexpContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.TsexpContext;
 import com.alipay.simplehbase.antlr.manual.ContextUtil;
 import com.alipay.simplehbase.antlr.manual.TreeUtil;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
@@ -112,7 +114,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                     queryExtInfo);
         }
 
-        ProgContext progContext = TreeUtil.parse(hql);
+        ProgContext progContext = TreeUtil.parseProgContext(hql);
         Filter filter = TreeUtil.parseSelectFilter(progContext,
                 hbaseTableConfig, para);
 
@@ -421,7 +423,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             return count_internal(startRowKey, endRowKey, null);
         }
 
-        ProgContext progContext = TreeUtil.parse(hql);
+        ProgContext progContext = TreeUtil.parseProgContext(hql);
         Filter filter = TreeUtil.parseCountFilter(progContext,
                 hbaseTableConfig, para);
 
@@ -506,7 +508,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                     null, queryExtInfo);
         }
 
-        ProgContext progContext = TreeUtil.parse(hql);
+        ProgContext progContext = TreeUtil.parseProgContext(hql);
         Filter filter = TreeUtil.parseSelectFilter(progContext,
                 hbaseTableConfig, para);
 
@@ -518,7 +520,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     public void put(String hql) {
         Util.checkEmptyString(hql);
 
-        ProgContext progContext = TreeUtil.parse(hql);
+        ProgContext progContext = TreeUtil.parseProgContext(hql);
         InsertconstantListContext context = TreeUtil
                 .parseInsertconstantListContext(progContext);
         Util.checkNull(context);
@@ -530,11 +532,44 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                 .parseHBaseColumnSchemaList(hbaseTableConfig, context.cidList());
         List<ConstantContext> constantContextList = context.constantList()
                 .constant();
-
         Util.check(hbaseColumnSchemaList.size() == constantContextList.size());
 
-        // TODO Auto-generated method stub
+        RowkeyexpContext rowkeyexpContext = context.rowkeyexp();
+        RowKey rowKey = ContextUtil.parseRowKey(rowkeyexpContext);
+        Util.checkRowKey(rowKey);
 
+        Date ts = null;
+        TsexpContext tsexpContext = context.tsexp();
+        if (tsexpContext != null) {
+            ts = ContextUtil.parseTsDate(tsexpContext);
+        }
+
+        Put put = new Put(rowKey.toBytes());
+        for (int i = 0; i < hbaseColumnSchemaList.size(); i++) {
+            HBaseColumnSchema hbaseColumnSchema = hbaseColumnSchemaList.get(i);
+            ConstantContext constantContext = constantContextList.get(i);
+            Object value = ContextUtil.parseConstant(hbaseColumnSchema,
+                    constantContext);
+            byte[] data = convertValueToBytes(value, hbaseColumnSchema);
+            if (ts == null) {
+                put.add(hbaseColumnSchema.getFamilyBytes(),
+                        hbaseColumnSchema.getQualifierBytes(), data);
+            } else {
+                put.add(hbaseColumnSchema.getFamilyBytes(),
+                        hbaseColumnSchema.getQualifierBytes(), ts.getTime(),
+                        data);
+            }
+        }
+
+        HTableInterface htableInterface = htableInterface();
+
+        try {
+            htableInterface.put(put);
+        } catch (IOException e) {
+            throw new SimpleHBaseException("put. hql=" + hql, e);
+        } finally {
+            Util.close(htableInterface);
+        }
     }
 
 }

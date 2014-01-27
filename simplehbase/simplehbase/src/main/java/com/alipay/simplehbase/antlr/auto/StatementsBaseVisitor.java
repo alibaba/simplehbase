@@ -1,5 +1,4 @@
-package com.alipay.simplehbase.antlr.auto; 
-// Generated from Statements.g4 by ANTLR 4.0
+package com.alipay.simplehbase.antlr.auto;// Generated from Statements.g4 by ANTLR 4.0
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -21,8 +20,6 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitSelectc(StatementsParser.SelectcContext ctx) { return visitChildren(ctx); }
 
-	@Override public T visitWrapper(StatementsParser.WrapperContext ctx) { return visitChildren(ctx); }
-
 	@Override public T visitIsnullc(StatementsParser.IsnullcContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitInsertconstantList(StatementsParser.InsertconstantListContext ctx) { return visitChildren(ctx); }
@@ -40,8 +37,6 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	@Override public T visitCid(StatementsParser.CidContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitAndcondition(StatementsParser.AndconditionContext ctx) { return visitChildren(ctx); }
-
-	@Override public T visitRowkeyfunc_constant(StatementsParser.Rowkeyfunc_constantContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitBetweenconstant(StatementsParser.BetweenconstantContext ctx) { return visitChildren(ctx); }
 
@@ -65,6 +60,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitLessconstant(StatementsParser.LessconstantContext ctx) { return visitChildren(ctx); }
 
+	@Override public T visitConditionwrapper(StatementsParser.ConditionwrapperContext ctx) { return visitChildren(ctx); }
+
 	@Override public T visitRowkeyfunc(StatementsParser.RowkeyfuncContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitEqualconstant(StatementsParser.EqualconstantContext ctx) { return visitChildren(ctx); }
@@ -82,6 +79,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	@Override public T visitOrcondition(StatementsParser.OrconditionContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitInvarlist(StatementsParser.InvarlistContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitRowkeyfuncconstant(StatementsParser.RowkeyfuncconstantContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitNotequalconstant(StatementsParser.NotequalconstantContext ctx) { return visitChildren(ctx); }
 

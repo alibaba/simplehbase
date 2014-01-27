@@ -500,19 +500,6 @@ public class StatementsParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class WrapperContext extends ConditioncContext {
-		public ConditioncContext conditionc() {
-			return getRuleContext(ConditioncContext.class,0);
-		}
-		public TerminalNode LB() { return getToken(StatementsParser.LB, 0); }
-		public TerminalNode RB() { return getToken(StatementsParser.RB, 0); }
-		public WrapperContext(ConditioncContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitWrapper(this);
-			else return visitor.visitChildren(this);
-		}
-	}
 	public static class IsnullcContext extends ConditioncContext {
 		public CidContext cid() {
 			return getRuleContext(CidContext.class,0);
@@ -522,6 +509,19 @@ public class StatementsParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitIsnullc(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ConditionwrapperContext extends ConditioncContext {
+		public ConditioncContext conditionc() {
+			return getRuleContext(ConditioncContext.class,0);
+		}
+		public TerminalNode LB() { return getToken(StatementsParser.LB, 0); }
+		public TerminalNode RB() { return getToken(StatementsParser.RB, 0); }
+		public ConditionwrapperContext(ConditioncContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitConditionwrapper(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -834,7 +834,7 @@ public class StatementsParser extends Parser {
 			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 			case 1:
 				{
-				_localctx = new WrapperContext(_localctx);
+				_localctx = new ConditionwrapperContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
@@ -1219,6 +1219,22 @@ public class StatementsParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
+	public static class RowkeyfuncconstantContext extends RowkeyexpContext {
+		public ConstantContext constant() {
+			return getRuleContext(ConstantContext.class,0);
+		}
+		public TerminalNode LB() { return getToken(StatementsParser.LB, 0); }
+		public TerminalNode RB() { return getToken(StatementsParser.RB, 0); }
+		public FuncnameContext funcname() {
+			return getRuleContext(FuncnameContext.class,0);
+		}
+		public RowkeyfuncconstantContext(RowkeyexpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitRowkeyfuncconstant(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class RowkeywrapperContext extends RowkeyexpContext {
 		public RowkeyexpContext rowkeyexp() {
 			return getRuleContext(RowkeyexpContext.class,0);
@@ -1248,22 +1264,6 @@ public class StatementsParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitRowkeyfunc(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class Rowkeyfunc_constantContext extends RowkeyexpContext {
-		public ConstantContext constant() {
-			return getRuleContext(ConstantContext.class,0);
-		}
-		public TerminalNode LB() { return getToken(StatementsParser.LB, 0); }
-		public TerminalNode RB() { return getToken(StatementsParser.RB, 0); }
-		public FuncnameContext funcname() {
-			return getRuleContext(FuncnameContext.class,0);
-		}
-		public Rowkeyfunc_constantContext(RowkeyexpContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof StatementsVisitor ) return ((StatementsVisitor<? extends T>)visitor).visitRowkeyfunc_constant(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1311,7 +1311,7 @@ public class StatementsParser extends Parser {
 				break;
 
 			case 3:
-				_localctx = new Rowkeyfunc_constantContext(_localctx);
+				_localctx = new RowkeyfuncconstantContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(208); funcname();

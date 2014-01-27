@@ -3,7 +3,7 @@ package com.alipay.simplehbase.client.rowkeystringfun;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.rowkey.IntRowKey;
 
-public class IntStringFunc implements RowKeyStringFunc {
+public class IntTextFunc implements RowKeyTextFunc {
 
     @Override
     public RowKey func(String text) {

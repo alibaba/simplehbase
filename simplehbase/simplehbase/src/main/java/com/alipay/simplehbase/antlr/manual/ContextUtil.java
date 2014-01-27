@@ -1,13 +1,17 @@
 package com.alipay.simplehbase.antlr.manual;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CidContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CidListContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.RowkeyexpContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.TsexpContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.VarContext;
+import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
@@ -122,5 +126,26 @@ public class ContextUtil {
             result.add(parseConstant(hbaseColumnSchema, constantContext));
         }
         return result;
+    }
+
+    /**
+     * Parse Rowkey from RowkeyexpContext.
+     */
+    public static RowKey parseRowKey(RowkeyexpContext rowkeyexpContext) {
+        Util.checkNull(rowkeyexpContext);
+
+        SimpleHbaseRowKeyVisitor visitor = new SimpleHbaseRowKeyVisitor();
+        return rowkeyexpContext.accept(visitor);
+    }
+
+    /**
+     * Parse Date from TsexpContext.
+     */
+    public static Date parseTsDate(TsexpContext tsexpContext) {
+        Util.checkNull(tsexpContext);
+
+        String constant = tsexpContext.constant().TEXT().getText();
+        return (Date) LiteralValueInterpreter.convertToObject(Date.class,
+                constant);
     }
 }

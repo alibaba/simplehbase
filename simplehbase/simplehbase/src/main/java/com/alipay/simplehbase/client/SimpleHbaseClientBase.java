@@ -215,6 +215,32 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
+     * Convert value to bytes.
+     * */
+    protected byte[] convertValueToBytes(Object value,
+            HBaseColumnSchema hbaseColumnSchema) {
+
+        if (value == null) {
+            return null;
+        }
+
+        try {
+            Class<?> valueType = value.getClass();
+            Class<?> schemaType = hbaseColumnSchema.getType();
+            if (!ClassUtil.withSameType(valueType, schemaType)) {
+                throw new SimpleHBaseException(
+                        "class does not match. valueType=" + valueType
+                                + " schemaType=" + schemaType);
+            }
+
+            TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
+            return typeHandler.toBytes(valueType, value);
+        } catch (Exception e) {
+            throw new SimpleHBaseException(e);
+        }
+    }
+
+    /**
      * Check for typeInfo is versioned typeInfo.
      * */
     protected void checkVersioned(TypeInfo typeInfo) {
