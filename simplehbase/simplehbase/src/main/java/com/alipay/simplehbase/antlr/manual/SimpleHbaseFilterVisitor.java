@@ -5,11 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterList;
@@ -18,22 +13,25 @@ import org.apache.hadoop.hbase.filter.RegexStringComparator;
 
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 
+import com.alipay.simplehbase.antlr.auto.StatementsBaseVisitor;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.AndconditionContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.BetweenconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.BetweenvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CidContext;
+
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConditioncContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantListContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.CountcContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.CountclContext;
+
 import com.alipay.simplehbase.antlr.auto.StatementsParser.EqualconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.EqualvarContext;
+
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterequalconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreaterequalvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.GreatervarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InconstantlistContext;
+
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InvarlistContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.IsmissingcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.IsnotmissingcContext;
@@ -54,12 +52,11 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.NotinvarlistContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.NotmatchconstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.NotmatchvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.OrconditionContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectcContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectclContext;
+
 import com.alipay.simplehbase.antlr.auto.StatementsParser.VarContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.WherecContext;
+
 import com.alipay.simplehbase.antlr.auto.StatementsParser.WrapperContext;
-import com.alipay.simplehbase.antlr.auto.StatementsVisitor;
+
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
@@ -71,12 +68,12 @@ import com.alipay.simplehbase.util.Util;
  * 
  * @author xinzhi.zhang
  * */
-public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
+public class SimpleHbaseFilterVisitor extends StatementsBaseVisitor<Filter> {
 
     private HBaseTableConfig    hbaseTableConfig;
     private Map<String, Object> para;
 
-    public SimpleHbaseVisitor(HBaseTableConfig hbaseTableConfig,
+    public SimpleHbaseFilterVisitor(HBaseTableConfig hbaseTableConfig,
             Map<String, Object> para) {
         this.hbaseTableConfig = hbaseTableConfig;
         this.para = para;
@@ -570,70 +567,4 @@ public class SimpleHbaseVisitor implements StatementsVisitor<Filter> {
 
         return filterList;
     }
-
-    @Override
-    public Filter visitCid(CidContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Filter visitWherec(WherecContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Filter visitVar(VarContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Filter visitConstant(ConstantContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Filter visit(@NotNull ParseTree arg0) {
-        return null;
-    }
-
-    @Override
-    public Filter visitChildren(@NotNull RuleNode arg0) {
-        return null;
-    }
-
-    @Override
-    public Filter visitErrorNode(@NotNull ErrorNode arg0) {
-        return null;
-    }
-
-    @Override
-    public Filter visitTerminal(@NotNull TerminalNode arg0) {
-        return null;
-    }
-
-    @Override
-    public Filter visitConstantList(ConstantListContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Filter visitCountc(CountcContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Filter visitSelectcl(SelectclContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Filter visitCountcl(CountclContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Filter visitSelectc(SelectcContext ctx) {
-        return null;
-    }
-
 }

@@ -1,0 +1,1 @@
+insert into tablename ( a , b , c ) values ( "a" ,"b" ,"c" ) rowkey is a ( c ( b ( "a" ),d ( "e" ) ) ) ts is "2012"

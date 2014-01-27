@@ -110,6 +110,24 @@ public class Util {
         }
     }
 
+    /**
+     * Check for 2 objects are equal.
+     * */
+    public static void checkEquals(Object one, Object other) {
+        if (one == other) {
+            return;
+        }
+
+        if (one == null || other == null) {
+            throw new SimpleHBaseException("null object. one = " + one
+                    + " other = " + other);
+        }
+        if (!one.equals(other)) {
+            throw new SimpleHBaseException("not equal object. one = " + one
+                    + " other = " + other);
+        }
+    }
+
     private Util() {
     }
 }

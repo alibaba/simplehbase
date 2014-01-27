@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CidContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CidListContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.VarContext;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
@@ -43,6 +44,24 @@ public class ContextUtil {
 
         throw new SimpleHBaseException("parseHBaseColumnSchema error. cid="
                 + cid);
+    }
+
+    /**
+     * Parse HBaseColumnSchema list from CidListContext.
+     * */
+    public static List<HBaseColumnSchema> parseHBaseColumnSchemaList(
+            HBaseTableConfig hbaseTableConfig, CidListContext cidListContext) {
+        Util.checkNull(hbaseTableConfig);
+        Util.checkNull(cidListContext);
+
+        List<HBaseColumnSchema> result = new ArrayList<HBaseColumnSchema>();
+
+        for (CidContext cidContext : cidListContext.cid()) {
+            result.add(parseHBaseColumnSchema(hbaseTableConfig, cidContext));
+        }
+
+        return result;
+
     }
 
     /**
@@ -85,8 +104,8 @@ public class ContextUtil {
         String constant = constantContext.TEXT().getText();
         Util.checkEmptyString(constant);
 
-        return LiteralValueInterpreter.convertToObject(hbaseColumnSchema.getType(),
-                constant);
+        return LiteralValueInterpreter.convertToObject(
+                hbaseColumnSchema.getType(), constant);
     }
 
     /**

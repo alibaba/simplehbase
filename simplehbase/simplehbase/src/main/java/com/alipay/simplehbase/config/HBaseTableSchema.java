@@ -91,7 +91,13 @@ public class HBaseTableSchema {
         Util.checkEmptyString(family);
         Util.checkEmptyString(qualifier);
 
-        return columnSchemas.get(qualifier).get(family);
+        HBaseColumnSchema result = columnSchemas.get(qualifier).get(family);
+
+        if (result == null) {
+            throw new SimpleHBaseException("no HBaseColumnSchema found.");
+        }
+
+        return result;
     }
 
     /**

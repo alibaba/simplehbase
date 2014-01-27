@@ -19,7 +19,10 @@ import org.apache.hadoop.hbase.client.coprocessor.AggregationClient;
 import org.apache.hadoop.hbase.client.coprocessor.LongColumnInterpreter;
 import org.apache.hadoop.hbase.filter.Filter;
 
+import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertconstantListContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
+import com.alipay.simplehbase.antlr.manual.ContextUtil;
 import com.alipay.simplehbase.antlr.manual.TreeUtil;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.core.Nullable;
@@ -509,6 +512,29 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         return findObjectList_internal_mv(startRowKey, endRowKey, type, filter,
                 queryExtInfo);
+    }
+
+    @Override
+    public void put(String hql) {
+        Util.checkEmptyString(hql);
+
+        ProgContext progContext = TreeUtil.parse(hql);
+        InsertconstantListContext context = TreeUtil
+                .parseInsertconstantListContext(progContext);
+        Util.checkNull(context);
+
+        String tableName = context.tablename().TEXT().getText();
+        checkTableName(tableName);
+
+        List<HBaseColumnSchema> hbaseColumnSchemaList = ContextUtil
+                .parseHBaseColumnSchemaList(hbaseTableConfig, context.cidList());
+        List<ConstantContext> constantContextList = context.constantList()
+                .constant();
+
+        Util.check(hbaseColumnSchemaList.size() == constantContextList.size());
+
+        // TODO Auto-generated method stub
+
     }
 
 }

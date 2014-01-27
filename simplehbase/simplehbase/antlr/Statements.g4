@@ -3,15 +3,17 @@ grammar Statements;
 
 prog:    selectc           # selectcl
        | countc            # countcl
+	   | insertc           # insertcl
        ;
 
 
+insertc : INSERT INTO tablename cidList VALUES constantList ROWKEY IS rowkeyexp ( TS IS tsexp ) ? # insertconstantList
+		;
+	   
 selectc: SELECT wherec;
 countc: COUNT wherec;
 
-
 wherec: WHERE conditionc;
-
 
 conditionc : LB conditionc RB        # wrapper
 	| conditionc AND conditionc        # andcondition
@@ -46,12 +48,29 @@ conditionc : LB conditionc RB        # wrapper
 	| cid ISNOTMISSING                     # isnotmissingc
 	;
 
-constantList : LB constant ( ',' constant) * RB ;
-
 	
+rowkeyexp : LB rowkeyexp RB        # rowkeywrapper
+	| funcname LB rowkeyexp ( ',' rowkeyexp) * RB     # rowkeyfunc
+	| funcname LB constant RB      # rowkeyfunc_constant
+    ;
+
+tsexp: constant ;
+	
+constantList : LB constant ( ',' constant) * RB ;
+cidList : LB cid (',' cid) * RB ;
+
+tablename : TEXT ;	
 cid : TEXT ;
 constant: '"' TEXT '"';	
 var : '#' TEXT '#' ;
+
+funcname: TEXT ;
+
+
+
+
+
+
 
 LB : '(' ;
 RB : ')' ;
@@ -60,12 +79,16 @@ WHERE : 'where' ;
 
 SELECT : 'select' ; 
 COUNT : 'count' ;
+INSERT : 'insert' ;
+INTO : 'into' ;
+VALUES : 'values' ;
 
+ROWKEY : 'rowkey' ;
+TS : 'ts' ;
+IS : 'is' ;
 
 AND : 'and' ;
 OR : 'or' ;
-
-
 
 
 LESSEQUAL : 'lessequal' ;

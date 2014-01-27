@@ -22,6 +22,7 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.type.TypeHandler;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.ConfigUtil;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * SimpleHbaseClient's skeleton implementation.
@@ -222,6 +223,14 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             throw new SimpleHBaseException("not a versioned type. typeInfo = "
                     + typeInfo);
         }
+    }
+
+    /**
+     * Check for table name.
+     * */
+    protected void checkTableName(String tableName) {
+        Util.checkEquals(tableName, hbaseTableConfig.getHbaseTableSchema()
+                .getTableName());
     }
 
     @Override
