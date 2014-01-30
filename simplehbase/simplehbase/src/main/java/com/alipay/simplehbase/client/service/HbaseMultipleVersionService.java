@@ -15,6 +15,8 @@ import com.alipay.simplehbase.core.Nullable;
  * <pre>
  * Provides hbase multiple version related service.
  * </pre>
+ * 
+ * @author xinzhi.zhang
  * */
 public interface HbaseMultipleVersionService {
 

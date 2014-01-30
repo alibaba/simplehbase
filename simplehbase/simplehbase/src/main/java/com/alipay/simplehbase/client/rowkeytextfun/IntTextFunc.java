@@ -3,6 +3,9 @@ package com.alipay.simplehbase.client.rowkeytextfun;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.rowkey.IntRowKey;
 
+/**
+ * @author xinzhi
+ * */
 public class IntTextFunc implements RowKeyTextFunc {
 
     @Override

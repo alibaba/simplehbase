@@ -7,6 +7,9 @@ import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.HQLNodeType;
 import com.alipay.simplehbase.util.Util;
 
+/**
+ * @author xinzhi
+ */
 public class StatementNode extends HQLNode {
     protected StatementNode() {
         super(HQLNodeType.Statement);

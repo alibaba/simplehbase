@@ -5,7 +5,9 @@ import java.util.Map;
 import com.alipay.simplehbase.hql.HQLNodeType;
 import com.alipay.simplehbase.literal.LiteralValueInterpreter;
 import com.alipay.simplehbase.util.CompareUtil;
-
+/**
+ * @author xinzhi
+ */
 public class IsGreaterThanNode extends BinaryNode {
 
     protected IsGreaterThanNode() {

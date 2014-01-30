@@ -10,6 +10,8 @@ import com.alipay.simplehbase.client.SimpleHbaseCellResult;
  * <pre>
  * Provides hbase raw service.
  * </pre>
+ * 
+ * @author xinzhi.zhang
  * */
 public interface HbaseRawService {
 

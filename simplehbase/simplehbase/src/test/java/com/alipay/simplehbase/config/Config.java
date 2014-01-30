@@ -16,6 +16,9 @@ import com.alipay.simplehbase.client.SimpleHbaseClient;
 import com.alipay.simplehbase.client.SimpleHbaseClientFactory;
 import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
 
+/**
+ * @author xinzhi
+ * */
 public class Config {
 
     final public static String                     TableName                         = "MyRecordV04";

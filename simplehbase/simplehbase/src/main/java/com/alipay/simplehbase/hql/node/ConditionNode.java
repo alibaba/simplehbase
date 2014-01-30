@@ -5,7 +5,9 @@ import java.util.Map;
 import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.HQLNodeType;
 import com.alipay.simplehbase.util.StringUtil;
-
+/**
+ * @author xinzhi
+ */
 abstract public class ConditionNode extends PrependNode {
 
     protected ConditionNode(HQLNodeType hqlNodeType) {

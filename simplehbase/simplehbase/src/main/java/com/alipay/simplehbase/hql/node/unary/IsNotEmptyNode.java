@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.hql.HQLNodeType;
-
+/**
+ * @author xinzhi
+ */
 public class IsNotEmptyNode extends UnaryNode {
 
     protected IsNotEmptyNode() {

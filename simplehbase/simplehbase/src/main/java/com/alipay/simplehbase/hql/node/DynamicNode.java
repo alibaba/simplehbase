@@ -4,7 +4,9 @@ import java.util.Map;
 
 import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.HQLNodeType;
-
+/**
+ * @author xinzhi
+ */
 public class DynamicNode extends PrependNode {
 
     protected DynamicNode() {

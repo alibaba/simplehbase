@@ -2,7 +2,9 @@ package com.alipay.simplehbase.hql.node.unary;
 
 import com.alipay.simplehbase.hql.HQLNodeType;
 import com.alipay.simplehbase.hql.node.ConditionNode;
-
+/**
+ * @author xinzhi
+ */
 abstract public class UnaryNode extends ConditionNode {
 
     private String property;

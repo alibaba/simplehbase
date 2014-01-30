@@ -4,7 +4,9 @@ import java.util.Map;
 
 import com.alipay.simplehbase.hql.HQLNodeType;
 import com.alipay.simplehbase.literal.LiteralValueInterpreter;
-
+/**
+ * @author xinzhi
+ */
 public class IsEqualNode extends BinaryNode {
 
     protected IsEqualNode() {

@@ -8,6 +8,9 @@ import com.alipay.simplehbase.myrecord.MyFatRecord;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
+/**
+ * @author xinzhi
+ * */
 public class TestBasic extends MyRecordTestBase {
 
     @Test

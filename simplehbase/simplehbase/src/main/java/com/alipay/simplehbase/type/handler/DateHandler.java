@@ -5,7 +5,9 @@ import java.util.Date;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.alipay.simplehbase.type.AbstractTypeHandler;
-
+/**
+ * @author xinzhi
+ * */
 public class DateHandler extends AbstractTypeHandler {
 
 	@Override

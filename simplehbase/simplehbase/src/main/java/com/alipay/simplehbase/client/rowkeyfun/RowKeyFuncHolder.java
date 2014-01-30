@@ -9,7 +9,9 @@ import org.apache.log4j.Logger;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.Util;
-
+/**
+ * @author xinzhi
+ */
 public class RowKeyFuncHolder {
     /** log. */
     private static Logger                                log             = Logger.getLogger(RowKeyFuncHolder.class);

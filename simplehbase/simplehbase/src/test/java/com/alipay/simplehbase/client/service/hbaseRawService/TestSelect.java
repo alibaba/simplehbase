@@ -15,6 +15,9 @@ import com.alipay.simplehbase.config.TimeDepend;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 import com.alipay.simplehbase.util.DateUtil;
 
+/**
+ * @author xinzhi
+ * */
 public class TestSelect extends MyRecordTestBase {
 
     private void assertSimpleHbaseCellResult(

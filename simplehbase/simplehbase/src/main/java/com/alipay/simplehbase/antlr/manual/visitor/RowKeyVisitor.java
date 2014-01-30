@@ -14,6 +14,9 @@ import com.alipay.simplehbase.client.rowkeyfun.RowKeyFuncHolder;
 import com.alipay.simplehbase.client.rowkeytextfun.RowKeyTextFunc;
 import com.alipay.simplehbase.client.rowkeytextfun.RowKeyTextFuncHolder;
 
+/**
+ * @author xinzhi
+ * */
 public class RowKeyVisitor extends StatementsBaseVisitor<RowKey> {
 
     @Override

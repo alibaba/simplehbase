@@ -23,6 +23,11 @@ import com.alipay.simplehbase.config.TimeDepend;
 import com.alipay.simplehbase.util.DateUtil;
 import com.alipay.simplehbase.util.Util;
 
+/**
+ * HbaseBasicOpTest.
+ * 
+ * @author xinzhi.zhang
+ * */
 public class HbaseBasicOpTest extends HbaseTestBase {
 
     @Test

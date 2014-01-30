@@ -2,7 +2,9 @@ package com.alipay.simplehbase.type.handler;
 
 import com.alipay.simplehbase.type.AbstractTypeHandler;
 import com.alipay.simplehbase.util.Util;
-
+/**
+ * @author xinzhi
+ * */
 public class CharacterHandler extends AbstractTypeHandler {
 
     @Override

@@ -1,6 +1,6 @@
 package allen.studyhbase;
 
-import java.io.IOException; 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +23,11 @@ import org.junit.BeforeClass;
 import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.util.Util;
 
+/**
+ * HbaseTestBase.
+ * 
+ * @author xinzhi.zhang
+ * */
 public class HbaseTestBase {
 
     protected static Log      log              = LogFactory

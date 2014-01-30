@@ -5,6 +5,8 @@ import org.apache.hadoop.hbase.client.HTableInterface;
 
 /**
  * HbaseService
+ * 
+ * @author xinzhi.zhang
  * */
 public interface HbaseService {
 

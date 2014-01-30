@@ -11,6 +11,9 @@ import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
+/**
+ * @author xinzhi
+ * */
 public class TestPut extends MyRecordTestBase {
 
     @Test

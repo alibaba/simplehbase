@@ -4,6 +4,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+/**
+ * @author xinzhi
+ * */
 public class TestStringRowKey {
 
     @Test

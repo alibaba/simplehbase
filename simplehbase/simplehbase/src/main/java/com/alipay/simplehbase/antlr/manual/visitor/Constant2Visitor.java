@@ -6,6 +6,9 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.Constant2_NullContext;
 import com.alipay.simplehbase.antlr.manual.ContextUtil;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 
+/**
+ * @author xinzhi
+ * */
 public class Constant2Visitor extends StatementsBaseVisitor<Object> {
 
     private HBaseColumnSchema hbaseColumnSchema;

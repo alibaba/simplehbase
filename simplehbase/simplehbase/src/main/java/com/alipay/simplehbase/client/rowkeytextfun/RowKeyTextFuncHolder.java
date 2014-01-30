@@ -10,6 +10,9 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.Util;
 
+/**
+ * @author xinzhi
+ * */
 public class RowKeyTextFuncHolder {
 
     /** log. */

@@ -12,6 +12,9 @@ import com.alipay.simplehbase.myrecord.MyFatRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
+/**
+ * @author xinzhi
+ * */
 public class TestIsMissingNot extends MyRecordTestBase {
     @Test
     public void less() {

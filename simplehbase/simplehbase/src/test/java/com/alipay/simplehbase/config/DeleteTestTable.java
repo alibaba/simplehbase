@@ -1,5 +1,8 @@
 package com.alipay.simplehbase.config;
 
+/**
+ * @author xinzhi
+ * */
 public class DeleteTestTable {
 
     public static void main(String[] args) {

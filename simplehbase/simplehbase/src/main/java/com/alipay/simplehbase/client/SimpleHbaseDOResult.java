@@ -15,6 +15,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * timestamp.
  * </list>
  * </pre>
+ * 
+ * @author xinzhi.zhang
  * */
 public class SimpleHbaseDOResult<T> {
     /** The mapping result of DO. */

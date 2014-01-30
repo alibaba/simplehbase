@@ -3,7 +3,9 @@ package com.alipay.simplehbase.type.handler;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.alipay.simplehbase.type.AbstractTypeHandler;
-
+/**
+ * @author xinzhi
+ * */
 public class ShortHandler extends AbstractTypeHandler {
 
 	@Override

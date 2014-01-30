@@ -7,7 +7,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.alipay.simplehbase.config.Config;
-
+/**
+ * HbaseCoprocessorTest.
+ * 
+ * @author xinzhi.zhang
+ * */
 public class HbaseCoprocessorTest extends HbaseTestBase {
 
     @Test

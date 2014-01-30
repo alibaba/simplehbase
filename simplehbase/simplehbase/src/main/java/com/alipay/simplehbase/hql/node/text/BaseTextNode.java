@@ -2,7 +2,9 @@ package com.alipay.simplehbase.hql.node.text;
 
 import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.HQLNodeType;
-
+/**
+ * @author xinzhi
+ */
 abstract public class BaseTextNode extends HQLNode {
 
     private String textValue;

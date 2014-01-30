@@ -3,7 +3,9 @@ package com.alipay.simplehbase.hql.node.unary;
 import org.w3c.dom.Node;
 
 import com.alipay.simplehbase.hql.HQLNode;
-
+/**
+ * @author xinzhi
+ */
 public class IsNotNullNodeHandler extends UnaryNodeHandler {
 
     @Override

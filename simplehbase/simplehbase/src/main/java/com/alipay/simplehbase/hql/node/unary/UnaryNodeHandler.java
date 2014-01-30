@@ -4,7 +4,9 @@ import org.w3c.dom.Node;
 
 import com.alipay.simplehbase.hql.node.PrependNodeHandler;
 import com.alipay.simplehbase.util.XmlUtil;
-
+/**
+ * @author xinzhi
+ */
 abstract public class UnaryNodeHandler extends PrependNodeHandler {
 
     public void handle(UnaryNode unaryNode, Node node) {

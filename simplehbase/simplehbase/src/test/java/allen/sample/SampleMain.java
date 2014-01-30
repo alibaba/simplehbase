@@ -14,6 +14,9 @@ import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 
+/**
+ * @author xinzhi
+ * */
 public class SampleMain {
 
     /** log. */

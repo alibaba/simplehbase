@@ -14,7 +14,9 @@ import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.config.SimpleHbaseConstants;
 import com.alipay.simplehbase.util.Util;
-
+/**
+ * @author xinzhi
+ * */
 public class SelectCidListVisitor extends
         StatementsBaseVisitor<List<HBaseColumnSchema>> {
 

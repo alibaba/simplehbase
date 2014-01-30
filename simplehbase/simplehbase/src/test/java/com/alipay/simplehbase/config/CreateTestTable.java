@@ -1,5 +1,8 @@
 package com.alipay.simplehbase.config;
 
+/**
+ * @author xinzhi
+ * */
 public class CreateTestTable {
 
     public static void main(String[] args) {
