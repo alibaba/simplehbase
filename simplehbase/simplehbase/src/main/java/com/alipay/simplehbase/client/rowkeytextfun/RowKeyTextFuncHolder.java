@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.client.rowkeystringfun;
+package com.alipay.simplehbase.client.rowkeytextfun;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ public class RowKeyTextFuncHolder {
     static {
 
         buildInFuncList.add(new IntTextFunc());
+        buildInFuncList.add(new StringTextFunc());
 
         for (RowKeyTextFunc func : buildInFuncList) {
             Util.checkEmptyString(func.funcName());

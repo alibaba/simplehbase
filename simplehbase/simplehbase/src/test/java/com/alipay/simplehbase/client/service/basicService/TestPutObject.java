@@ -9,7 +9,7 @@ import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 /**
  * @author xinzhi
  */
-public class TestPut extends MyRecordTestBase {
+public class TestPutObject extends MyRecordTestBase {
 
     @Test
     public void putObject() {

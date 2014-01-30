@@ -19,10 +19,12 @@ import org.apache.hadoop.hbase.client.coprocessor.AggregationClient;
 import org.apache.hadoop.hbase.client.coprocessor.LongColumnInterpreter;
 import org.apache.hadoop.hbase.filter.Filter;
 
-import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertconstantListContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.Constant2Context;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.InserthqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.RowkeyexpContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectCidListContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.SelecthqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.TsexpContext;
 import com.alipay.simplehbase.antlr.manual.ContextUtil;
 import com.alipay.simplehbase.antlr.manual.TreeUtil;
@@ -115,7 +117,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
 
         ProgContext progContext = TreeUtil.parseProgContext(hql);
-        Filter filter = TreeUtil.parseSelectFilter(progContext,
+        Filter filter = ContextUtil.parseSelectFilter(progContext,
                 hbaseTableConfig, para);
 
         return findObjectList_internal(startRowKey, endRowKey, type, filter,
@@ -424,7 +426,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
 
         ProgContext progContext = TreeUtil.parseProgContext(hql);
-        Filter filter = TreeUtil.parseCountFilter(progContext,
+        Filter filter = ContextUtil.parseCountFilter(progContext,
                 hbaseTableConfig, para);
 
         return count_internal(startRowKey, endRowKey, filter);
@@ -509,7 +511,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
 
         ProgContext progContext = TreeUtil.parseProgContext(hql);
-        Filter filter = TreeUtil.parseSelectFilter(progContext,
+        Filter filter = ContextUtil.parseSelectFilter(progContext,
                 hbaseTableConfig, para);
 
         return findObjectList_internal_mv(startRowKey, endRowKey, type, filter,
@@ -521,8 +523,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkEmptyString(hql);
 
         ProgContext progContext = TreeUtil.parseProgContext(hql);
-        InsertconstantListContext context = TreeUtil
-                .parseInsertconstantListContext(progContext);
+        InserthqlcContext context = ContextUtil
+                .parseInserthqlcContext(progContext);
         Util.checkNull(context);
 
         String tableName = context.tablename().TEXT().getText();
@@ -530,9 +532,9 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         List<HBaseColumnSchema> hbaseColumnSchemaList = ContextUtil
                 .parseHBaseColumnSchemaList(hbaseTableConfig, context.cidList());
-        List<ConstantContext> constantContextList = context.constantList()
-                .constant();
-        Util.check(hbaseColumnSchemaList.size() == constantContextList.size());
+        List<Constant2Context> constant2ContextList = context.constant2List()
+                .constant2();
+        Util.check(hbaseColumnSchemaList.size() == constant2ContextList.size());
 
         RowkeyexpContext rowkeyexpContext = context.rowkeyexp();
         RowKey rowKey = ContextUtil.parseRowKey(rowkeyexpContext);
@@ -547,9 +549,9 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Put put = new Put(rowKey.toBytes());
         for (int i = 0; i < hbaseColumnSchemaList.size(); i++) {
             HBaseColumnSchema hbaseColumnSchema = hbaseColumnSchemaList.get(i);
-            ConstantContext constantContext = constantContextList.get(i);
+            Constant2Context constant2Context = constant2ContextList.get(i);
             Object value = ContextUtil.parseConstant(hbaseColumnSchema,
-                    constantContext);
+                    constant2Context);
             byte[] data = convertValueToBytes(value, hbaseColumnSchema);
             if (ts == null) {
                 put.add(hbaseColumnSchema.getFamilyBytes(),
@@ -572,4 +574,100 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
     }
 
+    @Override
+    public List<List<SimpleHbaseCellResult>> select(String hql) {
+        Util.checkEmptyString(hql);
+
+        ProgContext progContext = TreeUtil.parseProgContext(hql);
+        SelecthqlcContext context = ContextUtil
+                .parseSelecthqlcContext(progContext);
+        Util.checkNull(context);
+
+        //tableName
+        String tableName = context.tablename().TEXT().getText();
+        checkTableName(tableName);
+
+        //cid list
+        SelectCidListContext selectCidListContext = context.selectCidList();
+        List<HBaseColumnSchema> hbaseColumnSchemaList = ContextUtil
+                .parseHBaseColumnSchemaList(hbaseTableConfig,
+                        selectCidListContext);
+        Util.check(!hbaseColumnSchemaList.isEmpty());
+
+        //filter
+        Filter filter = ContextUtil.parseSelectHqlFilter(progContext,
+                hbaseTableConfig);
+
+        //rowkeys.
+        List<RowkeyexpContext> rowkeyexpContextList = context.rowkeyrange()
+                .rowkeyexp();
+        Util.check(rowkeyexpContextList.size() == 2);
+        RowKey startRowKey = ContextUtil.parseRowKey(rowkeyexpContextList
+                .get(0));
+        RowKey endRowKey = ContextUtil.parseRowKey(rowkeyexpContextList.get(1));
+        Util.checkRowKey(startRowKey);
+        Util.checkRowKey(endRowKey);
+
+        //queryExtInfo
+        QueryExtInfo queryExtInfo = ContextUtil.parseQueryExtInfo(context);
+
+        //scan
+        Scan scan = new Scan();
+        scan.setStartRow(startRowKey.toBytes());
+        scan.setStopRow(endRowKey.toBytes());
+        scan.setCaching(getScanCaching());
+        scan.setFilter(filter);
+
+        long startIndex = 0L;
+        long length = Long.MAX_VALUE;
+
+        if (queryExtInfo.isMaxVersionSet()) {
+            scan.setMaxVersions(queryExtInfo.getMaxVersions());
+        }
+        if (queryExtInfo.isTimeRangeSet()) {
+            try {
+                scan.setTimeRange(queryExtInfo.getMinStamp(),
+                        queryExtInfo.getMaxStamp());
+            } catch (IOException e) {
+                // should never happen.
+                throw new SimpleHBaseException("should never happen.", e);
+            }
+        }
+        if (queryExtInfo.isLimitSet()) {
+            startIndex = queryExtInfo.getStartIndex();
+            length = queryExtInfo.getLength();
+        }
+
+        applyRequestFamilyAndQualifier(hbaseColumnSchemaList, scan);
+
+        HTableInterface htableInterface = htableInterface();
+        ResultScanner resultScanner = null;
+
+        List<List<SimpleHbaseCellResult>> resultList = new ArrayList<List<SimpleHbaseCellResult>>();
+
+        try {
+            resultScanner = htableInterface.getScanner(scan);
+            long ignoreCounter = startIndex;
+            long resultCounter = 0L;
+            Result result = null;
+            while ((result = resultScanner.next()) != null) {
+                if (ignoreCounter-- > 0) {
+                    continue;
+                }
+
+                resultList.add(convertToSimpleHbaseCellResultList(result));
+
+                if (++resultCounter >= length) {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            throw new SimpleHBaseException("select. hql=" + hql, e);
+        } finally {
+            Util.close(resultScanner);
+            Util.close(htableInterface);
+        }
+
+        return resultList;
+    }
 }

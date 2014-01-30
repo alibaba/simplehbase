@@ -1,5 +1,9 @@
 package com.alipay.simplehbase.client.service;
 
+import java.util.List;
+
+import com.alipay.simplehbase.client.SimpleHbaseCellResult;
+
 /**
  * HbaseRawService.
  * 
@@ -8,9 +12,15 @@ package com.alipay.simplehbase.client.service;
  * </pre>
  * */
 public interface HbaseRawService {
+
     /**
      * put data.
      * */
     public void put(String hql);
+
+    /**
+     * select data.
+     * */
+    public List<List<SimpleHbaseCellResult>> select(String hql);
 
 }

@@ -2,6 +2,7 @@ package com.alipay.simplehbase.client;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -14,6 +15,7 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.coprocessor.AggregationClient;
 import org.apache.hadoop.hbase.util.Bytes;
 
+import com.alipay.simplehbase.client.rowkey.handler.RowKeyHandler;
 import com.alipay.simplehbase.config.ConfigOfTable;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseDataSource;
@@ -106,6 +108,73 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         for (String s : families) {
             scan.addFamily(Bytes.toBytes(s));
         }
+    }
+
+    //FIXME the columns in select list and condition can vary. 
+    /**
+     * Apply family and qualifier to scan request, to prevent return more data
+     * than we need.
+     * */
+    protected <T> void applyRequestFamilyAndQualifier(
+            List<HBaseColumnSchema> hbaseColumnSchemaList, Scan scan) {
+        for (HBaseColumnSchema hbaseColumnSchema : hbaseColumnSchemaList) {
+            scan.addColumn(hbaseColumnSchema.getFamilyBytes(),
+                    hbaseColumnSchema.getQualifierBytes());
+        }
+    }
+
+    /**
+     * Convert hbase result to SimpleHbaseCellResult list.
+     * 
+     * @param hbaseResult hbase result.
+     * 
+     * @return SimpleHbaseCellResult list.
+     * */
+    protected List<SimpleHbaseCellResult> convertToSimpleHbaseCellResultList(
+            Result hbaseResult) {
+        KeyValue[] keyValues = hbaseResult.raw();
+        if (keyValues == null || keyValues.length == 0) {
+            return new ArrayList<SimpleHbaseCellResult>();
+        }
+
+        List<SimpleHbaseCellResult> resultList = new ArrayList<SimpleHbaseCellResult>();
+
+        try {
+            for (KeyValue keyValue : keyValues) {
+                byte[] row = keyValue.getRow();
+                RowKeyHandler rowKeyHandler = hbaseTableConfig
+                        .getHbaseTableSchema().getRowKeyHandler();
+                Object rowObject = rowKeyHandler.convert(row);
+
+                byte[] familyBytes = keyValue.getFamily();
+                String familyStr = Bytes.toString(familyBytes);
+                byte[] qualifierBytes = keyValue.getQualifier();
+                String qualifierStr = Bytes.toString(qualifierBytes);
+                byte[] hbaseValue = keyValue.getValue();
+                HBaseColumnSchema hbaseColumnSchema = columnSchema(familyStr,
+                        qualifierStr);
+                TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
+                Object valueObject = typeHandler.toObject(
+                        hbaseColumnSchema.getType(), hbaseValue);
+
+                long ts = keyValue.getTimestamp();
+                Date tsDate = new Date(ts);
+
+                SimpleHbaseCellResult cellResult = new SimpleHbaseCellResult();
+                cellResult.setRowObject(rowObject);
+                cellResult.setFamilyStr(familyStr);
+                cellResult.setQualifierStr(qualifierStr);
+                cellResult.setValueObject(valueObject);
+                cellResult.setTsDate(tsDate);
+
+                resultList.add(cellResult);
+            }
+        } catch (Exception e) {
+            throw new SimpleHBaseException("convert result exception. result="
+                    + hbaseResult, e);
+        }
+
+        return resultList;
     }
 
     /**

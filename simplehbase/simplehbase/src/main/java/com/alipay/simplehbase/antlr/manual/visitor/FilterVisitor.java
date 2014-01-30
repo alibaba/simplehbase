@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.antlr.manual;
+package com.alipay.simplehbase.antlr.manual.visitor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +55,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.NotmatchvarContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.OrconditionContext;
 
 import com.alipay.simplehbase.antlr.auto.StatementsParser.VarContext;
+import com.alipay.simplehbase.antlr.manual.ContextUtil;
 
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseTableConfig;
@@ -63,16 +64,16 @@ import com.alipay.simplehbase.util.BytesUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
- * SimpleHbaseVisitor.
+ * FilterVisitor.
  * 
  * @author xinzhi.zhang
  * */
-public class SimpleHbaseFilterVisitor extends StatementsBaseVisitor<Filter> {
+public class FilterVisitor extends StatementsBaseVisitor<Filter> {
 
     private HBaseTableConfig    hbaseTableConfig;
     private Map<String, Object> para;
 
-    public SimpleHbaseFilterVisitor(HBaseTableConfig hbaseTableConfig,
+    public FilterVisitor(HBaseTableConfig hbaseTableConfig,
             Map<String, Object> para) {
         this.hbaseTableConfig = hbaseTableConfig;
         this.para = para;

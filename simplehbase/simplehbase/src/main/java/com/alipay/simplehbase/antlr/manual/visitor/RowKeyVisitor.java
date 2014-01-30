@@ -1,22 +1,24 @@
-package com.alipay.simplehbase.antlr.manual;
+package com.alipay.simplehbase.antlr.manual.visitor;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.alipay.simplehbase.antlr.auto.StatementsBaseVisitor;
 import com.alipay.simplehbase.antlr.auto.StatementsParser;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkey_EndContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkey_StartContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.RowkeyexpContext;
 import com.alipay.simplehbase.client.RowKey;
+import com.alipay.simplehbase.client.rowkey.RowKeyUtil;
 import com.alipay.simplehbase.client.rowkeyfun.RowKeyFunc;
 import com.alipay.simplehbase.client.rowkeyfun.RowKeyFuncHolder;
-import com.alipay.simplehbase.client.rowkeystringfun.RowKeyTextFunc;
-import com.alipay.simplehbase.client.rowkeystringfun.RowKeyTextFuncHolder;
+import com.alipay.simplehbase.client.rowkeytextfun.RowKeyTextFunc;
+import com.alipay.simplehbase.client.rowkeytextfun.RowKeyTextFuncHolder;
 
-public class SimpleHbaseRowKeyVisitor extends StatementsBaseVisitor<RowKey> {
+public class RowKeyVisitor extends StatementsBaseVisitor<RowKey> {
 
     @Override
-    public RowKey visitRowkeyfuncconstant(
-            StatementsParser.RowkeyfuncconstantContext ctx) {
+    public RowKey visitRowkey_FuncConstant(
+            StatementsParser.Rowkey_FuncConstantContext ctx) {
         String text = ctx.constant().TEXT().getText();
         String funcName = ctx.funcname().TEXT().getText();
         RowKeyTextFunc rowKeyTextFunc = RowKeyTextFuncHolder
@@ -25,7 +27,7 @@ public class SimpleHbaseRowKeyVisitor extends StatementsBaseVisitor<RowKey> {
     }
 
     @Override
-    public RowKey visitRowkeyfunc(StatementsParser.RowkeyfuncContext ctx) {
+    public RowKey visitRowkey_Func(StatementsParser.Rowkey_FuncContext ctx) {
         List<RowkeyexpContext> RowkeyexpContextList = ctx.rowkeyexp();
         List<RowKey> rowKeyList = new ArrayList<RowKey>();
         for (RowkeyexpContext rowkeyexpContext : RowkeyexpContextList) {
@@ -38,8 +40,18 @@ public class SimpleHbaseRowKeyVisitor extends StatementsBaseVisitor<RowKey> {
     }
 
     @Override
-    public RowKey visitRowkeywrapper(StatementsParser.RowkeywrapperContext ctx) {
+    public RowKey visitRowkey_Wrapper(StatementsParser.Rowkey_WrapperContext ctx) {
         return ctx.rowkeyexp().accept(this);
+    }
+
+    @Override
+    public RowKey visitRowkey_Start(Rowkey_StartContext ctx) {
+        return RowKeyUtil.START_ROW;
+    }
+
+    @Override
+    public RowKey visitRowkey_End(Rowkey_EndContext ctx) {
+        return RowKeyUtil.END_ROW;
     }
 
 }

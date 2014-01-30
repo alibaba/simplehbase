@@ -1,11 +1,14 @@
 package com.alipay.simplehbase.config;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
+import com.alipay.simplehbase.client.rowkey.handler.BytesRowKeyHandler;
+import com.alipay.simplehbase.client.rowkey.handler.RowKeyHandler;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
@@ -48,6 +51,12 @@ public class HBaseTableSchema {
      * Qualifier->Family-> HBaseColumnSchema.
      * */
     private Map<String, Map<String, HBaseColumnSchema>> columnSchemas = new TreeMap<String, Map<String, HBaseColumnSchema>>();
+
+    //TODO
+    /**
+     * RowKeyHandler.
+     * */
+    private RowKeyHandler                               rowKeyHandler = new BytesRowKeyHandler();
 
     /**
      * init.
@@ -134,6 +143,20 @@ public class HBaseTableSchema {
         throw new SimpleHBaseException("no HBaseColumnSchema found.");
     }
 
+    /**
+     * Find all HBaseColumnSchemas.
+     * */
+    public List<HBaseColumnSchema> findAllColumnSchemas() {
+        List<HBaseColumnSchema> result = new ArrayList<HBaseColumnSchema>();
+
+        for (Map<String, HBaseColumnSchema> t : columnSchemas.values()) {
+            for (HBaseColumnSchema hbaseColumnSchema : t.values()) {
+                result.add(hbaseColumnSchema);
+            }
+        }
+        return result;
+    }
+
     public String getDefaultFamily() {
         return defaultFamily;
     }
@@ -160,6 +183,10 @@ public class HBaseTableSchema {
 
     public byte[] getTableNameBytes() {
         return tableNameBytes;
+    }
+
+    public RowKeyHandler getRowKeyHandler() {
+        return rowKeyHandler;
     }
 
     @Override

@@ -52,6 +52,7 @@ public class HbaseCoprocessorTest extends HbaseTestBase {
         scan.addColumn(ColumnFamilyName, QName1);
         Long count = aggregationClient.rowCount(TableNameBytes,
                 columnInterpreter, scan);
+
         Assert.assertTrue(count.longValue() == 4);
     }
 }

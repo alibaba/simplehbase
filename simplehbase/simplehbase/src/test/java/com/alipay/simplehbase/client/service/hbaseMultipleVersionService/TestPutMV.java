@@ -8,15 +8,18 @@ import org.junit.Test;
 
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.SimpleHbaseDOResult;
+import com.alipay.simplehbase.config.CreateTestTable;
+import com.alipay.simplehbase.config.TimeDepend;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
-
 public class TestPutMV extends MyRecordTestBase {
 
+    @TimeDepend
     @Test
     public void putObjectMV() {
+        CreateTestTable.main(null);
 
         RowKey rowKey = new MyRecordRowKey(1000);
 
@@ -32,5 +35,7 @@ public class TestPutMV extends MyRecordTestBase {
                 .findObjectMV(rowKey, MyRecord.class, null);
         Assert.assertTrue(result.size() == 1);
         Assert.assertEquals(myRecord_2, result.get(0).getT());
+
+        CreateTestTable.main(null);
     }
 }

@@ -1,6 +1,6 @@
 package allen.studyhbase;
 
-import java.io.IOException;
+import java.io.IOException; 
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,6 +56,7 @@ public class HbaseTestBase {
     @Before
     public void before() throws Throwable {
         table = Config.getHTableInterface(TableName);
+        deleteData();
         fillData();
     }
 
