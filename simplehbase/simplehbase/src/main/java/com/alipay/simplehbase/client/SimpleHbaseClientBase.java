@@ -110,7 +110,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         }
     }
 
-    //FIXME the columns in select list and condition can vary. 
+    //FIXME [simplehbase] the columns in select list and condition can vary. 
     /**
      * Apply family and qualifier to scan request, to prevent return more data
      * than we need.

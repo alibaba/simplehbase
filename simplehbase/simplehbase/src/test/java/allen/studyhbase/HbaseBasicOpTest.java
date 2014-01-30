@@ -1,5 +1,6 @@
 package allen.studyhbase;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +18,9 @@ import org.junit.Assert;
 
 import org.junit.Test;
 
+import com.alipay.simplehbase.config.CreateTestTable;
+import com.alipay.simplehbase.config.TimeDepend;
+import com.alipay.simplehbase.util.DateUtil;
 import com.alipay.simplehbase.util.Util;
 
 public class HbaseBasicOpTest extends HbaseTestBase {
@@ -42,6 +46,37 @@ public class HbaseBasicOpTest extends HbaseTestBase {
         byte[] rowKey = Bytes.toBytes("allen_test_row");
         Delete delete = new Delete(rowKey);
         table.delete(delete);
+    }
+
+    @TimeDepend
+    @Test
+    public void testScan_ts_same() throws Exception {
+
+        CreateTestTable.main(null);
+
+        Date ts = DateUtil.parse("2000-01-01", DateUtil.DayFormat);
+
+        byte[] rowKey = Bytes.toBytes("allen_test_row");
+        Put put = new Put(rowKey);
+        put.add(ColumnFamilyName, QName1, ts.getTime(), Bytes.toBytes("a"));
+
+        table.put(put);
+
+        Set<String> resultRowKeys = new HashSet<String>();
+        Scan scan = new Scan(rowKey, rowKey);
+        scan.setTimeRange(ts.getTime(), ts.getTime());
+
+        ResultScanner resultScanner = table.getScanner(scan);
+        for (Result result = resultScanner.next(); result != null; result = resultScanner
+                .next()) {
+            resultRowKeys.add(Bytes.toString(result.getRow()));
+        }
+
+        Util.close(resultScanner);
+
+        Assert.assertTrue(resultRowKeys.size() == 0);
+
+        CreateTestTable.main(null);
     }
 
     @Test

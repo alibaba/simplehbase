@@ -52,7 +52,7 @@ public class HBaseTableSchema {
      * */
     private Map<String, Map<String, HBaseColumnSchema>> columnSchemas = new TreeMap<String, Map<String, HBaseColumnSchema>>();
 
-    //TODO
+    //TODO [simplehbase]
     /**
      * RowKeyHandler.
      * */
