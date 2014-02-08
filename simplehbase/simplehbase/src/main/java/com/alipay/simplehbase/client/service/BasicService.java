@@ -129,6 +129,7 @@ public interface BasicService {
      * */
     public <T> void putObject(RowKey rowKey, T t);
 
+    //FIXME change to delete only POJO type.
     /**
      * Delete POJO.
      * 
@@ -136,6 +137,7 @@ public interface BasicService {
      * */
     public void deleteObject(RowKey rowKey);
 
+    //FIXME change to delete only POJO type.
     /**
      * Batch delete POJO list.
      * 

@@ -311,5 +311,60 @@ public class TestSelect extends MyRecordTestBase {
         CreateTestTable.main(null);
     }
 
-    //TODO [simplehbase] add more test.
+    @Test
+    public void testSelect_Columns() {
+        String putHql = "insert into "
+                + Config.TableName
+                + " ( MyRecordFamily:name,age,fatname ) values ( \"allen\", \"30\" , \"dan\" ) rowkey is intkey (\"0\") ";
+        simpleHbaseClient.put(putHql);
+
+        String selectHql = "select ( name,age ,fatname ) from "
+                + Config.TableName
+                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ";
+        List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
+                .select(selectHql);
+        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(3, list.get(0).size());
+
+        assertSimpleHbaseCellResult(list.get(0), "name", "allen");
+        assertSimpleHbaseCellResult(list.get(0), "age", 30L);
+        assertSimpleHbaseCellResult(list.get(0), "fatname", "dan");
+    }
+
+    @Test
+    public void testSelect_RegxColumns() {
+        String putHql = "insert into "
+                + Config.TableName
+                + " ( MyRecordFamily:name,age,fatname ) values ( \"allen\", \"30\" , \"dan\" ) rowkey is intkey (\"0\") ";
+        simpleHbaseClient.put(putHql);
+
+        String selectHql = "select  .*name  from " + Config.TableName
+                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ";
+        List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
+                .select(selectHql);
+        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(2, list.get(0).size());
+
+        assertSimpleHbaseCellResult(list.get(0), "name", "allen");
+        assertSimpleHbaseCellResult(list.get(0), "fatname", "dan");
+    }
+
+    @Test
+    public void testSelect_Star() {
+        String putHql = "insert into "
+                + Config.TableName
+                + " ( MyRecordFamily:name,age,fatname ) values ( \"allen\", \"30\" , \"dan\" ) rowkey is intkey (\"0\") ";
+        simpleHbaseClient.put(putHql);
+
+        String selectHql = "select  *  from " + Config.TableName
+                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ";
+        List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
+                .select(selectHql);
+        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(3, list.get(0).size());
+
+        assertSimpleHbaseCellResult(list.get(0), "name", "allen");
+        assertSimpleHbaseCellResult(list.get(0), "age", 30L);
+        assertSimpleHbaseCellResult(list.get(0), "fatname", "dan");
+    }
 }
