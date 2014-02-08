@@ -13,7 +13,7 @@ import com.alipay.simplehbase.config.HBaseDataSource;
  * */
 public interface HBaseDataSourceAware {
 
-    public HBaseDataSource getHBaseDataSource();
+    public HBaseDataSource getHbaseDataSource();
 
-    public void setHBaseDataSource(HBaseDataSource hbaseDataSource);
+    public void setHbaseDataSource(HBaseDataSource hbaseDataSource);
 }

@@ -33,13 +33,13 @@ import com.alipay.simplehbase.util.Util;
  * */
 abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     protected HBaseTableConfig hbaseTableConfig;
-    protected HBaseDataSource  dataSource;
+    protected HBaseDataSource  hbaseDataSource;
 
     /**
      * Get HTableInterface.
      * */
     protected HTableInterface htableInterface() {
-        return dataSource.getHTable(hbaseTableConfig.getHbaseTableSchema()
+        return hbaseDataSource.getHTable(hbaseTableConfig.getHbaseTableSchema()
                 .getTableName());
     }
 
@@ -48,7 +48,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * */
     protected AggregationClient aggregationClient() {
         AggregationClient aggregationClient = new AggregationClient(
-                dataSource.getHbaseConfiguration());
+                hbaseDataSource.getHbaseConfiguration());
         return aggregationClient;
     }
 
@@ -330,22 +330,12 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
     @Override
     public HTableInterface getTable(String tableName) {
-        return dataSource.getHTable(tableName);
+        return hbaseDataSource.getHTable(tableName);
     }
 
     @Override
     public HBaseAdmin getHBaseAdmin() {
-        return dataSource.getHBaseAdmin();
-    }
-
-    @Override
-    public HBaseDataSource getHBaseDataSource() {
-        return dataSource;
-    }
-
-    @Override
-    public void setHBaseDataSource(HBaseDataSource hbaseDataSource) {
-        this.dataSource = hbaseDataSource;
+        return hbaseDataSource.getHBaseAdmin();
     }
 
     @Override
@@ -356,5 +346,15 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     @Override
     public void setHbaseTableConfig(HBaseTableConfig hbaseTableConfig) {
         this.hbaseTableConfig = hbaseTableConfig;
+    }
+
+    @Override
+    public HBaseDataSource getHbaseDataSource() {
+        return hbaseDataSource;
+    }
+
+    @Override
+    public void setHbaseDataSource(HBaseDataSource hbaseDataSource) {
+        this.hbaseDataSource = hbaseDataSource;
     }
 }

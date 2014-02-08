@@ -38,7 +38,7 @@ public class SampleMain {
         hbaseTableConfig.init();
 
         SimpleHbaseClient tClient = new SimpleHbaseClientImpl();
-        tClient.setHBaseDataSource(hbaseDataSource);
+        tClient.setHbaseDataSource(hbaseDataSource);
         tClient.setHbaseTableConfig(hbaseTableConfig);
 
         return tClient;

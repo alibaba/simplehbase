@@ -53,11 +53,11 @@ public class Config {
     }
 
     public static Configuration getConfiguration() {
-        return simpleHbaseClient.getHBaseDataSource().getHbaseConfiguration();
+        return simpleHbaseClient.getHbaseDataSource().getHbaseConfiguration();
     }
 
     public static HTableInterface getHTableInterface(String tableName) {
-        return simpleHbaseClient.getHBaseDataSource().getHTable(tableName);
+        return simpleHbaseClient.getHbaseDataSource().getHTable(tableName);
     }
 
     public static void createTable() throws Exception {
@@ -107,14 +107,14 @@ public class Config {
         hbaseTableConfig.init();
 
         SimpleHbaseClient tClient = new SimpleHbaseClientImpl();
-        tClient.setHBaseDataSource(hbaseDataSource);
+        tClient.setHbaseDataSource(hbaseDataSource);
         tClient.setHbaseTableConfig(hbaseTableConfig);
 
         simpleHbaseClient = SimpleHbaseClientFactory
                 .getSimpleHbaseClient(tClient);
 
         simpleHbaseAdminClient = new SimpleHbaseAdminClientImpl();
-        simpleHbaseAdminClient.setHBaseDataSource(simpleHbaseClient
-                .getHBaseDataSource());
+        simpleHbaseAdminClient.setHbaseDataSource(simpleHbaseClient
+                .getHbaseDataSource());
     }
 }

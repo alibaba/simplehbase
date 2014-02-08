@@ -5,7 +5,10 @@ import java.io.StringReader;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import com.alipay.simplehbase.antlr.auto.StatementsParser;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectHqlClContext;
+import com.alipay.simplehbase.core.RawHQLType;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.Util;
 
@@ -36,7 +39,40 @@ public class TreeUtil {
         }
     }
 
-    private TreeUtil() {
+    /**
+     * Parse table name from ProgContext.
+     * */
+    public static String parseTableName(ProgContext progContext) {
+        Util.checkNull(progContext);
+
+        if (progContext instanceof InsertHqlClContext) {
+            return InsertHqlClContext.class.cast(progContext).inserthqlc()
+                    .tablename().TEXT().getText();
+        }
+
+        if (progContext instanceof SelectHqlClContext) {
+            return SelectHqlClContext.class.cast(progContext).selecthqlc()
+                    .tablename().TEXT().getText();
+        }
+
+        throw new SimpleHBaseException("parse error.");
+    }
+
+    /**
+     * Parse RawHQLType.
+     * */
+    public static RawHQLType parseHQLType(ProgContext progContext) {
+        Util.checkNull(progContext);
+
+        if (progContext instanceof InsertHqlClContext) {
+            return RawHQLType.PUT;
+        }
+
+        if (progContext instanceof SelectHqlClContext) {
+            return RawHQLType.SELECT;
+        }
+
+        throw new SimpleHBaseException("parse error.");
     }
 
 }

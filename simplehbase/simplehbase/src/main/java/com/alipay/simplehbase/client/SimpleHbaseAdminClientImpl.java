@@ -56,12 +56,12 @@ public class SimpleHbaseAdminClientImpl implements SimpleHbaseAdminClient {
     }
 
     @Override
-    public HBaseDataSource getHBaseDataSource() {
+    public HBaseDataSource getHbaseDataSource() {
         return this.hbaseDataSource;
     }
 
     @Override
-    public void setHBaseDataSource(HBaseDataSource hbaseDataSource) {
+    public void setHbaseDataSource(HBaseDataSource hbaseDataSource) {
         this.hbaseDataSource = hbaseDataSource;
     }
 
