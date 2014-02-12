@@ -5,6 +5,7 @@ import java.io.StringReader;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import com.alipay.simplehbase.antlr.auto.StatementsParser;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.DeleteHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectHqlClContext;
@@ -70,6 +71,10 @@ public class TreeUtil {
 
         if (progContext instanceof SelectHqlClContext) {
             return RawHQLType.SELECT;
+        }
+
+        if (progContext instanceof DeleteHqlClContext) {
+            return RawHQLType.DELETE;
         }
 
         throw new SimpleHBaseException("parse error.");

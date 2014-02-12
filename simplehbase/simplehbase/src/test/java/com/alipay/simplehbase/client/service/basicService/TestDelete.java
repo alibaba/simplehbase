@@ -23,7 +23,7 @@ public class TestDelete extends MyRecordTestBase {
         Assert.assertNotNull(simpleHbaseClient.findObject(myRecordRowKey,
                 MyRecord.class));
 
-        simpleHbaseClient.deleteObject(myRecordRowKey);
+        simpleHbaseClient.deleteObject(myRecordRowKey, MyRecord.class);
 
         Assert.assertNull(simpleHbaseClient.findObject(myRecordRowKey,
                 MyRecord.class));
@@ -41,14 +41,16 @@ public class TestDelete extends MyRecordTestBase {
                 myRecordRowKey1, myRecordRowKey3, MyRecord.class);
         Assert.assertTrue(recordList.size() == 100);
 
-        simpleHbaseClient.deleteObjectList(myRecordRowKey1, myRecordRowKey2);
+        simpleHbaseClient.deleteObjectList(myRecordRowKey1, myRecordRowKey2,
+                MyRecord.class);
 
         recordList = simpleHbaseClient.findObjectList(myRecordRowKey1,
                 myRecordRowKey3, MyRecord.class);
 
         Assert.assertTrue(recordList.size() == 50);
 
-        simpleHbaseClient.deleteObjectList(myRecordRowKey2, myRecordRowKey3);
+        simpleHbaseClient.deleteObjectList(myRecordRowKey2, myRecordRowKey3,
+                MyRecord.class);
 
         recordList = simpleHbaseClient.findObjectList(myRecordRowKey1,
                 myRecordRowKey3, MyRecord.class);

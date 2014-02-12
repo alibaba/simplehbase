@@ -1,6 +1,5 @@
 package com.alipay.simplehbase.client.service.hbaseRawService;
 
-import java.util.Date;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -12,40 +11,12 @@ import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.config.CreateTestTable;
 import com.alipay.simplehbase.config.TimeDepend;
 
-import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 import com.alipay.simplehbase.util.DateUtil;
 
 /**
  * @author xinzhi
  * */
-public class TestSelect extends MyRecordTestBase {
-
-    private void assertSimpleHbaseCellResult(
-            List<SimpleHbaseCellResult> result, String qualifier, Date ts,
-            Object expectedObject) {
-        for (SimpleHbaseCellResult cell : result) {
-            if (cell.getQualifierStr().equals(qualifier)
-                    && cell.getTsDate().equals(ts)) {
-                Assert.assertEquals(expectedObject, cell.getValueObject());
-                return;
-            }
-        }
-
-        Assert.fail();
-    }
-
-    private void assertSimpleHbaseCellResult(
-            List<SimpleHbaseCellResult> result, String qualifier,
-            Object expectedObject) {
-        for (SimpleHbaseCellResult cell : result) {
-            if (cell.getQualifierStr().equals(qualifier)) {
-                Assert.assertEquals(expectedObject, cell.getValueObject());
-                return;
-            }
-        }
-
-        Assert.fail();
-    }
+public class TestSelect extends RawServiceTestBase {
 
     @Test
     public void testSelect_RowKeyRange() {

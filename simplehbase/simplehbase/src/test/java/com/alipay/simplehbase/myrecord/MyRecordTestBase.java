@@ -13,14 +13,12 @@ import org.junit.BeforeClass;
 
 import com.alipay.simplehbase.client.SimpleHbaseAdminClient;
 import com.alipay.simplehbase.client.SimpleHbaseClient;
-import com.alipay.simplehbase.client.rowkey.RowKeyUtil;
 
 import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.config.HBaseTableConfigParser;
 
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.literal.LiteralValueInterpreter;
-
 
 /**
  * @author xinzhi
@@ -59,8 +57,8 @@ public class MyRecordTestBase {
     }
 
     private void deleteRecords() {
-        simpleHbaseClient.deleteObjectList(RowKeyUtil.START_ROW,
-                RowKeyUtil.END_ROW);
+        simpleHbaseClient.delete("delete * from " + Config.TableName
+                + " rowkey range ( startkey , endkey )");
     }
 
     protected void addHql(String hql) {

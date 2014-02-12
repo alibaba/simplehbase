@@ -9,12 +9,11 @@ import com.alipay.simplehbase.config.CreateTestTable;
 import com.alipay.simplehbase.config.TimeDepend;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
-import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
 /**
  * @author xinzhi
  * */
-public class TestPut extends MyRecordTestBase {
+public class TestPut extends RawServiceTestBase {
 
     @Test
     public void testPut_Put() {

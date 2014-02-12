@@ -14,5 +14,10 @@ public enum RawHQLType {
     /**
      * SELECT.
      * */
-    SELECT;
+    SELECT,
+    /**
+     * DELETE.
+     * */
+    DELETE;
+    ;
 }

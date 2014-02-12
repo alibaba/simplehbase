@@ -14,6 +14,8 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.ConditioncContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Constant2Context;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CountclContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.DeleteHqlClContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.DeletehqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InserthqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.LimitexpContext;
@@ -22,6 +24,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectCidListContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelecthqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.TsrangeContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.WherecContext;
 
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.RowkeyexpContext;
@@ -264,22 +267,18 @@ public class ContextUtil {
     }
 
     /**
-     * Parse filter from SelectHqlClContext.
+     * Parse filter from WherecContext.
      * */
     @Nullable
-    public static Filter parseSelectHqlFilter(
-            @NotNullable ProgContext progContext,
+    public static Filter parseFilter(@Nullable WherecContext wherecContext,
             @NotNullable HBaseTableConfig hbaseTableConfig) {
-        Util.checkNull(progContext);
         Util.checkNull(hbaseTableConfig);
 
-        SelectHqlClContext selectHqlClContext = ((SelectHqlClContext) progContext);
-
-        if (selectHqlClContext.selecthqlc().wherec() == null) {
+        if (wherecContext == null) {
             return null;
         } else {
-            return parseFilter(selectHqlClContext.selecthqlc().wherec()
-                    .conditionc(), hbaseTableConfig, null);
+            return parseFilter(wherecContext.conditionc(), hbaseTableConfig,
+                    null);
         }
     }
 
@@ -327,6 +326,21 @@ public class ContextUtil {
 
         SelectHqlClContext selectHqlClContext = (SelectHqlClContext) progContext;
         SelecthqlcContext result = selectHqlClContext.selecthqlc();
+
+        Util.checkNull(result);
+        return result;
+    }
+
+    /**
+     * Parse DeletehqlcContext from delete hql.
+     * */
+    @NotNullable
+    public static DeletehqlcContext parseDeletehqlcContext(
+            @NotNullable ProgContext progContext) {
+        Util.checkNull(progContext);
+
+        DeleteHqlClContext deleteHqlClContext = (DeleteHqlClContext) progContext;
+        DeletehqlcContext result = deleteHqlClContext.deletehqlc();
 
         Util.checkNull(result);
         return result;

@@ -25,4 +25,9 @@ public interface HbaseRawService {
      * */
     public List<List<SimpleHbaseCellResult>> select(String hql);
 
+    /**
+     * delete data.
+     * */
+    public void delete(String hql);
+
 }

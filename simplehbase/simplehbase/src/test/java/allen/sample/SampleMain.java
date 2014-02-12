@@ -90,7 +90,7 @@ public class SampleMain {
 
         //batch delete.
         simpleHbaseClient.deleteObjectList(new PersonRowKey(0),
-                new PersonRowKey(100));
+                new PersonRowKey(100), Person.class);
 
     }
 }

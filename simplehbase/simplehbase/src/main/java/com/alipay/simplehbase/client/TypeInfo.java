@@ -3,10 +3,8 @@ package com.alipay.simplehbase.client;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.Util;
 
@@ -49,8 +47,6 @@ public class TypeInfo {
                 versionFieldCounter++;
             }
 
-            typeInfo.families.add(columnInfo.family);
-
             if (!typeInfo.columnInfosMap.containsKey(columnInfo.qualifier)) {
                 typeInfo.columnInfosMap.put(columnInfo.qualifier,
                         new HashMap<String, ColumnInfo>());
@@ -76,8 +72,7 @@ public class TypeInfo {
     private List<ColumnInfo>                     columnInfos    = new ArrayList<ColumnInfo>();
     /** Versioned ColumnInfo, can be null. */
     private ColumnInfo                           versionedColumnInfo;
-    /** All the family name of this type info. */
-    private Set<String>                          families       = new HashSet<String>();
+
     /**
      * Qualifier->Family-> ColumnInfo.
      * */
@@ -112,10 +107,6 @@ public class TypeInfo {
         return versionedColumnInfo;
     }
 
-    public Set<String> getFamilies() {
-        return families;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -123,7 +114,6 @@ public class TypeInfo {
                 + "-----------------------\n");
         sb.append("type=" + type + "\n");
         sb.append("versionedColumnInfo=" + versionedColumnInfo + "\n");
-        sb.append("families=" + families + "\n");
         for (ColumnInfo columnInfo : columnInfos) {
             sb.append(columnInfo + "\n");
         }

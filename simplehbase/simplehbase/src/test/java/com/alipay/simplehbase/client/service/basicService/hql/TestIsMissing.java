@@ -52,6 +52,11 @@ public class TestIsMissing extends MyRecordTestBase {
                 MyFatRecord.class, TestHqlId, para);
         Assert.assertTrue(myRecordList.size() == 0);
 
+        addHql("select where fatname ismissing");
+        myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
+                new MyRecordRowKey(100), MyFatRecord.class, TestHqlId, para);
+        Assert.assertTrue(myRecordList.size() == 1);
+
         addHql("select where fatname ismissing or fatname equal #name#");
         myRecordList = simpleHbaseClient.findObjectList(new MyRecordRowKey(0),
                 new MyRecordRowKey(100), MyFatRecord.class, TestHqlId, para);

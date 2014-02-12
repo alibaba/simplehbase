@@ -129,22 +129,23 @@ public interface BasicService {
      * */
     public <T> void putObject(RowKey rowKey, T t);
 
-    //FIXME change to delete only POJO type.
     /**
      * Delete POJO.
      * 
      * @param rowKey rowKey.
+     * @param type POJO type.
      * */
-    public void deleteObject(RowKey rowKey);
+    public void deleteObject(RowKey rowKey, Class<?> type);
 
-    //FIXME change to delete only POJO type.
     /**
      * Batch delete POJO list.
      * 
      * @param startRowKey startRowKey.
      * @param endRowKey endRowKey.
+     * @param type POJO type.
      * 
      * */
-    public void deleteObjectList(RowKey startRowKey, RowKey endRowKey);
+    public void deleteObjectList(RowKey startRowKey, RowKey endRowKey,
+            Class<?> type);
 
 }

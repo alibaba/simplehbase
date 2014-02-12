@@ -5,6 +5,7 @@ prog:    selectc            # selectcl
        | countc             # countcl	   
 	   | inserthqlc         # insertHqlCl
 	   | selecthqlc         # selectHqlCl
+	   | deletehqlc         # deleteHqlCl
        ;
 
 
@@ -13,6 +14,9 @@ inserthqlc : INSERT INTO tablename cidList VALUES constant2List ROWKEY IS rowkey
 		
 selecthqlc : SELECT selectCidList FROM tablename ( wherec ) ? rowkeyrange ( maxversionexp) ?  (tsrange) ? (limitexp) ?
 	       ;
+	       
+deletehqlc : DELETE selectCidList FROM tablename ( wherec ) ? rowkeyrange ( TS IS tsexp ) ?
+	     ;	       
 
 		   
 selectc: SELECT wherec;
@@ -112,6 +116,7 @@ WHERE : 'where' ;
 SELECT : 'select' ; 
 COUNT : 'count' ;
 INSERT : 'insert' ;
+DELETE : 'delete' ;
 INTO : 'into' ;
 VALUES : 'values' ;
 FROM : 'from' ;

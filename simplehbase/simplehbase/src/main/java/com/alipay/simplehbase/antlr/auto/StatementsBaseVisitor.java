@@ -10,6 +10,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitNotmatchconstant(StatementsParser.NotmatchconstantContext ctx) { return visitChildren(ctx); }
 
+	@Override public T visitDeleteHqlCl(StatementsParser.DeleteHqlClContext ctx) { return visitChildren(ctx); }
+
 	@Override public T visitRowkey_Wrapper(StatementsParser.Rowkey_WrapperContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitRowkey_Start(StatementsParser.Rowkey_StartContext ctx) { return visitChildren(ctx); }
@@ -73,6 +75,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	@Override public T visitIsnotmissingc(StatementsParser.IsnotmissingcContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitCidList_CidList(StatementsParser.CidList_CidListContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitDeletehqlc(StatementsParser.DeletehqlcContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitBetweenvar(StatementsParser.BetweenvarContext ctx) { return visitChildren(ctx); }
 

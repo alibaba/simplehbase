@@ -20,6 +20,7 @@ import org.apache.hadoop.hbase.client.coprocessor.LongColumnInterpreter;
 import org.apache.hadoop.hbase.filter.Filter;
 
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Constant2Context;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.DeletehqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InserthqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.RowkeyexpContext;
@@ -263,84 +264,6 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     }
 
     @Override
-    public void deleteObject(RowKey rowKey) {
-        Util.checkRowKey(rowKey);
-
-        HTableInterface htableInterface = htableInterface();
-        Delete delete = new Delete(rowKey.toBytes());
-        try {
-            htableInterface.delete(delete);
-        } catch (IOException e) {
-            throw new SimpleHBaseException("deleteObject. rowkey=" + rowKey, e);
-        } finally {
-            Util.close(htableInterface);
-        }
-    }
-
-    @Override
-    public void deleteObjectList(RowKey startRowKey, RowKey endRowKey) {
-        Util.checkRowKey(startRowKey);
-        Util.checkRowKey(endRowKey);
-
-        final int deleteBatch = getDeleteBatch();
-
-        while (true) {
-
-            Scan scan = new Scan();
-            scan.setStartRow(startRowKey.toBytes());
-            scan.setStopRow(endRowKey.toBytes());
-            scan.setCaching(getScanCaching());
-
-            List<Delete> deletes = new LinkedList<Delete>();
-
-            HTableInterface htableInterface = htableInterface();
-            ResultScanner resultScanner = null;
-            try {
-                resultScanner = htableInterface.getScanner(scan);
-                Result result = null;
-                while ((result = resultScanner.next()) != null) {
-                    deletes.add(new Delete(result.getRow()));
-                    if (deletes.size() >= deleteBatch) {
-                        break;
-                    }
-                }
-
-            } catch (IOException e) {
-                throw new SimpleHBaseException("deleteObjectList. startRowKey="
-                        + startRowKey + " endRowKey=" + endRowKey, e);
-            } finally {
-                Util.close(resultScanner);
-                Util.close(htableInterface);
-            }
-
-            final int deleteListSize = deletes.size();
-            if (deleteListSize == 0) {
-                return;
-            }
-
-            try {
-                htableInterface = htableInterface();
-                htableInterface.delete(deletes);
-            } catch (IOException e) {
-                throw new SimpleHBaseException("deleteObjectList. startRowKey="
-                        + startRowKey + " endRowKey=" + endRowKey, e);
-            } finally {
-                Util.close(htableInterface);
-            }
-
-            //successful delete will clear the items of deletes list.
-            if (deletes.size() > 0) {
-                throw new SimpleHBaseException(
-                        "deleteObjectList fail. deletes=" + deletes);
-            }
-
-            if (deleteListSize < deleteBatch) {
-                return;
-            }
-        }
-    }
-
-    @Override
     public <T> boolean insertObject(RowKey rowKey, T t) {
         return updateObjectWithVersion(rowKey, t, null);
     }
@@ -578,9 +501,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     public List<List<SimpleHbaseCellResult>> select(String hql) {
         Util.checkEmptyString(hql);
 
-        ProgContext progContext = TreeUtil.parseProgContext(hql);
-        SelecthqlcContext context = ContextUtil
-                .parseSelecthqlcContext(progContext);
+        SelecthqlcContext context = ContextUtil.parseSelecthqlcContext(TreeUtil
+                .parseProgContext(hql));
         Util.checkNull(context);
 
         //tableName
@@ -595,7 +517,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.check(!hbaseColumnSchemaList.isEmpty());
 
         //filter
-        Filter filter = ContextUtil.parseSelectHqlFilter(progContext,
+        Filter filter = ContextUtil.parseFilter(context.wherec(),
                 hbaseTableConfig);
 
         //rowkeys.
@@ -669,5 +591,172 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
 
         return resultList;
+    }
+
+    @Override
+    public void deleteObject(RowKey rowKey, Class<?> type) {
+        deleteObjectList(rowKey, rowKey, type);
+    }
+
+    @Override
+    public void deleteObjectList(RowKey startRowKey, RowKey endRowKey,
+            Class<?> type) {
+        Util.checkRowKey(startRowKey);
+        Util.checkRowKey(endRowKey);
+        Util.checkNull(type);
+
+        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+        List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
+
+        Scan scan = new Scan();
+        scan.setStartRow(startRowKey.toBytes());
+        scan.setStopRow(endRowKey.toBytes());
+        scan.setCaching(getScanCaching());
+
+        delete_internal(scan, columnInfoList, null, null);
+    }
+
+    @Override
+    public void delete(String hql) {
+        Util.checkEmptyString(hql);
+
+        DeletehqlcContext context = ContextUtil.parseDeletehqlcContext(TreeUtil
+                .parseProgContext(hql));
+        Util.checkNull(context);
+
+        //tableName
+        String tableName = context.tablename().TEXT().getText();
+        checkTableName(tableName);
+
+        //cid list
+        SelectCidListContext selectCidListContext = context.selectCidList();
+        List<HBaseColumnSchema> hbaseColumnSchemaList = ContextUtil
+                .parseHBaseColumnSchemaList(hbaseTableConfig,
+                        selectCidListContext);
+        Util.check(!hbaseColumnSchemaList.isEmpty());
+
+        //filter
+        Filter filter = ContextUtil.parseFilter(context.wherec(),
+                hbaseTableConfig);
+
+        //rowkeys.
+        List<RowkeyexpContext> rowkeyexpContextList = context.rowkeyrange()
+                .rowkeyexp();
+        Util.check(rowkeyexpContextList.size() == 2);
+        RowKey startRowKey = ContextUtil.parseRowKey(rowkeyexpContextList
+                .get(0));
+        RowKey endRowKey = ContextUtil.parseRowKey(rowkeyexpContextList.get(1));
+        Util.checkRowKey(startRowKey);
+        Util.checkRowKey(endRowKey);
+
+        Date ts = null;
+        TsexpContext tsexpContext = context.tsexp();
+        if (tsexpContext != null) {
+            ts = ContextUtil.parseTsDate(tsexpContext);
+        }
+
+        Scan scan = new Scan();
+        scan.setStartRow(startRowKey.toBytes());
+        scan.setStopRow(endRowKey.toBytes());
+        scan.setCaching(getScanCaching());
+        scan.setFilter(filter);
+
+        delete_internal(scan, null, hbaseColumnSchemaList, ts);
+    }
+
+    private void delete_internal(Scan scan,
+            @Nullable List<ColumnInfo> columnInfoList,
+            @Nullable List<HBaseColumnSchema> hbaseColumnSchemaList,
+            @Nullable Date ts) {
+
+        final int deleteBatch = getDeleteBatch();
+
+        while (true) {
+            Scan temScan = null;
+            try {
+                temScan = new Scan(scan);
+            } catch (IOException e) {
+                throw new SimpleHBaseException("delete_internal. scan = "
+                        + temScan, e);
+            }
+
+            List<Delete> deletes = new LinkedList<Delete>();
+
+            HTableInterface htableInterface = htableInterface();
+            ResultScanner resultScanner = null;
+            try {
+                resultScanner = htableInterface.getScanner(temScan);
+                Result result = null;
+                while ((result = resultScanner.next()) != null) {
+
+                    Delete delete = new Delete(result.getRow());
+
+                    if (columnInfoList != null) {
+                        for (ColumnInfo columnInfo : columnInfoList) {
+                            if (ts == null) {
+                                delete.deleteColumns(columnInfo.familyBytes,
+                                        columnInfo.qualifierBytes);
+                            } else {
+                                delete.deleteColumn(columnInfo.familyBytes,
+                                        columnInfo.qualifierBytes, ts.getTime());
+                            }
+                        }
+                    }
+
+                    if (hbaseColumnSchemaList != null) {
+                        for (HBaseColumnSchema hbaseColumnSchema : hbaseColumnSchemaList) {
+                            if (ts == null) {
+                                delete.deleteColumns(
+                                        hbaseColumnSchema.getFamilyBytes(),
+                                        hbaseColumnSchema.getQualifierBytes());
+                            } else {
+                                delete.deleteColumn(
+                                        hbaseColumnSchema.getFamilyBytes(),
+                                        hbaseColumnSchema.getQualifierBytes(),
+                                        ts.getTime());
+                            }
+                        }
+                    }
+
+                    deletes.add(delete);
+
+                    if (deletes.size() >= deleteBatch) {
+                        break;
+                    }
+                }
+
+            } catch (IOException e) {
+                throw new SimpleHBaseException("delete_internal. scan = "
+                        + temScan, e);
+            } finally {
+                Util.close(resultScanner);
+                Util.close(htableInterface);
+            }
+
+            final int deleteListSize = deletes.size();
+            if (deleteListSize == 0) {
+                return;
+            }
+
+            try {
+                htableInterface = htableInterface();
+                htableInterface.delete(deletes);
+            } catch (IOException e) {
+                throw new SimpleHBaseException("delete_internal. scan = "
+                        + temScan, e);
+            } finally {
+                Util.close(htableInterface);
+            }
+
+            //successful delete will clear the items of deletes list.
+            if (deletes.size() > 0) {
+                throw new SimpleHBaseException("delete_internal fail. deletes="
+                        + deletes);
+            }
+
+            if (deleteListSize < deleteBatch) {
+                return;
+            }
+        }
     }
 }

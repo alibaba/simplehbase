@@ -9,6 +9,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitNotmatchconstant(StatementsParser.NotmatchconstantContext ctx);
 
+	T visitDeleteHqlCl(StatementsParser.DeleteHqlClContext ctx);
+
 	T visitRowkey_Wrapper(StatementsParser.Rowkey_WrapperContext ctx);
 
 	T visitRowkey_Start(StatementsParser.Rowkey_StartContext ctx);
@@ -72,6 +74,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	T visitIsnotmissingc(StatementsParser.IsnotmissingcContext ctx);
 
 	T visitCidList_CidList(StatementsParser.CidList_CidListContext ctx);
+
+	T visitDeletehqlc(StatementsParser.DeletehqlcContext ctx);
 
 	T visitBetweenvar(StatementsParser.BetweenvarContext ctx);
 

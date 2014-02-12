@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.hadoop.hbase.KeyValue;
@@ -99,14 +98,15 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                 ConfigOfTable.DELETE_BATCH, ConfigOfTable.DELETE_BATCH_DEFAULT);
     }
 
+    //FIXME [simplehbase] the columns in select list and condition can vary. 
     /**
      * Apply family to scan request, to prevent return more family than we need.
      * */
     protected <T> void applyRequestFamily(Class<? extends T> type, Scan scan) {
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
-        Set<String> families = typeInfo.getFamilies();
-        for (String s : families) {
-            scan.addFamily(Bytes.toBytes(s));
+        List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            scan.addColumn(columnInfo.familyBytes, columnInfo.qualifierBytes);
         }
     }
 
