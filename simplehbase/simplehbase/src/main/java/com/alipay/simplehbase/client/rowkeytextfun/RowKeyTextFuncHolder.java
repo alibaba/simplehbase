@@ -16,15 +16,14 @@ import com.alipay.simplehbase.util.Util;
 public class RowKeyTextFuncHolder {
 
     /** log. */
-    private static Logger                                    log             = Logger.getLogger(RowKeyTextFuncHolder.class);
-
-    /** BIF. */
-    private static List<RowKeyTextFunc>                      buildInFuncList = new ArrayList<RowKeyTextFunc>();
+    private static Logger                                    log   = Logger.getLogger(RowKeyTextFuncHolder.class);
 
     /** String->RowKeyTextFunc map. */
-    private static ConcurrentHashMap<String, RowKeyTextFunc> funcs           = new ConcurrentHashMap<String, RowKeyTextFunc>();
+    private static ConcurrentHashMap<String, RowKeyTextFunc> funcs = new ConcurrentHashMap<String, RowKeyTextFunc>();
 
     static {
+
+        List<RowKeyTextFunc> buildInFuncList = new ArrayList<RowKeyTextFunc>();
 
         buildInFuncList.add(new IntTextFunc());
         buildInFuncList.add(new StringTextFunc());

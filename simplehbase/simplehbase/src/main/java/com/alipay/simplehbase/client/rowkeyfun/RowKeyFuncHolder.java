@@ -9,20 +9,21 @@ import org.apache.log4j.Logger;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.Util;
+
 /**
  * @author xinzhi
  */
 public class RowKeyFuncHolder {
-    /** log. */
-    private static Logger                                log             = Logger.getLogger(RowKeyFuncHolder.class);
 
-    /** BIF. */
-    private static List<RowKeyFunc>                      buildInFuncList = new ArrayList<RowKeyFunc>();
+    /** log. */
+    private static Logger                                log   = Logger.getLogger(RowKeyFuncHolder.class);
 
     /** String->RowKeyFunc map. */
-    private static ConcurrentHashMap<String, RowKeyFunc> funcs           = new ConcurrentHashMap<String, RowKeyFunc>();
+    private static ConcurrentHashMap<String, RowKeyFunc> funcs = new ConcurrentHashMap<String, RowKeyFunc>();
 
     static {
+
+        List<RowKeyFunc> buildInFuncList = new ArrayList<RowKeyFunc>();
 
         for (RowKeyFunc func : buildInFuncList) {
             Util.checkEmptyString(func.funcName());
@@ -30,7 +31,6 @@ public class RowKeyFuncHolder {
             log.info("register RowKeyFunc : funcName=" + func.funcName()
                     + " type=" + func.getClass().getCanonicalName());
         }
-
     }
 
     /**
