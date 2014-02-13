@@ -1,7 +1,5 @@
 package com.alipay.simplehbase.client;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -9,6 +7,7 @@ import java.lang.reflect.Proxy;
 import org.apache.log4j.Logger;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.util.ExceptionUtil;
 
 /**
  * SimpleHbaseClient's factory.
@@ -120,10 +119,7 @@ public class SimpleHbaseClientFactory {
             }
 
             if (ex != null) {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                ex.printStackTrace(pw);
-                sb.append("ex=" + sw + "\n");
+                sb.append("ex=" + ExceptionUtil.getExceptionMsg(ex) + "\n");
             } else {
                 sb.append("result=" + result + "\n");
             }

@@ -42,6 +42,8 @@ public class HBaseTableConfigParser {
                 "tableName"));
         tableSchema.setDefaultFamily(XmlUtil.getAttr(hbaseTableSchemaNode,
                 "defaultFamily"));
+        tableSchema.setRowKeyHandlerName(XmlUtil.getAttr(hbaseTableSchemaNode,
+                "rowKeyHandlerName"));
 
         NodeList nodeList = hbaseTableSchemaNode.getChildNodes();
 

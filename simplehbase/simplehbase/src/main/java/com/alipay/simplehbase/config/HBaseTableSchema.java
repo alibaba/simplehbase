@@ -9,6 +9,9 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import com.alipay.simplehbase.client.rowkey.handler.BytesRowKeyHandler;
 import com.alipay.simplehbase.client.rowkey.handler.RowKeyHandler;
+import com.alipay.simplehbase.client.rowkey.handler.RowKeyHandlerHolder;
+import com.alipay.simplehbase.core.NotNullable;
+import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
@@ -29,12 +32,20 @@ public class HBaseTableSchema {
      * tableName. not null.
      * */
     @ConfigAttr
+    @NotNullable
     private String                                      tableName;
     /**
      * default family. can be null.
      * */
     @ConfigAttr
+    @Nullable
     private String                                      defaultFamily;
+    /**
+     * rowKeyHandlerName. can be null.
+     **/
+    @ConfigAttr
+    @Nullable
+    private String                                      rowKeyHandlerName;
 
     // ------------runtime-------------------
     /**
@@ -52,11 +63,10 @@ public class HBaseTableSchema {
      * */
     private Map<String, Map<String, HBaseColumnSchema>> columnSchemas = new TreeMap<String, Map<String, HBaseColumnSchema>>();
 
-    //TODO [simplehbase]
     /**
      * RowKeyHandler.
      * */
-    private RowKeyHandler                               rowKeyHandler = new BytesRowKeyHandler();
+    private RowKeyHandler                               rowKeyHandler;
 
     /**
      * init.
@@ -69,6 +79,13 @@ public class HBaseTableSchema {
         if (StringUtil.isNotEmptyString(defaultFamily)) {
             defaultFamilyBytes = Bytes.toBytes(defaultFamily);
         }
+
+        if (StringUtil.isEmptyString(rowKeyHandlerName)) {
+            rowKeyHandlerName = BytesRowKeyHandler.class.getCanonicalName();
+        }
+
+        rowKeyHandler = RowKeyHandlerHolder
+                .findRowKeyHandler(rowKeyHandlerName);
 
         if (hbaseColumnSchemas.isEmpty()) {
             throw new SimpleHBaseException("no HBaseColumnSchemas.");
@@ -189,12 +206,21 @@ public class HBaseTableSchema {
         return rowKeyHandler;
     }
 
+    public String getRowKeyHandlerName() {
+        return rowKeyHandlerName;
+    }
+
+    public void setRowKeyHandlerName(String rowKeyHandlerName) {
+        this.rowKeyHandlerName = rowKeyHandlerName;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("---------------table--------------------------\n");
         StringUtil.append(sb, "tableName", tableName);
         StringUtil.append(sb, "defaultFamily", defaultFamily);
+        StringUtil.append(sb, "rowKeyHandlerName", rowKeyHandlerName);
         for (Map<String, HBaseColumnSchema> tem : columnSchemas.values()) {
             for (HBaseColumnSchema columnSchema : tem.values()) {
                 StringUtil.append(sb, "columnSchema", columnSchema);

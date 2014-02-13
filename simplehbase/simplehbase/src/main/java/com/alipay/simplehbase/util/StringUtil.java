@@ -66,6 +66,16 @@ public class StringUtil {
         }
     }
 
+    /**
+     * Reverse string.
+     * */
+    public static String reverse(String str) {
+        if (str == null || str.length() == 0) {
+            return str;
+        }
+        return new StringBuilder(str).reverse().toString();
+    }
+
     private StringUtil() {
     }
 }

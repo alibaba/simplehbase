@@ -33,4 +33,14 @@ public class DateUtil {
         }
         return null;
     }
+
+    /**
+     * Formats date to string.
+     * */
+    public static String format(Date date, String format) {
+        Util.checkNull(date);
+        Util.checkEmptyString(format);
+
+        return new SimpleDateFormat(format).format(date);
+    }
 }
