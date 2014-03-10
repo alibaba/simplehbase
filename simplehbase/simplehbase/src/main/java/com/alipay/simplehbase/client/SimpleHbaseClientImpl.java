@@ -28,6 +28,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectCidListContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelecthqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.TsexpContext;
 import com.alipay.simplehbase.antlr.manual.ContextUtil;
+import com.alipay.simplehbase.antlr.manual.RowKeyRange;
 import com.alipay.simplehbase.antlr.manual.TreeUtil;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.core.Nullable;
@@ -180,7 +181,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             }
         }
 
-        applyRequestFamily(type, scan);
+        applyRequestFamilyAndQualifier(type, scan);
 
         HTableInterface htableInterface = htableInterface();
         ResultScanner resultScanner = null;
@@ -466,7 +467,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Date ts = null;
         TsexpContext tsexpContext = context.tsexp();
         if (tsexpContext != null) {
-            ts = ContextUtil.parseTsDate(tsexpContext);
+            ts = ContextUtil.parseTimeStampDate(tsexpContext);
         }
 
         Put put = new Put(rowKey.toBytes());
@@ -520,13 +521,13 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Filter filter = ContextUtil.parseFilter(context.wherec(),
                 hbaseTableConfig);
 
-        //rowkeys.
-        List<RowkeyexpContext> rowkeyexpContextList = context.rowkeyrange()
-                .rowkeyexp();
-        Util.check(rowkeyexpContextList.size() == 2);
-        RowKey startRowKey = ContextUtil.parseRowKey(rowkeyexpContextList
-                .get(0));
-        RowKey endRowKey = ContextUtil.parseRowKey(rowkeyexpContextList.get(1));
+        //rowkeys.        
+        RowKeyRange rowKeyRange = ContextUtil.parseRowKeyRange(context
+                .rowkeyrange());
+
+        RowKey startRowKey = rowKeyRange.getStart();
+        RowKey endRowKey = rowKeyRange.getEnd();
+
         Util.checkRowKey(startRowKey);
         Util.checkRowKey(endRowKey);
 
@@ -640,19 +641,19 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                 hbaseTableConfig);
 
         //rowkeys.
-        List<RowkeyexpContext> rowkeyexpContextList = context.rowkeyrange()
-                .rowkeyexp();
-        Util.check(rowkeyexpContextList.size() == 2);
-        RowKey startRowKey = ContextUtil.parseRowKey(rowkeyexpContextList
-                .get(0));
-        RowKey endRowKey = ContextUtil.parseRowKey(rowkeyexpContextList.get(1));
+        RowKeyRange rowKeyRange = ContextUtil.parseRowKeyRange(context
+                .rowkeyrange());
+
+        RowKey startRowKey = rowKeyRange.getStart();
+        RowKey endRowKey = rowKeyRange.getEnd();
+
         Util.checkRowKey(startRowKey);
         Util.checkRowKey(endRowKey);
 
         Date ts = null;
         TsexpContext tsexpContext = context.tsexp();
         if (tsexpContext != null) {
-            ts = ContextUtil.parseTsDate(tsexpContext);
+            ts = ContextUtil.parseTimeStampDate(tsexpContext);
         }
 
         Scan scan = new Scan();

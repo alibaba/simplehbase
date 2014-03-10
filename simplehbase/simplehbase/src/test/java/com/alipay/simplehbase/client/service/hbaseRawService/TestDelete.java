@@ -38,17 +38,18 @@ public class TestDelete extends RawServiceTestBase {
         fillData();
 
         List<List<SimpleHbaseCellResult>> cellListList = simpleHbaseClient
-                .select("select * from " + Config.TableName
-                        + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ");
+                .select("select * from "
+                        + Config.TableName
+                        + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  ");
 
         Assert.assertEquals(3, cellListList.size());
         Assert.assertEquals(2, cellListList.get(0).size());
 
         simpleHbaseClient.delete("delete * from " + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"0\") ) ");
+                + " startkey is intkey (\"0\") ,  endkey is intkey (\"0\")  ");
         cellListList = simpleHbaseClient.select("select * from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ");
+                + " startkey is intkey (\"0\") , endkey is  intkey (\"3\")  ");
         Assert.assertEquals(2, cellListList.size());
         Assert.assertEquals(2, cellListList.get(0).size());
     }
@@ -61,11 +62,12 @@ public class TestDelete extends RawServiceTestBase {
         simpleHbaseClient
                 .delete("delete * from "
                         + Config.TableName
-                        + " where name equal \"allen\" rowkey range ( intkey (\"0\") , intkey (\"3\") ) ");
+                        + " where name equal \"allen\" startkey is  intkey (\"0\") , endkey is intkey (\"3\")  ");
 
         List<List<SimpleHbaseCellResult>> cellListList = simpleHbaseClient
-                .select("select * from " + Config.TableName
-                        + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ");
+                .select("select * from "
+                        + Config.TableName
+                        + " startkey is  intkey (\"0\") , endkey is intkey (\"3\")  ");
 
         Assert.assertEquals(2, cellListList.size());
 
@@ -90,7 +92,7 @@ public class TestDelete extends RawServiceTestBase {
         simpleHbaseClient.put(putHql);
 
         String selectHql = "select * from " + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ";
+                + " startkey is  intkey (\"0\") , endkey is intkey (\"3\")  ";
 
         List<List<SimpleHbaseCellResult>> cellListList = simpleHbaseClient
                 .select(selectHql);
@@ -103,7 +105,7 @@ public class TestDelete extends RawServiceTestBase {
         simpleHbaseClient
                 .delete("delete * from "
                         + Config.TableName
-                        + " rowkey range ( intkey (\"0\") , intkey (\"0\") ) ts is \"2001-01-01\" ");
+                        + " startkey is intkey (\"0\") , endkey is intkey (\"0\")  ts is \"2001-01-01\" ");
 
         cellListList = simpleHbaseClient.select(selectHql);
 

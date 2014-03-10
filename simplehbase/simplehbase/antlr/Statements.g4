@@ -57,17 +57,22 @@ conditionc : LB conditionc RB              # conditionwrapper
 	| cid ISNOTMISSING                     # isnotmissingc
 	;
 
-rowkeyrange : ROWKEY RANGE LB rowkeyexp ',' rowkeyexp RB
+
+rowkeyrange : STARTKEY IS rowkeyexp ',' ENDKEY IS rowkeyexp # rowkeyrange_startAndEnd
+			| STARTKEY IS rowkeyexp                         # rowkeyrange_start
+            | ENDKEY IS rowkeyexp		                    # rowkeyrange_end			
 			;
 
 	
 rowkeyexp : LB rowkeyexp RB                               # rowkey_Wrapper
 	| funcname LB constant RB                         # rowkey_FuncConstant
-	| STARTROWKEY                                     # rowkey_Start
-	| ENDROWKEY                                       # rowkey_End
+	| HBASESTARTKEY               # rowkey_hbasestart
+	| HBASEENDKEY                 # rowkey_hbaseend
     ;
-
-tsrange : TS RANGE LB tsexp ',' tsexp RB
+ 
+tsrange : STARTTS IS tsexp ',' ENDTS IS  tsexp                   # tsrange_startAndEnd
+		| STARTTS IS tsexp                    # tsrange_start
+		| ENDTS IS tsexp  # tsrange_end
 	    ;
 		
 tsexp: constant ;
@@ -121,14 +126,18 @@ VALUES : 'values' ;
 FROM : 'from' ;
 
 ROWKEY : 'rowkey' ;
-STARTROWKEY : 'startkey' ;
-ENDROWKEY : 'endkey' ;
+STARTKEY : 'startkey' ;
+ENDKEY : 'endkey' ;
+HBASESTARTKEY : 'hbasestartkey';
+HBASEENDKEY : 'hbaseendkey';
 MAXVERSION : 'maxversion' ;
-RANGE : 'range' ;
+
 LIMIT : 'limit' ;
 
 
 TS : 'ts' ;
+STARTTS : 'startTS' ;
+ENDTS : 'endTS' ;
 
 IS : 'is' ;
 NULL : 'null';

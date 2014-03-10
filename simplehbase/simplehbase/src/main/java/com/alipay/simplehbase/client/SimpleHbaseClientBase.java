@@ -100,9 +100,11 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
     //FIXME [simplehbase] the columns in select list and condition can vary. 
     /**
-     * Apply family to scan request, to prevent return more family than we need.
+     * Apply family and qualifier to scan request, to prevent return more data
+     * than we need.
      * */
-    protected <T> void applyRequestFamily(Class<? extends T> type, Scan scan) {
+    protected <T> void applyRequestFamilyAndQualifier(Class<? extends T> type,
+            Scan scan) {
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
         List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
         for (ColumnInfo columnInfo : columnInfoList) {

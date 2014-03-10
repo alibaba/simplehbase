@@ -20,6 +20,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InserthqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.LimitexpContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.MaxversionexpContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.RowkeyrangeContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectCidListContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelecthqlcContext;
@@ -33,8 +34,10 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.TsexpContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.VarContext;
 import com.alipay.simplehbase.antlr.manual.visitor.Constant2Visitor;
 import com.alipay.simplehbase.antlr.manual.visitor.FilterVisitor;
+import com.alipay.simplehbase.antlr.manual.visitor.RowKeyRangeVisitor;
 import com.alipay.simplehbase.antlr.manual.visitor.RowKeyVisitor;
 import com.alipay.simplehbase.antlr.manual.visitor.SelectCidListVisitor;
+import com.alipay.simplehbase.antlr.manual.visitor.TimeStampRangeVisitor;
 import com.alipay.simplehbase.client.QueryExtInfo;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
@@ -217,10 +220,25 @@ public class ContextUtil {
     }
 
     /**
+     * Parse RowkeyRange from RowkeyrangeContext.
+     */
+    @NotNullable
+    public static RowKeyRange parseRowKeyRange(
+            RowkeyrangeContext rowkeyrangeContext) {
+        Util.checkNull(rowkeyrangeContext);
+
+        RowKeyRangeVisitor visitor = new RowKeyRangeVisitor();
+        RowKeyRange rowkeyRange = rowkeyrangeContext.accept(visitor);
+
+        Util.checkNull(rowkeyRange);
+        return rowkeyRange;
+    }
+
+    /**
      * Parse Date from TsexpContext.
      */
     @NotNullable
-    public static Date parseTsDate(@NotNullable TsexpContext tsexpContext) {
+    public static Date parseTimeStampDate(@NotNullable TsexpContext tsexpContext) {
         Util.checkNull(tsexpContext);
 
         String constant = tsexpContext.constant().TEXT().getText();
@@ -229,6 +247,21 @@ public class ContextUtil {
 
         Util.checkNull(date);
         return date;
+    }
+
+    /**
+     * Parse TimeStampRange from tsrangeContext.
+     */
+    @NotNullable
+    public static TimeStampRange parseTimeStampRange(
+            @NotNullable TsrangeContext tsrangeContext) {
+        Util.checkNull(tsrangeContext);
+
+        TimeStampRangeVisitor visitor = new TimeStampRangeVisitor();
+        TimeStampRange timeStampRange = tsrangeContext.accept(visitor);
+
+        Util.checkNull(timeStampRange);
+        return timeStampRange;
     }
 
     /**
@@ -365,10 +398,9 @@ public class ContextUtil {
 
         TsrangeContext tsrangeContext = selecthqlcContext.tsrange();
         if (tsrangeContext != null) {
-            List<TsexpContext> tsexpContextList = tsrangeContext.tsexp();
-            Util.check(tsexpContextList.size() == 2);
-            Date minStamp = parseTsDate(tsexpContextList.get(0));
-            Date maxStamp = parseTsDate(tsexpContextList.get(1));
+            TimeStampRange timeStampRange = parseTimeStampRange(tsrangeContext);
+            Date minStamp = timeStampRange.getStart();
+            Date maxStamp = timeStampRange.getEnd();
             extInfo.setTimeRange(minStamp, maxStamp);
         }
 

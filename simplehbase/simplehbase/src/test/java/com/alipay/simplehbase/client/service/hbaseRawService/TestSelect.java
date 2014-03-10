@@ -27,7 +27,7 @@ public class TestSelect extends RawServiceTestBase {
         simpleHbaseClient.put(putHql);
 
         String selectHql = "select ( name,age ) from " + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"0\") )";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"0\") ";
 
         List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
                 .select(selectHql);
@@ -53,7 +53,7 @@ public class TestSelect extends RawServiceTestBase {
 
         String selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " where age greater \"10\" rowkey range ( intkey (\"0\") , intkey (\"2\") )";
+                + " where age greater \"10\" startkey is intkey (\"0\") , endkey is intkey (\"2\")";
 
         List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
                 .select(selectHql);
@@ -68,7 +68,7 @@ public class TestSelect extends RawServiceTestBase {
 
         selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " where age greater \"25\" rowkey range ( intkey (\"0\") , intkey (\"2\") )";
+                + " where age greater \"25\" startkey is intkey (\"0\") , endkey is intkey (\"2\") ";
 
         list = simpleHbaseClient.select(selectHql);
 
@@ -96,8 +96,9 @@ public class TestSelect extends RawServiceTestBase {
                 + " ( MyRecordFamily:name,age ) values ( \"linzhi\", \"10\" ) rowkey is intkey (\"2\") ";
         simpleHbaseClient.put(putHql);
 
-        String selectHql = "select ( name,age ) from " + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) limit 4 ";
+        String selectHql = "select ( name,age ) from "
+                + Config.TableName
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  limit 4 ";
         List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
                 .select(selectHql);
         Assert.assertEquals(3, list.size());
@@ -105,23 +106,26 @@ public class TestSelect extends RawServiceTestBase {
         assertSimpleHbaseCellResult(list.get(1), "name", "dan");
         assertSimpleHbaseCellResult(list.get(2), "name", "linzhi");
 
-        selectHql = "select ( name,age ) from " + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) limit 3 ";
+        selectHql = "select ( name,age ) from "
+                + Config.TableName
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  limit 3 ";
         list = simpleHbaseClient.select(selectHql);
         Assert.assertEquals(3, list.size());
         assertSimpleHbaseCellResult(list.get(0), "name", "allen");
         assertSimpleHbaseCellResult(list.get(1), "name", "dan");
         assertSimpleHbaseCellResult(list.get(2), "name", "linzhi");
 
-        selectHql = "select ( name,age ) from " + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) limit 2 ";
+        selectHql = "select ( name,age ) from "
+                + Config.TableName
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  limit 2 ";
         list = simpleHbaseClient.select(selectHql);
         Assert.assertEquals(2, list.size());
         assertSimpleHbaseCellResult(list.get(0), "name", "allen");
         assertSimpleHbaseCellResult(list.get(1), "name", "dan");
 
-        selectHql = "select ( name,age ) from " + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) limit 1 ";
+        selectHql = "select ( name,age ) from "
+                + Config.TableName
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  limit 1 ";
         list = simpleHbaseClient.select(selectHql);
         Assert.assertEquals(1, list.size());
         assertSimpleHbaseCellResult(list.get(0), "name", "allen");
@@ -147,14 +151,14 @@ public class TestSelect extends RawServiceTestBase {
 
         String selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) limit 4 , 1 ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  limit 4 , 1 ";
         List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
                 .select(selectHql);
         Assert.assertEquals(0, list.size());
 
         selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) limit 0, 4 ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  limit 0, 4 ";
         list = simpleHbaseClient.select(selectHql);
         Assert.assertEquals(3, list.size());
         assertSimpleHbaseCellResult(list.get(0), "name", "allen");
@@ -163,7 +167,7 @@ public class TestSelect extends RawServiceTestBase {
 
         selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) limit 1,2 ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  limit 1,2 ";
         list = simpleHbaseClient.select(selectHql);
         Assert.assertEquals(2, list.size());
         assertSimpleHbaseCellResult(list.get(0), "name", "dan");
@@ -171,14 +175,14 @@ public class TestSelect extends RawServiceTestBase {
 
         selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) limit 1,1 ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  limit 1,1 ";
         list = simpleHbaseClient.select(selectHql);
         Assert.assertEquals(1, list.size());
         assertSimpleHbaseCellResult(list.get(0), "name", "dan");
 
         selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) limit 1, 10 ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  limit 1, 10 ";
         list = simpleHbaseClient.select(selectHql);
         Assert.assertEquals(2, list.size());
         assertSimpleHbaseCellResult(list.get(0), "name", "dan");
@@ -207,7 +211,7 @@ public class TestSelect extends RawServiceTestBase {
 
         String selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ts range ( \"1999-01-01\" ,  \"2003-01-01\") ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  startTS is  \"1999-01-01\" ,  endTS is \"2003-01-01\" ";
 
         List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
                 .select(selectHql);
@@ -220,7 +224,7 @@ public class TestSelect extends RawServiceTestBase {
 
         selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ts range ( \"2000-01-01\" ,  \"2000-01-02\") ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  startTS is \"2000-01-01\" ,  endTS is \"2000-01-02\" ";
 
         list = simpleHbaseClient.select(selectHql);
         Assert.assertEquals(1, list.size());
@@ -252,7 +256,7 @@ public class TestSelect extends RawServiceTestBase {
 
         String selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) maxversion 1 ";
+                + " startkey is  intkey (\"0\") , endkey is intkey (\"3\")  maxversion 1 ";
 
         List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
                 .select(selectHql);
@@ -266,7 +270,7 @@ public class TestSelect extends RawServiceTestBase {
 
         selectHql = "select ( name,age ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) maxversion 2 ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  maxversion 2 ";
 
         list = simpleHbaseClient.select(selectHql);
         Assert.assertEquals(2, list.size());
@@ -291,7 +295,7 @@ public class TestSelect extends RawServiceTestBase {
 
         String selectHql = "select ( name,age ,fatname ) from "
                 + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  ";
         List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
                 .select(selectHql);
         Assert.assertEquals(1, list.size());
@@ -310,7 +314,7 @@ public class TestSelect extends RawServiceTestBase {
         simpleHbaseClient.put(putHql);
 
         String selectHql = "select  .*name  from " + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ";
+                + " startkey is  intkey (\"0\") , endkey is intkey (\"3\")  ";
         List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
                 .select(selectHql);
         Assert.assertEquals(1, list.size());
@@ -328,7 +332,7 @@ public class TestSelect extends RawServiceTestBase {
         simpleHbaseClient.put(putHql);
 
         String selectHql = "select  *  from " + Config.TableName
-                + " rowkey range ( intkey (\"0\") , intkey (\"3\") ) ";
+                + " startkey is intkey (\"0\") , endkey is intkey (\"3\")  ";
         List<List<SimpleHbaseCellResult>> list = simpleHbaseClient
                 .select(selectHql);
         Assert.assertEquals(1, list.size());

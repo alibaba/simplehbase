@@ -1,135 +1,145 @@
 package com.alipay.simplehbase.antlr.auto;// Generated from Statements.g4 by ANTLR 4.0
+
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Token;
 
 public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
-	T visitTsexp(StatementsParser.TsexpContext ctx);
+    T visitTsexp(StatementsParser.TsexpContext ctx);
 
-	T visitConstantList(StatementsParser.ConstantListContext ctx);
+    T visitRowkey_hbasestart(StatementsParser.Rowkey_hbasestartContext ctx);
 
-	T visitNotmatchconstant(StatementsParser.NotmatchconstantContext ctx);
+    T visitConstantList(StatementsParser.ConstantListContext ctx);
 
-	T visitDeleteHqlCl(StatementsParser.DeleteHqlClContext ctx);
+    T visitNotmatchconstant(StatementsParser.NotmatchconstantContext ctx);
 
-	T visitRowkey_Wrapper(StatementsParser.Rowkey_WrapperContext ctx);
+    T visitTsrange_end(StatementsParser.Tsrange_endContext ctx);
 
-	T visitRowkey_Start(StatementsParser.Rowkey_StartContext ctx);
+    T visitDeleteHqlCl(StatementsParser.DeleteHqlClContext ctx);
 
-	T visitConstant2_NotNull(StatementsParser.Constant2_NotNullContext ctx);
+    T visitRowkey_Wrapper(StatementsParser.Rowkey_WrapperContext ctx);
 
-	T visitEqualvar(StatementsParser.EqualvarContext ctx);
+    T visitConstant2_NotNull(StatementsParser.Constant2_NotNullContext ctx);
 
-	T visitNotinconstantlist(StatementsParser.NotinconstantlistContext ctx);
+    T visitEqualvar(StatementsParser.EqualvarContext ctx);
 
-	T visitSelectHqlCl(StatementsParser.SelectHqlClContext ctx);
+    T visitNotinconstantlist(StatementsParser.NotinconstantlistContext ctx);
 
-	T visitRowkey_FuncConstant(StatementsParser.Rowkey_FuncConstantContext ctx);
+    T visitSelectHqlCl(StatementsParser.SelectHqlClContext ctx);
 
-	T visitCidList(StatementsParser.CidListContext ctx);
+    T visitTsrange_start(StatementsParser.Tsrange_startContext ctx);
 
-	T visitIsmissingc(StatementsParser.IsmissingcContext ctx);
+    T visitRowkey_FuncConstant(StatementsParser.Rowkey_FuncConstantContext ctx);
 
-	T visitSelectc(StatementsParser.SelectcContext ctx);
+    T visitCidList(StatementsParser.CidListContext ctx);
 
-	T visitIsnullc(StatementsParser.IsnullcContext ctx);
+    T visitIsmissingc(StatementsParser.IsmissingcContext ctx);
 
-	T visitMaxversionexp(StatementsParser.MaxversionexpContext ctx);
+    T visitSelectc(StatementsParser.SelectcContext ctx);
 
-	T visitLimitexp(StatementsParser.LimitexpContext ctx);
+    T visitIsnullc(StatementsParser.IsnullcContext ctx);
 
-	T visitGreatervar(StatementsParser.GreatervarContext ctx);
+    T visitMaxversionexp(StatementsParser.MaxversionexpContext ctx);
 
-	T visitMaxversion(StatementsParser.MaxversionContext ctx);
+    T visitRowkeyrange_start(StatementsParser.Rowkeyrange_startContext ctx);
 
-	T visitSelectcl(StatementsParser.SelectclContext ctx);
+    T visitLimitexp(StatementsParser.LimitexpContext ctx);
 
-	T visitWherec(StatementsParser.WherecContext ctx);
+    T visitGreatervar(StatementsParser.GreatervarContext ctx);
 
-	T visitNotbetweenvar(StatementsParser.NotbetweenvarContext ctx);
+    T visitMaxversion(StatementsParser.MaxversionContext ctx);
 
-	T visitCountcl(StatementsParser.CountclContext ctx);
+    T visitSelectcl(StatementsParser.SelectclContext ctx);
 
-	T visitCid(StatementsParser.CidContext ctx);
+    T visitWherec(StatementsParser.WherecContext ctx);
 
-	T visitCidList_Star(StatementsParser.CidList_StarContext ctx);
+    T visitNotbetweenvar(StatementsParser.NotbetweenvarContext ctx);
 
-	T visitAndcondition(StatementsParser.AndconditionContext ctx);
+    T visitCountcl(StatementsParser.CountclContext ctx);
 
-	T visitBetweenconstant(StatementsParser.BetweenconstantContext ctx);
+    T visitCid(StatementsParser.CidContext ctx);
 
-	T visitTsrange(StatementsParser.TsrangeContext ctx);
+    T visitCidList_Star(StatementsParser.CidList_StarContext ctx);
 
-	T visitMatchconstant(StatementsParser.MatchconstantContext ctx);
+    T visitAndcondition(StatementsParser.AndconditionContext ctx);
 
-	T visitNotmatchvar(StatementsParser.NotmatchvarContext ctx);
+    T visitBetweenconstant(StatementsParser.BetweenconstantContext ctx);
 
-	T visitNotbetweenconstant(StatementsParser.NotbetweenconstantContext ctx);
+    T visitRowkey_hbaseend(StatementsParser.Rowkey_hbaseendContext ctx);
 
-	T visitVar(StatementsParser.VarContext ctx);
+    T visitMatchconstant(StatementsParser.MatchconstantContext ctx);
 
-	T visitRowkey_End(StatementsParser.Rowkey_EndContext ctx);
+    T visitNotmatchvar(StatementsParser.NotmatchvarContext ctx);
 
-	T visitIsnotmissingc(StatementsParser.IsnotmissingcContext ctx);
+    T visitNotbetweenconstant(StatementsParser.NotbetweenconstantContext ctx);
 
-	T visitCidList_CidList(StatementsParser.CidList_CidListContext ctx);
+    T visitVar(StatementsParser.VarContext ctx);
 
-	T visitDeletehqlc(StatementsParser.DeletehqlcContext ctx);
+    T visitIsnotmissingc(StatementsParser.IsnotmissingcContext ctx);
 
-	T visitBetweenvar(StatementsParser.BetweenvarContext ctx);
+    T visitCidList_CidList(StatementsParser.CidList_CidListContext ctx);
 
-	T visitCountc(StatementsParser.CountcContext ctx);
+    T visitDeletehqlc(StatementsParser.DeletehqlcContext ctx);
 
-	T visitIsnotnullc(StatementsParser.IsnotnullcContext ctx);
+    T visitBetweenvar(StatementsParser.BetweenvarContext ctx);
 
-	T visitLessconstant(StatementsParser.LessconstantContext ctx);
+    T visitCountc(StatementsParser.CountcContext ctx);
 
-	T visitConditionwrapper(StatementsParser.ConditionwrapperContext ctx);
+    T visitIsnotnullc(StatementsParser.IsnotnullcContext ctx);
 
-	T visitSelecthqlc(StatementsParser.SelecthqlcContext ctx);
+    T visitLessconstant(StatementsParser.LessconstantContext ctx);
 
-	T visitInserthqlc(StatementsParser.InserthqlcContext ctx);
+    T visitRowkeyrange_startAndEnd(
+            StatementsParser.Rowkeyrange_startAndEndContext ctx);
 
-	T visitGreaterconstant(StatementsParser.GreaterconstantContext ctx);
+    T visitConditionwrapper(StatementsParser.ConditionwrapperContext ctx);
 
-	T visitEqualconstant(StatementsParser.EqualconstantContext ctx);
+    T visitSelecthqlc(StatementsParser.SelecthqlcContext ctx);
 
-	T visitMatchvar(StatementsParser.MatchvarContext ctx);
+    T visitInserthqlc(StatementsParser.InserthqlcContext ctx);
 
-	T visitGreaterequalvar(StatementsParser.GreaterequalvarContext ctx);
+    T visitRowkeyrange_end(StatementsParser.Rowkeyrange_endContext ctx);
 
-	T visitInsertHqlCl(StatementsParser.InsertHqlClContext ctx);
+    T visitGreaterconstant(StatementsParser.GreaterconstantContext ctx);
 
-	T visitConstant(StatementsParser.ConstantContext ctx);
+    T visitEqualconstant(StatementsParser.EqualconstantContext ctx);
 
-	T visitConstant2List(StatementsParser.Constant2ListContext ctx);
+    T visitMatchvar(StatementsParser.MatchvarContext ctx);
 
-	T visitGreaterequalconstant(StatementsParser.GreaterequalconstantContext ctx);
+    T visitGreaterequalvar(StatementsParser.GreaterequalvarContext ctx);
 
-	T visitOrcondition(StatementsParser.OrconditionContext ctx);
+    T visitInsertHqlCl(StatementsParser.InsertHqlClContext ctx);
 
-	T visitInvarlist(StatementsParser.InvarlistContext ctx);
+    T visitConstant(StatementsParser.ConstantContext ctx);
 
-	T visitRowkeyrange(StatementsParser.RowkeyrangeContext ctx);
+    T visitConstant2List(StatementsParser.Constant2ListContext ctx);
 
-	T visitConstant2_Null(StatementsParser.Constant2_NullContext ctx);
+    T visitTsrange_startAndEnd(StatementsParser.Tsrange_startAndEndContext ctx);
 
-	T visitNotequalconstant(StatementsParser.NotequalconstantContext ctx);
+    T visitGreaterequalconstant(StatementsParser.GreaterequalconstantContext ctx);
 
-	T visitLessequalvar(StatementsParser.LessequalvarContext ctx);
+    T visitOrcondition(StatementsParser.OrconditionContext ctx);
 
-	T visitLessvar(StatementsParser.LessvarContext ctx);
+    T visitInvarlist(StatementsParser.InvarlistContext ctx);
 
-	T visitTablename(StatementsParser.TablenameContext ctx);
+    T visitConstant2_Null(StatementsParser.Constant2_NullContext ctx);
 
-	T visitLessequalconstant(StatementsParser.LessequalconstantContext ctx);
+    T visitNotequalconstant(StatementsParser.NotequalconstantContext ctx);
 
-	T visitNotinvarlist(StatementsParser.NotinvarlistContext ctx);
+    T visitLessequalvar(StatementsParser.LessequalvarContext ctx);
 
-	T visitCidList_Regx(StatementsParser.CidList_RegxContext ctx);
+    T visitLessvar(StatementsParser.LessvarContext ctx);
 
-	T visitInconstantlist(StatementsParser.InconstantlistContext ctx);
+    T visitTablename(StatementsParser.TablenameContext ctx);
 
-	T visitNotequalvar(StatementsParser.NotequalvarContext ctx);
+    T visitLessequalconstant(StatementsParser.LessequalconstantContext ctx);
 
-	T visitFuncname(StatementsParser.FuncnameContext ctx);
+    T visitNotinvarlist(StatementsParser.NotinvarlistContext ctx);
+
+    T visitCidList_Regx(StatementsParser.CidList_RegxContext ctx);
+
+    T visitInconstantlist(StatementsParser.InconstantlistContext ctx);
+
+    T visitNotequalvar(StatementsParser.NotequalvarContext ctx);
+
+    T visitFuncname(StatementsParser.FuncnameContext ctx);
 }

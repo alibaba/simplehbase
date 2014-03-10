@@ -2,8 +2,8 @@ package com.alipay.simplehbase.antlr.manual.visitor;
 
 import com.alipay.simplehbase.antlr.auto.StatementsBaseVisitor;
 import com.alipay.simplehbase.antlr.auto.StatementsParser;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkey_EndContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkey_StartContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkey_hbaseendContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkey_hbasestartContext;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.rowkey.RowKeyUtil;
 import com.alipay.simplehbase.client.rowkeytextfun.RowKeyTextFunc;
@@ -30,13 +30,13 @@ public class RowKeyVisitor extends StatementsBaseVisitor<RowKey> {
     }
 
     @Override
-    public RowKey visitRowkey_Start(Rowkey_StartContext ctx) {
-        return RowKeyUtil.START_ROW;
+    public RowKey visitRowkey_hbaseend(Rowkey_hbaseendContext ctx) {
+        return RowKeyUtil.END_ROW;
     }
 
     @Override
-    public RowKey visitRowkey_End(Rowkey_EndContext ctx) {
-        return RowKeyUtil.END_ROW;
+    public RowKey visitRowkey_hbasestart(Rowkey_hbasestartContext ctx) {
+        return RowKeyUtil.START_ROW;
     }
 
 }

@@ -58,7 +58,7 @@ public class MyRecordTestBase {
 
     private void deleteRecords() {
         simpleHbaseClient.delete("delete * from " + Config.TableName
-                + " rowkey range ( startkey , endkey )");
+                + " startkey is hbasestartkey , endkey is hbaseendkey");
     }
 
     protected void addHql(String hql) {
