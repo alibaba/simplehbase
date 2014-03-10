@@ -35,6 +35,7 @@ public class RowKeyTextFuncHolder {
                     + " type=" + func.getClass().getCanonicalName());
         }
 
+        
     }
 
     /**
