@@ -21,7 +21,7 @@ import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
  * */
 public class Config {
 
-    final public static String                     TableName                         = "MyRecordV04";
+    final public static String                     TableName                         = "MyRecordV05";
     final public static String                     ColumnFamilyName                  = "MyRecordFamily";
 
     public static String                           TestHqlNodeXmlFile                = "test\\hql\\testHqlNode.xml";

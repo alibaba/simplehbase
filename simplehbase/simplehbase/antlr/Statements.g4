@@ -62,7 +62,6 @@ rowkeyrange : ROWKEY RANGE LB rowkeyexp ',' rowkeyexp RB
 
 	
 rowkeyexp : LB rowkeyexp RB                               # rowkey_Wrapper
-	| funcname LB rowkeyexp ( ',' rowkeyexp) * RB     # rowkey_Func
 	| funcname LB constant RB                         # rowkey_FuncConstant
 	| STARTROWKEY                                     # rowkey_Start
 	| ENDROWKEY                                       # rowkey_End

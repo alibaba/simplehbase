@@ -55,8 +55,6 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitAndcondition(StatementsParser.AndconditionContext ctx);
 
-	T visitRowkey_Func(StatementsParser.Rowkey_FuncContext ctx);
-
 	T visitBetweenconstant(StatementsParser.BetweenconstantContext ctx);
 
 	T visitTsrange(StatementsParser.TsrangeContext ctx);

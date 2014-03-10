@@ -21,10 +21,10 @@ public class RowKeyUtil {
     public static RowKey END_ROW   = new BytesRowKey(new byte[0]);
 
     /**
-     * Increase rowKey's bytes's by appending ZERO byte at tail.
+     * Append rowKey's bytes's by appending ZERO byte at tail.
      * 
      * */
-    public static RowKey increaseRowKey(RowKey rowKey) {
+    public static RowKey appendZeroToRowKey(RowKey rowKey) {
         Util.checkRowKey(rowKey);
         byte[] oldKey = rowKey.toBytes();
         byte[] newKey = BytesUtil.merge(oldKey, BytesUtil.ZERO);

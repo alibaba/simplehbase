@@ -1,4 +1,5 @@
-package com.alipay.simplehbase.antlr.auto;// Generated from Statements.g4 by ANTLR 4.0
+package com.alipay.simplehbase.antlr.auto;
+// Generated from Statements.g4 by ANTLR 4.0
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -55,8 +56,6 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	@Override public T visitCidList_Star(StatementsParser.CidList_StarContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitAndcondition(StatementsParser.AndconditionContext ctx) { return visitChildren(ctx); }
-
-	@Override public T visitRowkey_Func(StatementsParser.Rowkey_FuncContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitBetweenconstant(StatementsParser.BetweenconstantContext ctx) { return visitChildren(ctx); }
 

@@ -1,6 +1,6 @@
 <SimpleHbase>
 
-	<HBaseTableSchema tableName="MyRecordV04" defaultFamily="MyRecordFamily">
+	<HBaseTableSchema tableName="MyRecordV05" defaultFamily="MyRecordFamily">
 		<HBaseColumnSchema qualifier="id" typeName="int" />
 		<HBaseColumnSchema qualifier="name" typeName="string" />
 		<HBaseColumnSchema qualifier="age" typeName="long" />

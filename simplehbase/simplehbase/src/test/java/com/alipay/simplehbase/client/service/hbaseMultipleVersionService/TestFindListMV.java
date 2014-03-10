@@ -47,7 +47,7 @@ public class TestFindListMV extends MyRecordTestBase {
 
         List<List<SimpleHbaseDOResult<MyRecord>>> listOfList = simpleHbaseClient
                 .findObjectListMV(rowKey_1,
-                        RowKeyUtil.increaseRowKey(rowKey_2), MyRecord.class,
+                        RowKeyUtil.appendZeroToRowKey(rowKey_2), MyRecord.class,
                         extInfo);
 
         Assert.assertTrue(listOfList.size() == 2);
@@ -70,7 +70,7 @@ public class TestFindListMV extends MyRecordTestBase {
 
         List<List<SimpleHbaseDOResult<MyRecord>>> listOfList = simpleHbaseClient
                 .findObjectListMV(rowKey_1,
-                        RowKeyUtil.increaseRowKey(rowKey_2), MyRecord.class,
+                        RowKeyUtil.appendZeroToRowKey(rowKey_2), MyRecord.class,
                         TestHqlId, null, extInfo);
 
         Assert.assertTrue(listOfList.size() == 2);
@@ -82,7 +82,7 @@ public class TestFindListMV extends MyRecordTestBase {
 
         addHql("select where name equal \"b\"");
         listOfList = simpleHbaseClient.findObjectListMV(rowKey_1,
-                RowKeyUtil.increaseRowKey(rowKey_2), MyRecord.class, TestHqlId,
+                RowKeyUtil.appendZeroToRowKey(rowKey_2), MyRecord.class, TestHqlId,
                 null, extInfo);
 
         Assert.assertTrue(listOfList.size() == 1);
