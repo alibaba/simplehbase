@@ -3,7 +3,6 @@ package com.alipay.simplehbase.config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -19,8 +18,7 @@ import com.alipay.simplehbase.util.Util;
  * <pre>
  * Including following info.
  * 1 hbaseTableSchema Table's schema.
- * 2 configMap simplehbase private config map.
- * 3 queryMap HQL collection.
+ * 2 queryMap HQL collection.
  * </pre>
  * 
  * @author xinzhi
@@ -35,9 +33,10 @@ public class HBaseTableConfig {
      * */
     @ConfigAttr
     private String                            configFilePath;
+
     //------------bean config-------------------
     private HBaseTableSchema                  hbaseTableSchema = new HBaseTableSchema();
-    private Map<String, String>               configMap        = new TreeMap<String, String>();
+
     private ConcurrentMap<String, HBaseQuery> queryMap         = new ConcurrentHashMap<String, HBaseQuery>();
 
     public void init() {
@@ -48,8 +47,6 @@ public class HBaseTableConfig {
             HBaseTableConfigParser.parseTableSchema(configFilePath,
                     hbaseTableSchema, hbaseColumnSchemas);
             hbaseTableSchema.init(hbaseColumnSchemas);
-
-            HBaseTableConfigParser.parseConfigMap(configFilePath, configMap);
 
             List<HBaseQuery> hbaseQueries = HBaseTableConfigParser
                     .parseHBaseQuery(configFilePath);
@@ -85,10 +82,6 @@ public class HBaseTableConfig {
         return hbaseTableSchema;
     }
 
-    public Map<String, String> getConfigMap() {
-        return configMap;
-    }
-
     public Map<String, HBaseQuery> getQueryMap() {
         return queryMap;
     }
@@ -97,11 +90,6 @@ public class HBaseTableConfig {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(hbaseTableSchema.toString());
-        sb.append("-------------------configMap-----------------------\n");
-        for (String key : configMap.keySet()) {
-            sb.append(key + "=" + configMap.get(key) + "\n");
-        }
-        sb.append("-------------------configMap-----------------------\n");
         return sb.toString();
     }
 }

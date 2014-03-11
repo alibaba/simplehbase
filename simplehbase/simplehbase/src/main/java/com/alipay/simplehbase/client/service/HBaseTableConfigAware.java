@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.client;
+package com.alipay.simplehbase.client.service;
 
 import com.alipay.simplehbase.config.HBaseTableConfig;
 

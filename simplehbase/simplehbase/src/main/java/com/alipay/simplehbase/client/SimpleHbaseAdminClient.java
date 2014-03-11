@@ -2,6 +2,8 @@ package com.alipay.simplehbase.client;
 
 import org.apache.hadoop.hbase.HTableDescriptor;
 
+import com.alipay.simplehbase.client.service.HBaseDataSourceAware;
+
 
 /**
  * SimpleHbaseAdminClient.

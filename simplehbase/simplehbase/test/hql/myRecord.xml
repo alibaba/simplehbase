@@ -19,10 +19,6 @@
 		
 	</HBaseTableSchema>
 
-	<configMap>
-		<config key="SCAN_CACHING" value="20" />
-		<config key="DELETE_BATCH" value="20" />
-	</configMap>
 
 </SimpleHbase>   
 

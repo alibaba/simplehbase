@@ -7,6 +7,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkeyrange_startConte
 import com.alipay.simplehbase.antlr.manual.ContextUtil;
 import com.alipay.simplehbase.antlr.manual.RowKeyRange;
 import com.alipay.simplehbase.client.rowkey.RowKeyUtil;
+import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 
 /**
  * RowKeyRange visitor.
@@ -14,12 +15,19 @@ import com.alipay.simplehbase.client.rowkey.RowKeyUtil;
  * @author xinzhi
  * */
 public class RowKeyRangeVisitor extends StatementsBaseVisitor<RowKeyRange> {
+    private SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting;
+
+    public RowKeyRangeVisitor(
+            SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting) {
+        this.simpleHbaseRuntimeSetting = simpleHbaseRuntimeSetting;
+    }
 
     @Override
     public RowKeyRange visitRowkeyrange_start(
             Rowkeyrange_startContext startContext) {
         RowKeyRange range = new RowKeyRange();
-        range.setStart(ContextUtil.parseRowKey(startContext.rowkeyexp()));
+        range.setStart(ContextUtil.parseRowKey(startContext.rowkeyexp(),
+                simpleHbaseRuntimeSetting));
         range.setEnd(RowKeyUtil.END_ROW);
         return range;
     }
@@ -28,7 +36,8 @@ public class RowKeyRangeVisitor extends StatementsBaseVisitor<RowKeyRange> {
     public RowKeyRange visitRowkeyrange_end(Rowkeyrange_endContext endContext) {
         RowKeyRange range = new RowKeyRange();
         range.setStart(RowKeyUtil.START_ROW);
-        range.setEnd(ContextUtil.parseRowKey(endContext.rowkeyexp()));
+        range.setEnd(ContextUtil.parseRowKey(endContext.rowkeyexp(),
+                simpleHbaseRuntimeSetting));
         return range;
     }
 
@@ -36,8 +45,10 @@ public class RowKeyRangeVisitor extends StatementsBaseVisitor<RowKeyRange> {
     public RowKeyRange visitRowkeyrange_startAndEnd(
             Rowkeyrange_startAndEndContext startAndEndContext) {
         RowKeyRange range = new RowKeyRange();
-        range.setStart(ContextUtil.parseRowKey(startAndEndContext.rowkeyexp(0)));
-        range.setEnd(ContextUtil.parseRowKey(startAndEndContext.rowkeyexp(1)));
+        range.setStart(ContextUtil.parseRowKey(startAndEndContext.rowkeyexp(0),
+                simpleHbaseRuntimeSetting));
+        range.setEnd(ContextUtil.parseRowKey(startAndEndContext.rowkeyexp(1),
+                simpleHbaseRuntimeSetting));
         return range;
     }
 }

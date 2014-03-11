@@ -2,14 +2,13 @@ package com.alipay.simplehbase.config;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.hql.HQLNodeParser;
-import com.alipay.simplehbase.util.StringUtil;
+
 import com.alipay.simplehbase.util.Util;
 import com.alipay.simplehbase.util.XmlUtil;
 
@@ -60,36 +59,6 @@ public class HBaseTableConfigParser {
                     "handler"));
 
             hbaseColumnSchemas.add(columnSchema);
-        }
-    }
-
-    /**
-     * Parse simplehbase private config map.
-     * */
-    public static void parseConfigMap(String filePath,
-            Map<String, String> configMap) {
-
-        Util.checkEmptyString(filePath);
-        Util.checkNull(configMap);
-
-        Node configMapNode = XmlUtil.findTopLevelNode(filePath, "configMap");
-        if (configMapNode == null) {
-            return;
-        }
-
-        NodeList nodeList = configMapNode.getChildNodes();
-
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node configNode = nodeList.item(i);
-            if (!configNode.getNodeName().equals("config")) {
-                continue;
-            }
-            String key = XmlUtil.getAttr(configNode, "key");
-            String value = XmlUtil.getAttr(configNode, "value");
-            if (StringUtil.isNotEmptyString(key)
-                    && StringUtil.isNotEmptyString(value)) {
-                configMap.put(key, value);
-            }
         }
     }
 

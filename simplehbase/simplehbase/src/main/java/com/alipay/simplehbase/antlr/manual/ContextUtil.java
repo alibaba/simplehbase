@@ -43,10 +43,10 @@ import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.config.SimpleHbaseConstants;
+import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 import com.alipay.simplehbase.core.NotNullable;
 import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
-import com.alipay.simplehbase.literal.LiteralValueInterpreter;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -160,11 +160,14 @@ public class ContextUtil {
     @Nullable
     public static Object parseConstant(
             @NotNullable HBaseColumnSchema hbaseColumnSchema,
-            @NotNullable Constant2Context constant2Context) {
+            @NotNullable Constant2Context constant2Context,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(hbaseColumnSchema);
         Util.checkNull(constant2Context);
+        Util.checkNull(runtimeSetting);
 
-        Constant2Visitor visitor = new Constant2Visitor(hbaseColumnSchema);
+        Constant2Visitor visitor = new Constant2Visitor(hbaseColumnSchema,
+                runtimeSetting);
         return constant2Context.accept(visitor);
     }
 
@@ -174,15 +177,17 @@ public class ContextUtil {
     @NotNullable
     public static Object parseConstant(
             @NotNullable HBaseColumnSchema hbaseColumnSchema,
-            @NotNullable ConstantContext constantContext) {
+            @NotNullable ConstantContext constantContext,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(hbaseColumnSchema);
         Util.checkNull(constantContext);
+        Util.checkNull(runtimeSetting);
 
         String constant = constantContext.TEXT().getText();
         Util.checkEmptyString(constant);
 
-        Object obj = LiteralValueInterpreter.convertToObject(
-                hbaseColumnSchema.getType(), constant);
+        Object obj = runtimeSetting.interpret(hbaseColumnSchema.getType(),
+                constant);
         Util.checkNull(obj);
         return obj;
     }
@@ -193,13 +198,16 @@ public class ContextUtil {
     @NotNullable
     public static List<Object> parseConstantList(
             @NotNullable HBaseColumnSchema hbaseColumnSchema,
-            @NotNullable List<ConstantContext> constantContextList) {
+            @NotNullable List<ConstantContext> constantContextList,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(hbaseColumnSchema);
         Util.checkNull(constantContextList);
+        Util.checkNull(runtimeSetting);
 
         List<Object> result = new ArrayList<Object>();
         for (ConstantContext constantContext : constantContextList) {
-            result.add(parseConstant(hbaseColumnSchema, constantContext));
+            result.add(parseConstant(hbaseColumnSchema, constantContext,
+                    runtimeSetting));
         }
         return result;
     }
@@ -209,10 +217,12 @@ public class ContextUtil {
      */
     @NotNullable
     public static RowKey parseRowKey(
-            @NotNullable RowkeyexpContext rowkeyexpContext) {
+            @NotNullable RowkeyexpContext rowkeyexpContext,
+            @NotNullable SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting) {
         Util.checkNull(rowkeyexpContext);
+        Util.checkNull(simpleHbaseRuntimeSetting);
 
-        RowKeyVisitor visitor = new RowKeyVisitor();
+        RowKeyVisitor visitor = new RowKeyVisitor(simpleHbaseRuntimeSetting);
         RowKey rowkey = rowkeyexpContext.accept(visitor);
         Util.checkNull(rowkey);
 
@@ -224,10 +234,13 @@ public class ContextUtil {
      */
     @NotNullable
     public static RowKeyRange parseRowKeyRange(
-            RowkeyrangeContext rowkeyrangeContext) {
+            RowkeyrangeContext rowkeyrangeContext,
+            @NotNullable SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting) {
         Util.checkNull(rowkeyrangeContext);
+        Util.checkNull(simpleHbaseRuntimeSetting);
 
-        RowKeyRangeVisitor visitor = new RowKeyRangeVisitor();
+        RowKeyRangeVisitor visitor = new RowKeyRangeVisitor(
+                simpleHbaseRuntimeSetting);
         RowKeyRange rowkeyRange = rowkeyrangeContext.accept(visitor);
 
         Util.checkNull(rowkeyRange);
@@ -238,12 +251,14 @@ public class ContextUtil {
      * Parse Date from TsexpContext.
      */
     @NotNullable
-    public static Date parseTimeStampDate(@NotNullable TsexpContext tsexpContext) {
+    public static Date parseTimeStampDate(
+            @NotNullable TsexpContext tsexpContext,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(tsexpContext);
+        Util.checkNull(runtimeSetting);
 
         String constant = tsexpContext.constant().TEXT().getText();
-        Date date = (Date) LiteralValueInterpreter.convertToObject(Date.class,
-                constant);
+        Date date = (Date) runtimeSetting.interpret(Date.class, constant);
 
         Util.checkNull(date);
         return date;
@@ -254,10 +269,13 @@ public class ContextUtil {
      */
     @NotNullable
     public static TimeStampRange parseTimeStampRange(
-            @NotNullable TsrangeContext tsrangeContext) {
+            @NotNullable TsrangeContext tsrangeContext,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(tsrangeContext);
+        Util.checkNull(runtimeSetting);
 
-        TimeStampRangeVisitor visitor = new TimeStampRangeVisitor();
+        TimeStampRangeVisitor visitor = new TimeStampRangeVisitor(
+                runtimeSetting);
         TimeStampRange timeStampRange = tsrangeContext.accept(visitor);
 
         Util.checkNull(timeStampRange);
@@ -271,15 +289,18 @@ public class ContextUtil {
     public static Filter parseSelectFilter(
             @NotNullable ProgContext progContext,
             @NotNullable HBaseTableConfig hbaseTableConfig,
-            @Nullable Map<String, Object> para) {
+            @Nullable Map<String, Object> para,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(progContext);
         Util.checkNull(hbaseTableConfig);
+        Util.checkNull(runtimeSetting);
 
         SelectclContext SelectclContext = ((SelectclContext) progContext);
         ConditioncContext conditioncContext = SelectclContext.selectc()
                 .wherec().conditionc();
 
-        return parseFilter(conditioncContext, hbaseTableConfig, para);
+        return parseFilter(conditioncContext, hbaseTableConfig, para,
+                runtimeSetting);
     }
 
     /**
@@ -288,15 +309,18 @@ public class ContextUtil {
     @Nullable
     public static Filter parseCountFilter(@NotNullable ProgContext progContext,
             @NotNullable HBaseTableConfig hbaseTableConfig,
-            @Nullable Map<String, Object> para) {
+            @Nullable Map<String, Object> para,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(progContext);
         Util.checkNull(hbaseTableConfig);
+        Util.checkNull(runtimeSetting);
 
         CountclContext countclContext = ((CountclContext) progContext);
         ConditioncContext conditioncContext = countclContext.countc().wherec()
                 .conditionc();
 
-        return parseFilter(conditioncContext, hbaseTableConfig, para);
+        return parseFilter(conditioncContext, hbaseTableConfig, para,
+                runtimeSetting);
     }
 
     /**
@@ -304,14 +328,16 @@ public class ContextUtil {
      * */
     @Nullable
     public static Filter parseFilter(@Nullable WherecContext wherecContext,
-            @NotNullable HBaseTableConfig hbaseTableConfig) {
+            @NotNullable HBaseTableConfig hbaseTableConfig,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(hbaseTableConfig);
+        Util.checkNull(runtimeSetting);
 
         if (wherecContext == null) {
             return null;
         } else {
             return parseFilter(wherecContext.conditionc(), hbaseTableConfig,
-                    null);
+                    null, runtimeSetting);
         }
     }
 
@@ -322,15 +348,18 @@ public class ContextUtil {
     private static Filter parseFilter(
             @Nullable ConditioncContext conditioncContext,
             @NotNullable HBaseTableConfig hbaseTableConfig,
-            @Nullable Map<String, Object> para) {
+            @Nullable Map<String, Object> para,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
 
         Util.checkNull(hbaseTableConfig);
+        Util.checkNull(runtimeSetting);
 
         if (conditioncContext == null) {
             return null;
         }
 
-        FilterVisitor visitor = new FilterVisitor(hbaseTableConfig, para);
+        FilterVisitor visitor = new FilterVisitor(hbaseTableConfig, para,
+                runtimeSetting);
         return conditioncContext.accept(visitor);
     }
 
@@ -384,8 +413,10 @@ public class ContextUtil {
      * */
     @NotNullable
     public static QueryExtInfo parseQueryExtInfo(
-            @NotNullable SelecthqlcContext selecthqlcContext) {
+            @NotNullable SelecthqlcContext selecthqlcContext,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(selecthqlcContext);
+        Util.checkNull(runtimeSetting);
 
         QueryExtInfo extInfo = new QueryExtInfo();
 
@@ -398,7 +429,8 @@ public class ContextUtil {
 
         TsrangeContext tsrangeContext = selecthqlcContext.tsrange();
         if (tsrangeContext != null) {
-            TimeStampRange timeStampRange = parseTimeStampRange(tsrangeContext);
+            TimeStampRange timeStampRange = parseTimeStampRange(tsrangeContext,
+                    runtimeSetting);
             Date minStamp = timeStampRange.getStart();
             Date maxStamp = timeStampRange.getEnd();
             extInfo.setTimeRange(minStamp, maxStamp);

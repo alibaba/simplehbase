@@ -109,7 +109,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         StringBuilder sb = new StringBuilder();
         Map<Object, Object> context = new HashMap<Object, Object>();
-        hbaseQuery.getHqlNode().applyParaMap(para, sb, context);
+        hbaseQuery.getHqlNode().applyParaMap(para, sb, context,
+                simpleHbaseRuntimeSetting());
 
         String hql = sb.toString().trim();
 
@@ -120,7 +121,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         ProgContext progContext = TreeUtil.parseProgContext(hql);
         Filter filter = ContextUtil.parseSelectFilter(progContext,
-                hbaseTableConfig, para);
+                hbaseTableConfig, para, simpleHbaseRuntimeSetting());
 
         return findObjectList_internal(startRowKey, endRowKey, type, filter,
                 queryExtInfo);
@@ -341,7 +342,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         StringBuilder sb = new StringBuilder();
         Map<Object, Object> context = new HashMap<Object, Object>();
-        hbaseQuery.getHqlNode().applyParaMap(para, sb, context);
+        hbaseQuery.getHqlNode().applyParaMap(para, sb, context,
+                simpleHbaseRuntimeSetting());
 
         String hql = sb.toString().trim();
 
@@ -351,7 +353,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         ProgContext progContext = TreeUtil.parseProgContext(hql);
         Filter filter = ContextUtil.parseCountFilter(progContext,
-                hbaseTableConfig, para);
+                hbaseTableConfig, para, simpleHbaseRuntimeSetting());
 
         return count_internal(startRowKey, endRowKey, filter);
 
@@ -425,7 +427,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         StringBuilder sb = new StringBuilder();
         Map<Object, Object> context = new HashMap<Object, Object>();
-        hbaseQuery.getHqlNode().applyParaMap(para, sb, context);
+        hbaseQuery.getHqlNode().applyParaMap(para, sb, context,
+                simpleHbaseRuntimeSetting());
 
         String hql = sb.toString().trim();
 
@@ -436,7 +439,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         ProgContext progContext = TreeUtil.parseProgContext(hql);
         Filter filter = ContextUtil.parseSelectFilter(progContext,
-                hbaseTableConfig, para);
+                hbaseTableConfig, para, simpleHbaseRuntimeSetting());
 
         return findObjectList_internal_mv(startRowKey, endRowKey, type, filter,
                 queryExtInfo);
@@ -461,13 +464,15 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.check(hbaseColumnSchemaList.size() == constant2ContextList.size());
 
         RowkeyexpContext rowkeyexpContext = context.rowkeyexp();
-        RowKey rowKey = ContextUtil.parseRowKey(rowkeyexpContext);
+        RowKey rowKey = ContextUtil.parseRowKey(rowkeyexpContext,
+                simpleHbaseRuntimeSetting());
         Util.checkRowKey(rowKey);
 
         Date ts = null;
         TsexpContext tsexpContext = context.tsexp();
         if (tsexpContext != null) {
-            ts = ContextUtil.parseTimeStampDate(tsexpContext);
+            ts = ContextUtil.parseTimeStampDate(tsexpContext,
+                    simpleHbaseRuntimeSetting());
         }
 
         Put put = new Put(rowKey.toBytes());
@@ -475,7 +480,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             HBaseColumnSchema hbaseColumnSchema = hbaseColumnSchemaList.get(i);
             Constant2Context constant2Context = constant2ContextList.get(i);
             Object value = ContextUtil.parseConstant(hbaseColumnSchema,
-                    constant2Context);
+                    constant2Context, simpleHbaseRuntimeSetting());
             byte[] data = convertValueToBytes(value, hbaseColumnSchema);
             if (ts == null) {
                 put.add(hbaseColumnSchema.getFamilyBytes(),
@@ -519,11 +524,11 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         //filter
         Filter filter = ContextUtil.parseFilter(context.wherec(),
-                hbaseTableConfig);
+                hbaseTableConfig, simpleHbaseRuntimeSetting());
 
         //rowkeys.        
-        RowKeyRange rowKeyRange = ContextUtil.parseRowKeyRange(context
-                .rowkeyrange());
+        RowKeyRange rowKeyRange = ContextUtil.parseRowKeyRange(
+                context.rowkeyrange(), simpleHbaseRuntimeSetting());
 
         RowKey startRowKey = rowKeyRange.getStart();
         RowKey endRowKey = rowKeyRange.getEnd();
@@ -532,7 +537,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkRowKey(endRowKey);
 
         //queryExtInfo
-        QueryExtInfo queryExtInfo = ContextUtil.parseQueryExtInfo(context);
+        QueryExtInfo queryExtInfo = ContextUtil.parseQueryExtInfo(context,
+                simpleHbaseRuntimeSetting());
 
         //scan
         Scan scan = new Scan();
@@ -638,11 +644,11 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         //filter
         Filter filter = ContextUtil.parseFilter(context.wherec(),
-                hbaseTableConfig);
+                hbaseTableConfig, simpleHbaseRuntimeSetting());
 
         //rowkeys.
-        RowKeyRange rowKeyRange = ContextUtil.parseRowKeyRange(context
-                .rowkeyrange());
+        RowKeyRange rowKeyRange = ContextUtil.parseRowKeyRange(
+                context.rowkeyrange(), simpleHbaseRuntimeSetting());
 
         RowKey startRowKey = rowKeyRange.getStart();
         RowKey endRowKey = rowKeyRange.getEnd();
@@ -653,7 +659,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Date ts = null;
         TsexpContext tsexpContext = context.tsexp();
         if (tsexpContext != null) {
-            ts = ContextUtil.parseTimeStampDate(tsexpContext);
+            ts = ContextUtil.parseTimeStampDate(tsexpContext,
+                    simpleHbaseRuntimeSetting());
         }
 
         Scan scan = new Scan();

@@ -2,6 +2,7 @@ package com.alipay.simplehbase.hql.node;
 
 import org.junit.Test;
 
+import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 import com.alipay.simplehbase.hql.HQLNode;
 
 /**
@@ -14,7 +15,7 @@ public class Test_Dynamic3 extends HQLTestBase {
         HQLNode hqlNode = findStatementHQLNode("test_dynamic3");
         para.put("c", null);
 
-        hqlNode.applyParaMap(para, sb, context);
+        hqlNode.applyParaMap(para, sb, context, new SimpleHbaseRuntimeSetting());
         assertEqualHQL("allen hi love cup", sb.toString());
     }
 
@@ -24,7 +25,7 @@ public class Test_Dynamic3 extends HQLTestBase {
         para.put("c", null);
         para.put("d", null);
 
-        hqlNode.applyParaMap(para, sb, context);
+        hqlNode.applyParaMap(para, sb, context, new SimpleHbaseRuntimeSetting());
         assertEqualHQL("allen hi love hello dandan cup", sb.toString());
     }
 
@@ -35,7 +36,7 @@ public class Test_Dynamic3 extends HQLTestBase {
         para.put("d", null);
         para.put("e", null);
 
-        hqlNode.applyParaMap(para, sb, context);
+        hqlNode.applyParaMap(para, sb, context, new SimpleHbaseRuntimeSetting());
         assertEqualHQL("allen hi love hello dandan cup cat linzhi",
                 sb.toString());
     }
@@ -46,7 +47,7 @@ public class Test_Dynamic3 extends HQLTestBase {
         para.put("c", null);
         para.put("e", null);
 
-        hqlNode.applyParaMap(para, sb, context);
+        hqlNode.applyParaMap(para, sb, context, new SimpleHbaseRuntimeSetting());
         assertEqualHQL("allen hi love cup hello linzhi", sb.toString());
     }
 

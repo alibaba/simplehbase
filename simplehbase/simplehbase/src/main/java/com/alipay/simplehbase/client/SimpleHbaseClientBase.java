@@ -15,14 +15,13 @@ import org.apache.hadoop.hbase.client.coprocessor.AggregationClient;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.alipay.simplehbase.client.rowkey.handler.RowKeyHandler;
-import com.alipay.simplehbase.config.ConfigOfTable;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
+import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.type.TypeHandler;
 import com.alipay.simplehbase.util.ClassUtil;
-import com.alipay.simplehbase.util.ConfigUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -31,8 +30,21 @@ import com.alipay.simplehbase.util.Util;
  * @author xinzhi
  * */
 abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
-    protected HBaseTableConfig hbaseTableConfig;
-    protected HBaseDataSource  hbaseDataSource;
+    protected HBaseDataSource           hbaseDataSource;
+    protected HBaseTableConfig          hbaseTableConfig;
+    protected SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting;
+
+    @Override
+    public SimpleHbaseRuntimeSetting getSimpleHbaseRuntimeSetting() {
+        if (simpleHbaseRuntimeSetting == null) {
+            simpleHbaseRuntimeSetting = new SimpleHbaseRuntimeSetting();
+        }
+        return simpleHbaseRuntimeSetting;
+    }
+
+    protected SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting() {
+        return getSimpleHbaseRuntimeSetting();
+    }
 
     /**
      * Get HTableInterface.
@@ -85,17 +97,14 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * Get scan's caching size.
      * */
     protected int getScanCaching() {
-        return ConfigUtil.parsePositiveInt(hbaseTableConfig.getConfigMap(),
-                ConfigOfTable.SCAN_CACHING, ConfigOfTable.SCAN_CACHING_DEFAULT);
-
+        return simpleHbaseRuntimeSetting().getScanCachingSize();
     }
 
     /**
      * Get batch size when do delete.
      * */
     protected int getDeleteBatch() {
-        return ConfigUtil.parsePositiveInt(hbaseTableConfig.getConfigMap(),
-                ConfigOfTable.DELETE_BATCH, ConfigOfTable.DELETE_BATCH_DEFAULT);
+        return simpleHbaseRuntimeSetting().getDeleteBatchSize();
     }
 
     //FIXME [simplehbase] the columns in select list and condition can vary. 
@@ -358,5 +367,11 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     @Override
     public void setHbaseDataSource(HBaseDataSource hbaseDataSource) {
         this.hbaseDataSource = hbaseDataSource;
+    }
+
+    @Override
+    public void setSimpleHbaseRuntimeSetting(
+            SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting) {
+        this.simpleHbaseRuntimeSetting = simpleHbaseRuntimeSetting;
     }
 }

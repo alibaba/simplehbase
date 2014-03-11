@@ -16,9 +16,10 @@ import com.alipay.simplehbase.client.SimpleHbaseClient;
 
 import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.config.HBaseTableConfigParser;
+import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 
 import com.alipay.simplehbase.hql.HBaseQuery;
-import com.alipay.simplehbase.literal.LiteralValueInterpreter;
+
 
 /**
  * @author xinzhi
@@ -95,7 +96,7 @@ public class MyRecordTestBase {
     }
 
     protected MyRecord parseSlim(String str) {
-
+        SimpleHbaseRuntimeSetting runtimeSetting = new SimpleHbaseRuntimeSetting();
         MyRecord record = new MyRecord();
 
         String[] parts = str.split("[=,]");
@@ -103,8 +104,8 @@ public class MyRecordTestBase {
         for (int i = 0; i < parts.length; i += 2) {
 
             if (parts[i].equals("id")) {
-                record.setId((Integer) (LiteralValueInterpreter
-                        .convertToObject(int.class, parts[i + 1])));
+                record.setId((Integer) (runtimeSetting.interpret(int.class,
+                        parts[i + 1])));
                 continue;
             }
 
@@ -114,26 +115,26 @@ public class MyRecordTestBase {
             }
 
             if (parts[i].equals("date")) {
-                record.setDate((Date) (LiteralValueInterpreter.convertToObject(
-                        Date.class, parts[i + 1])));
+                record.setDate((Date) (runtimeSetting.interpret(Date.class,
+                        parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("gender")) {
-                record.setGender((Gender) (LiteralValueInterpreter
-                        .convertToObject(Gender.class, parts[i + 1])));
+                record.setGender((Gender) (runtimeSetting.interpret(
+                        Gender.class, parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("age")) {
-                record.setAge((Long) (LiteralValueInterpreter.convertToObject(
-                        long.class, parts[i + 1])));
+                record.setAge((Long) (runtimeSetting.interpret(long.class,
+                        parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("version")) {
-                record.setVersion((Long) (LiteralValueInterpreter
-                        .convertToObject(long.class, parts[i + 1])));
+                record.setVersion((Long) (runtimeSetting.interpret(long.class,
+                        parts[i + 1])));
                 continue;
             }
 
@@ -149,7 +150,7 @@ public class MyRecordTestBase {
     }
 
     protected MyFatRecord parseFat(String str) {
-
+        SimpleHbaseRuntimeSetting runtimeSetting = new SimpleHbaseRuntimeSetting();
         MyFatRecord record = new MyFatRecord();
 
         String[] parts = str.split("[=,]");
@@ -157,8 +158,8 @@ public class MyRecordTestBase {
         for (int i = 0; i < parts.length; i += 2) {
 
             if (parts[i].equals("id")) {
-                record.setId((Integer) (LiteralValueInterpreter
-                        .convertToObject(int.class, parts[i + 1])));
+                record.setId((Integer) (runtimeSetting.interpret(int.class,
+                        parts[i + 1])));
                 continue;
             }
 
@@ -168,32 +169,32 @@ public class MyRecordTestBase {
             }
 
             if (parts[i].equals("date")) {
-                record.setDate((Date) (LiteralValueInterpreter.convertToObject(
-                        Date.class, parts[i + 1])));
+                record.setDate((Date) (runtimeSetting.interpret(Date.class,
+                        parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("gender")) {
-                record.setGender((Gender) (LiteralValueInterpreter
-                        .convertToObject(Gender.class, parts[i + 1])));
+                record.setGender((Gender) (runtimeSetting.interpret(
+                        Gender.class, parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("age")) {
-                record.setAge((Long) (LiteralValueInterpreter.convertToObject(
-                        long.class, parts[i + 1])));
+                record.setAge((Long) (runtimeSetting.interpret(long.class,
+                        parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("version")) {
-                record.setVersion((Long) (LiteralValueInterpreter
-                        .convertToObject(long.class, parts[i + 1])));
+                record.setVersion((Long) (runtimeSetting.interpret(long.class,
+                        parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("fatid")) {
-                record.setFatid((Integer) (LiteralValueInterpreter
-                        .convertToObject(int.class, parts[i + 1])));
+                record.setFatid((Integer) (runtimeSetting.interpret(int.class,
+                        parts[i + 1])));
                 continue;
             }
 
@@ -203,26 +204,26 @@ public class MyRecordTestBase {
             }
 
             if (parts[i].equals("fatdate")) {
-                record.setFatdate((Date) (LiteralValueInterpreter
-                        .convertToObject(Date.class, parts[i + 1])));
+                record.setFatdate((Date) (runtimeSetting.interpret(Date.class,
+                        parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("fatgender")) {
-                record.setFatgender((Gender) (LiteralValueInterpreter
-                        .convertToObject(Gender.class, parts[i + 1])));
+                record.setFatgender((Gender) (runtimeSetting.interpret(
+                        Gender.class, parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("fatage")) {
-                record.setFatage((Long) (LiteralValueInterpreter
-                        .convertToObject(long.class, parts[i + 1])));
+                record.setFatage((Long) (runtimeSetting.interpret(long.class,
+                        parts[i + 1])));
                 continue;
             }
 
             if (parts[i].equals("fatversion")) {
-                record.setFatversion((Long) (LiteralValueInterpreter
-                        .convertToObject(long.class, parts[i + 1])));
+                record.setFatversion((Long) (runtimeSetting.interpret(
+                        long.class, parts[i + 1])));
                 continue;
             }
 

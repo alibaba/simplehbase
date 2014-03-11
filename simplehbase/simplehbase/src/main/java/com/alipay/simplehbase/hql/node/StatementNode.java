@@ -2,6 +2,7 @@ package com.alipay.simplehbase.hql.node;
 
 import java.util.Map;
 
+import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.HQLNodeType;
@@ -17,12 +18,13 @@ public class StatementNode extends HQLNode {
 
     @Override
     public void applyParaMap(@Nullable Map<String, Object> para,
-            StringBuilder sb, Map<Object, Object> context) {
+            StringBuilder sb, Map<Object, Object> context,
+            @Nullable SimpleHbaseRuntimeSetting runtimeSetting) {
         Util.checkNull(sb);
         Util.checkNull(context);
 
         for (HQLNode hqlNode : subNodeList) {
-            hqlNode.applyParaMap(para, sb, context);
+            hqlNode.applyParaMap(para, sb, context, runtimeSetting);
         }
 
     }

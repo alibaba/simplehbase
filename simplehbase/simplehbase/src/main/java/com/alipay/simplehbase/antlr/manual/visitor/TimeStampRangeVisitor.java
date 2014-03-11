@@ -9,6 +9,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.Tsrange_startContext;
 
 import com.alipay.simplehbase.antlr.manual.ContextUtil;
 import com.alipay.simplehbase.antlr.manual.TimeStampRange;
+import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 
 /**
  * TimeStampRangeVisitor.
@@ -17,11 +18,17 @@ import com.alipay.simplehbase.antlr.manual.TimeStampRange;
  * */
 public class TimeStampRangeVisitor extends
         StatementsBaseVisitor<TimeStampRange> {
+    private SimpleHbaseRuntimeSetting runtimeSetting;
+
+    public TimeStampRangeVisitor(SimpleHbaseRuntimeSetting runtimeSetting) {
+        this.runtimeSetting = runtimeSetting;
+    }
 
     @Override
     public TimeStampRange visitTsrange_start(Tsrange_startContext startContext) {
         TimeStampRange timeStampRange = new TimeStampRange();
-        timeStampRange.setStart(ContextUtil.parseTimeStampDate(startContext.tsexp()));
+        timeStampRange.setStart(ContextUtil.parseTimeStampDate(
+                startContext.tsexp(), runtimeSetting));
         timeStampRange.setEnd(new Date(0x7FFFFFFF));
         return timeStampRange;
     }
@@ -30,7 +37,8 @@ public class TimeStampRangeVisitor extends
     public TimeStampRange visitTsrange_end(Tsrange_endContext endContext) {
         TimeStampRange timeStampRange = new TimeStampRange();
         timeStampRange.setStart(new Date(0));
-        timeStampRange.setEnd(ContextUtil.parseTimeStampDate(endContext.tsexp()));
+        timeStampRange.setEnd(ContextUtil.parseTimeStampDate(
+                endContext.tsexp(), runtimeSetting));
         return timeStampRange;
     }
 
@@ -38,10 +46,10 @@ public class TimeStampRangeVisitor extends
     public TimeStampRange visitTsrange_startAndEnd(
             Tsrange_startAndEndContext startAndEndContext) {
         TimeStampRange timeStampRange = new TimeStampRange();
-        timeStampRange.setStart(ContextUtil.parseTimeStampDate(startAndEndContext
-                .tsexp(0)));
-        timeStampRange.setEnd(ContextUtil.parseTimeStampDate(startAndEndContext
-                .tsexp(1)));
+        timeStampRange.setStart(ContextUtil.parseTimeStampDate(
+                startAndEndContext.tsexp(0), runtimeSetting));
+        timeStampRange.setEnd(ContextUtil.parseTimeStampDate(
+                startAndEndContext.tsexp(1), runtimeSetting));
         return timeStampRange;
     }
 }
