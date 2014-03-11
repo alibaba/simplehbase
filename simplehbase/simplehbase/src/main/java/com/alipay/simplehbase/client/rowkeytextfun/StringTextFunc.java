@@ -18,4 +18,9 @@ public class StringTextFunc implements RowKeyTextFunc {
         return "stringkey";
     }
 
+    @Override
+    public String desc() {
+        return "use string as rowkey.";
+    }
+
 }

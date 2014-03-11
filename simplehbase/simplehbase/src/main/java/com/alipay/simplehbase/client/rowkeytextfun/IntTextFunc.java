@@ -19,4 +19,9 @@ public class IntTextFunc implements RowKeyTextFunc {
         return "intkey";
     }
 
+    @Override
+    public String desc() {
+        return "use int as rowkey";
+    }
+
 }

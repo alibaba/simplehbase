@@ -29,6 +29,7 @@ import com.alipay.simplehbase.util.Util;
  * @author xinzhi
  * */
 public class SimpleHbaseRuntimeSetting {
+
     /**
      * scan caching size.
      * */
@@ -41,24 +42,26 @@ public class SimpleHbaseRuntimeSetting {
      * rowkey text func list.
      * */
     private List<RowKeyTextFunc>           rowKeyTextFuncList;
+
+    private Map<String, RowKeyTextFunc>    rowKeyTextFuncCache            = new HashMap<String, RowKeyTextFunc>();
+    private Map<String, RowKeyTextFunc>    buildInRowKeyTextFuncCache     = new HashMap<String, RowKeyTextFunc>();
+
     /**
      * LiteralInterpreter list.
      * */
     private List<LiteralInterpreter>       literalInterpreterList;
-
-    /**
-     * build-in rowkey text func list.
-     * */
-    private List<RowKeyTextFunc>           buildInRowKeyTextFuncList;
 
     private Map<Class, LiteralInterpreter> literalInterpreterCache        = new HashMap<Class, LiteralInterpreter>();
     private Map<Class, LiteralInterpreter> buildInliteralInterpreterCache = new HashMap<Class, LiteralInterpreter>();
 
     public SimpleHbaseRuntimeSetting() {
 
-        buildInRowKeyTextFuncList = new ArrayList<RowKeyTextFunc>();
+        List<RowKeyTextFunc> buildInRowKeyTextFuncList = new ArrayList<RowKeyTextFunc>();
         buildInRowKeyTextFuncList.add(new IntTextFunc());
         buildInRowKeyTextFuncList.add(new StringTextFunc());
+        for (RowKeyTextFunc func : buildInRowKeyTextFuncList) {
+            buildInRowKeyTextFuncCache.put(func.funcName(), func);
+        }
 
         List<LiteralInterpreter> buildInLiteralInterpreterList = new ArrayList<LiteralInterpreter>();
         buildInLiteralInterpreterList.add(new BooleanInterpreter());
@@ -83,19 +86,20 @@ public class SimpleHbaseRuntimeSetting {
      * findRowKeyTextFunc.
      * */
     public RowKeyTextFunc findRowKeyTextFunc(String funcName) {
-        if (rowKeyTextFuncList != null) {
-            for (RowKeyTextFunc fun : rowKeyTextFuncList) {
-                if (fun.funcName().equals(funcName)) {
-                    return fun;
-                }
-            }
+        if (rowKeyTextFuncCache.containsKey(funcName)) {
+            return rowKeyTextFuncCache.get(funcName);
         }
-        for (RowKeyTextFunc fun : buildInRowKeyTextFuncList) {
-            if (fun.funcName().equals(funcName)) {
-                return fun;
-            }
+        if (buildInRowKeyTextFuncCache.containsKey(funcName)) {
+            return buildInRowKeyTextFuncCache.get(funcName);
         }
         throw new SimpleHBaseException("can not find func for " + funcName);
+    }
+
+    public List<RowKeyTextFunc> findAllRowKeyTextFunc() {
+        Map<String, RowKeyTextFunc> tem = new HashMap<String, RowKeyTextFunc>();
+        tem.putAll(buildInRowKeyTextFuncCache);
+        tem.putAll(rowKeyTextFuncCache);
+        return new ArrayList<RowKeyTextFunc>(tem.values());
     }
 
     public Object interpret(Class type, String literalValue) {
@@ -104,11 +108,11 @@ public class SimpleHbaseRuntimeSetting {
 
         Class temType = ClassUtil.tryConvertToBoxClass(type);
 
-        if (literalInterpreterCache.get(temType) != null) {
+        if (literalInterpreterCache.containsKey(temType)) {
             return literalInterpreterCache.get(temType).interpret(literalValue);
         }
 
-        if (buildInliteralInterpreterCache.get(temType) != null) {
+        if (buildInliteralInterpreterCache.containsKey(temType)) {
             return buildInliteralInterpreterCache.get(temType).interpret(
                     literalValue);
         }
@@ -122,15 +126,30 @@ public class SimpleHbaseRuntimeSetting {
         return result;
     }
 
+    public List<LiteralInterpreter> findAllLiteralInterpreter() {
+        Map<Class, LiteralInterpreter> tem = new HashMap<Class, LiteralInterpreter>();
+        tem.putAll(buildInliteralInterpreterCache);
+        tem.putAll(literalInterpreterCache);
+        return new ArrayList<LiteralInterpreter>(tem.values());
+    }
+
     public void setLiteralInterpreterList(
             List<LiteralInterpreter> literalInterpreterList) {
         this.literalInterpreterList = literalInterpreterList;
-
         if (this.literalInterpreterList != null) {
-            for (LiteralInterpreter interpreter : literalInterpreterList) {
+            for (LiteralInterpreter interpreter : this.literalInterpreterList) {
                 Class type = ClassUtil.tryConvertToBoxClass(interpreter
                         .getTypeCanInterpret());
                 literalInterpreterCache.put(type, interpreter);
+            }
+        }
+    }
+
+    public void setRowKeyTextFuncList(List<RowKeyTextFunc> rowKeyTextFuncList) {
+        this.rowKeyTextFuncList = rowKeyTextFuncList;
+        if (this.rowKeyTextFuncList != null) {
+            for (RowKeyTextFunc func : rowKeyTextFuncList) {
+                rowKeyTextFuncCache.put(func.funcName(), func);
             }
         }
     }
@@ -153,10 +172,6 @@ public class SimpleHbaseRuntimeSetting {
 
     public List<RowKeyTextFunc> getRowKeyTextFuncList() {
         return rowKeyTextFuncList;
-    }
-
-    public void setRowKeyTextFuncList(List<RowKeyTextFunc> rowKeyTextFuncList) {
-        this.rowKeyTextFuncList = rowKeyTextFuncList;
     }
 
     public List<LiteralInterpreter> getLiteralInterpreterList() {

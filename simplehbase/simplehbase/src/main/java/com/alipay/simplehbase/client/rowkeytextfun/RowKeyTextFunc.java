@@ -23,4 +23,11 @@ public interface RowKeyTextFunc {
      * @return name.
      * */
     public String funcName();
+
+    /**
+     * Func's description.
+     * 
+     * @return Func's description.
+     * */
+    public String desc();
 }
