@@ -29,14 +29,14 @@ public class TimeStampRangeVisitor extends
         TimeStampRange timeStampRange = new TimeStampRange();
         timeStampRange.setStart(ContextUtil.parseTimeStampDate(
                 startContext.tsexp(), runtimeSetting));
-        timeStampRange.setEnd(new Date(0x7FFFFFFF));
+        timeStampRange.setEnd(new Date(Long.MAX_VALUE));
         return timeStampRange;
     }
 
     @Override
     public TimeStampRange visitTsrange_end(Tsrange_endContext endContext) {
         TimeStampRange timeStampRange = new TimeStampRange();
-        timeStampRange.setStart(new Date(0));
+        timeStampRange.setStart(new Date(0L));
         timeStampRange.setEnd(ContextUtil.parseTimeStampDate(
                 endContext.tsexp(), runtimeSetting));
         return timeStampRange;

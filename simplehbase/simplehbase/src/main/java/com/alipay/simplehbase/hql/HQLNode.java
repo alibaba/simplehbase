@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
+import com.alipay.simplehbase.core.NotNullable;
 import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.util.Util;
 
@@ -35,8 +36,9 @@ abstract public class HQLNode {
      * @param context the context.
      * */
     public abstract void applyParaMap(@Nullable Map<String, Object> para,
-            StringBuilder sb, Map<Object, Object> context,
-            @Nullable SimpleHbaseRuntimeSetting runtimeSetting);
+            @NotNullable StringBuilder sb,
+            @NotNullable Map<Object, Object> context,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting);
 
     protected HQLNode(HQLNodeType hqlNodeType) {
         Util.checkNull(hqlNodeType);

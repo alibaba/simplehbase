@@ -158,7 +158,7 @@ public class ContextUtil {
      * Parse constant from constant2Context.
      * */
     @Nullable
-    public static Object parseConstant(
+    public static Object parseConstant2(
             @NotNullable HBaseColumnSchema hbaseColumnSchema,
             @NotNullable Constant2Context constant2Context,
             @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {

@@ -454,7 +454,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                 .parseInserthqlcContext(progContext);
         Util.checkNull(context);
 
-        String tableName = context.tablename().TEXT().getText();
+        String tableName = TreeUtil.parseTableName(progContext);
         checkTableName(tableName);
 
         List<HBaseColumnSchema> hbaseColumnSchemaList = ContextUtil
@@ -479,7 +479,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         for (int i = 0; i < hbaseColumnSchemaList.size(); i++) {
             HBaseColumnSchema hbaseColumnSchema = hbaseColumnSchemaList.get(i);
             Constant2Context constant2Context = constant2ContextList.get(i);
-            Object value = ContextUtil.parseConstant(hbaseColumnSchema,
+            Object value = ContextUtil.parseConstant2(hbaseColumnSchema,
                     constant2Context, simpleHbaseRuntimeSetting());
             byte[] data = convertValueToBytes(value, hbaseColumnSchema);
             if (ts == null) {
@@ -506,13 +506,13 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     @Override
     public List<List<SimpleHbaseCellResult>> select(String hql) {
         Util.checkEmptyString(hql);
-
-        SelecthqlcContext context = ContextUtil.parseSelecthqlcContext(TreeUtil
-                .parseProgContext(hql));
+        ProgContext progContext = TreeUtil.parseProgContext(hql);
+        SelecthqlcContext context = ContextUtil
+                .parseSelecthqlcContext(progContext);
         Util.checkNull(context);
 
         //tableName
-        String tableName = context.tablename().TEXT().getText();
+        String tableName = TreeUtil.parseTableName(progContext);
         checkTableName(tableName);
 
         //cid list
@@ -626,13 +626,13 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     @Override
     public void delete(String hql) {
         Util.checkEmptyString(hql);
-
-        DeletehqlcContext context = ContextUtil.parseDeletehqlcContext(TreeUtil
-                .parseProgContext(hql));
+        ProgContext progContext = TreeUtil.parseProgContext(hql);
+        DeletehqlcContext context = ContextUtil
+                .parseDeletehqlcContext(progContext);
         Util.checkNull(context);
 
         //tableName
-        String tableName = context.tablename().TEXT().getText();
+        String tableName = TreeUtil.parseTableName(progContext);
         checkTableName(tableName);
 
         //cid list

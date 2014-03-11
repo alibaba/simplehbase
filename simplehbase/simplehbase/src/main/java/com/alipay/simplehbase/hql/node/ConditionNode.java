@@ -3,7 +3,7 @@ package com.alipay.simplehbase.hql.node;
 import java.util.Map;
 
 import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
-import com.alipay.simplehbase.core.Nullable;
+import com.alipay.simplehbase.core.NotNullable;
 import com.alipay.simplehbase.hql.HQLNode;
 import com.alipay.simplehbase.hql.HQLNodeType;
 import com.alipay.simplehbase.util.StringUtil;
@@ -21,12 +21,12 @@ abstract public class ConditionNode extends PrependNode {
      * isConditionSatisfied.
      * */
     abstract protected boolean isConditionSatisfied(Map<String, Object> para,
-            @Nullable SimpleHbaseRuntimeSetting runtimeSetting);
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting);
 
     @Override
     final public void applyParaMap(Map<String, Object> para, StringBuilder sb,
             Map<Object, Object> context,
-            @Nullable SimpleHbaseRuntimeSetting runtimeSetting) {
+            SimpleHbaseRuntimeSetting runtimeSetting) {
         if (isConditionSatisfied(para, runtimeSetting)) {
             //if this is dynamic node's child node, when the first time isConditionSatisfied to be true,
             //use dynamic node's non-empty prepend value to override this node's prepend value.

@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
-import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.hql.HQLNodeType;
 
@@ -19,7 +18,7 @@ public class IsNotEmptyNode extends UnaryNode {
 
     @Override
     protected boolean isConditionSatisfied(Map<String, Object> para,
-            @Nullable SimpleHbaseRuntimeSetting runtimeSetting) {
+            SimpleHbaseRuntimeSetting runtimeSetting) {
         if (para.containsKey(getProperty())) {
             Object value = para.get(getProperty());
             if (value == null) {

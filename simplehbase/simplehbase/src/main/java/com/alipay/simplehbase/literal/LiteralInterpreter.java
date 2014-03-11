@@ -29,5 +29,6 @@ public interface LiteralInterpreter {
      * 
      * @return Type to interpret.
      * */
+    @NotNullable
     public Class getTypeCanInterpret();
 }

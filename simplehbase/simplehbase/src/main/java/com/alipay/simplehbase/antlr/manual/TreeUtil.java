@@ -56,6 +56,11 @@ public class TreeUtil {
                     .tablename().TEXT().getText();
         }
 
+        if (progContext instanceof DeleteHqlClContext) {
+            return DeleteHqlClContext.class.cast(progContext).deletehqlc()
+                    .tablename().TEXT().getText();
+        }
+
         throw new SimpleHBaseException("parse error.");
     }
 
