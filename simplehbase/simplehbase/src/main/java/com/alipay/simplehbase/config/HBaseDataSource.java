@@ -75,6 +75,11 @@ public class HBaseDataSource {
      * */
     public void init() {
         try {
+            System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
+                    "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+            System.setProperty("javax.xml.parsers.SAXParserFactory",
+                    "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
+
             parseConfig();
             initHtablePool();
             log.info(this);
