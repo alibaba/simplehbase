@@ -1,7 +1,7 @@
 grammar Statements;
 
 
-prog:    selectc            # selectcl
+prog   : selectc            # selectcl
        | countc             # countcl	   
 	   | inserthqlc         # insertHqlCl
 	   | selecthqlc         # selectHqlCl
@@ -16,7 +16,7 @@ selecthqlc : SELECT selectCidList FROM tablename ( wherec ) ? rowkeyrange ( maxv
 	       ;
 	       
 deletehqlc : DELETE selectCidList FROM tablename ( wherec ) ? rowkeyrange ( TS IS tsexp ) ?
-	     ;	       
+	       ;	       
 
 		   
 selectc: SELECT wherec;
@@ -60,19 +60,20 @@ conditionc : LB conditionc RB              # conditionwrapper
 
 rowkeyrange : STARTKEY IS rowkeyexp ',' ENDKEY IS rowkeyexp # rowkeyrange_startAndEnd
 			| STARTKEY IS rowkeyexp                         # rowkeyrange_start
-            | ENDKEY IS rowkeyexp		                    # rowkeyrange_end			
+            | ENDKEY IS rowkeyexp		                    # rowkeyrange_end
+            | ROWKEY IS rowkeyexp			                # rowkeyrange_onerowkey
 			;
 
 	
 rowkeyexp : LB rowkeyexp RB                               # rowkey_Wrapper
-	| funcname LB constant RB                         # rowkey_FuncConstant
-	| HBASESTARTKEY               # rowkey_hbasestart
-	| HBASEENDKEY                 # rowkey_hbaseend
+	| funcname LB constant RB                             # rowkey_FuncConstant
+	| HBASESTARTKEY                                       # rowkey_hbasestart
+	| HBASEENDKEY                                         # rowkey_hbaseend
     ;
  
 tsrange : STARTTS IS tsexp ',' ENDTS IS  tsexp                   # tsrange_startAndEnd
-		| STARTTS IS tsexp                    # tsrange_start
-		| ENDTS IS tsexp  # tsrange_end
+		| STARTTS IS tsexp                                       # tsrange_start
+		| ENDTS IS tsexp                                         # tsrange_end
 	    ;
 		
 tsexp: constant ;
@@ -96,17 +97,16 @@ constant2: constant               # constant2_NotNull
 		 
 maxversionexp : MAXVERSION maxversion
 			  ;
+			  
 limitexp : LIMIT TEXT ( ',' TEXT)?
 		 ;
 
+		 
+		 
 tablename : TEXT ;	
 maxversion : TEXT ;		 
 constant: '"' TEXT '"';	
 var : '#' TEXT '#' ;
-
-
-
-
 
 
 
@@ -118,19 +118,19 @@ RB : ')' ;
 WHERE : 'where' ;	
 
 SELECT : 'select' ; 
-COUNT : 'count' ;
+COUNT  : 'count' ;
 INSERT : 'insert' ;
 DELETE : 'delete' ;
-INTO : 'into' ;
+INTO   : 'into' ;
 VALUES : 'values' ;
-FROM : 'from' ;
+FROM   : 'from' ;
 
-ROWKEY : 'rowkey' ;
+ROWKEY   : 'rowkey' ;
 STARTKEY : 'startkey' ;
-ENDKEY : 'endkey' ;
+ENDKEY   : 'endkey' ;
 HBASESTARTKEY : 'hbasestartkey';
-HBASEENDKEY : 'hbaseendkey';
-MAXVERSION : 'maxversion' ;
+HBASEENDKEY   : 'hbaseendkey';
+MAXVERSION    : 'maxversion' ;
 
 LIMIT : 'limit' ;
 

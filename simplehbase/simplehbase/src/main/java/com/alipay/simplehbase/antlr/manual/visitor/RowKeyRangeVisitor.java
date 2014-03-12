@@ -2,10 +2,12 @@ package com.alipay.simplehbase.antlr.manual.visitor;
 
 import com.alipay.simplehbase.antlr.auto.StatementsBaseVisitor;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkeyrange_endContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkeyrange_onerowkeyContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkeyrange_startAndEndContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Rowkeyrange_startContext;
 import com.alipay.simplehbase.antlr.manual.ContextUtil;
 import com.alipay.simplehbase.antlr.manual.RowKeyRange;
+import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.rowkey.RowKeyUtil;
 import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 
@@ -49,6 +51,17 @@ public class RowKeyRangeVisitor extends StatementsBaseVisitor<RowKeyRange> {
                 simpleHbaseRuntimeSetting));
         range.setEnd(ContextUtil.parseRowKey(startAndEndContext.rowkeyexp(1),
                 simpleHbaseRuntimeSetting));
+        return range;
+    }
+
+    @Override
+    public RowKeyRange visitRowkeyrange_onerowkey(
+            Rowkeyrange_onerowkeyContext ctx) {
+        RowKeyRange range = new RowKeyRange();
+        RowKey rowKey = ContextUtil.parseRowKey(ctx.rowkeyexp(),
+                simpleHbaseRuntimeSetting);
+        range.setStart(rowKey);
+        range.setEnd(rowKey);
         return range;
     }
 }
