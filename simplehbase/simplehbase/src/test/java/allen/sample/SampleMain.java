@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.springframework.core.io.FileSystemResource;
-
+import org.springframework.core.io.Resource;
 import com.alipay.simplehbase.client.SimpleHbaseClient;
-
 import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
-
+import com.alipay.simplehbase.config.CachedFileSystemResource;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 
@@ -24,18 +22,23 @@ public class SampleMain {
     final private static Logger log = Logger.getLogger(SampleMain.class);
 
     private static SimpleHbaseClient getSimpleHbaseClient() {
+
         HBaseDataSource hbaseDataSource = new HBaseDataSource();
-        List<String> hbaseConfigFilePaths = new ArrayList<String>();
-        //hbase config file.
-        hbaseConfigFilePaths.add("sample\\hbase_site");
-        //zk config file.
-        hbaseConfigFilePaths.add("sample\\zk_conf");
-        hbaseDataSource.setHbaseConfigFilePaths(hbaseConfigFilePaths);
+
+        List<Resource> hbaseConfigResources = new ArrayList<Resource>();
+        //If run on hbase cluster, modify the following config files.
+        //If run on hbase stand alone mode, comment out the following config files.
+        hbaseConfigResources.add(new CachedFileSystemResource(
+                "sample\\hbase_site"));
+        hbaseConfigResources
+                .add(new CachedFileSystemResource("sample\\zk_conf"));
+        hbaseDataSource.setHbaseConfigResources(hbaseConfigResources);
+
         hbaseDataSource.init();
 
         HBaseTableConfig hbaseTableConfig = new HBaseTableConfig();
         //simplehbase config file.
-        hbaseTableConfig.setConfigResource(new FileSystemResource(
+        hbaseTableConfig.setConfigResource(new CachedFileSystemResource(
                 "sample\\myRecord.xml"));
 
         hbaseTableConfig.init();

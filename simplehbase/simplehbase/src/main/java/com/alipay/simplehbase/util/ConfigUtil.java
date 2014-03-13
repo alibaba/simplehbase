@@ -1,7 +1,8 @@
 package com.alipay.simplehbase.util;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,24 +47,24 @@ public class ConfigUtil {
     /**
      * Load config file.
      * */
-    public static Map<String, String> loadConfigFile(@Nullable String filePath)
-            throws IOException {
+    public static Map<String, String> loadConfigFile(
+            @Nullable InputStream inputStream) throws IOException {
 
         Map<String, String> result = new HashMap<String, String>();
-        if (StringUtil.isEmptyString(filePath)) {
+        if (inputStream == null) {
             return result;
         }
 
         LineNumberReader lineNumberReader = null;
         try {
-            lineNumberReader = new LineNumberReader(new FileReader(filePath));
+            lineNumberReader = new LineNumberReader(new InputStreamReader(
+                    inputStream));
             for (String line = lineNumberReader.readLine(); line != null; line = lineNumberReader
                     .readLine()) {
 
                 String[] parts = line.split("=");
                 if (parts == null || parts.length != 2) {
-                    log.warn("wrong config line. file=" + filePath + " line="
-                            + line);
+                    log.warn("wrong config line.  line=" + line);
                     continue;
                 }
 

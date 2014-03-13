@@ -10,6 +10,7 @@ import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.ConfigUtil;
@@ -24,7 +25,7 @@ import com.alipay.simplehbase.util.Util;
 public class HBaseDataSource {
 
     /** log. */
-    final private static Logger       log                   = Logger.getLogger(HBaseDataSource.class);
+    final private static Logger log                   = Logger.getLogger(HBaseDataSource.class);
     //----------config--------------
     /**
      * dataSource id.
@@ -32,25 +33,16 @@ public class HBaseDataSource {
     @ConfigAttr
     private String              id;
     /**
-     * hbase's config file path, such as hbase zk config file path.
+     * hbase's config resources, such as hbase zk config.
      * */
     @ConfigAttr
-    private List<String>        hbaseConfigFilePaths;
+    private List<Resource>      hbaseConfigResources;
+
     /**
-     * hbase's original config map.
+     * simplehbase's private config resource.
      * */
     @ConfigAttr
-    private Map<String, String> hbaseConfig;
-    /**
-     * simplehbase's private config file path.
-     * */
-    @ConfigAttr
-    private String              dataSourceConfigFilePath;
-    /**
-     * simplehbase's private config map.
-     * */
-    @ConfigAttr
-    private Map<String, String> dataSourceConfig;
+    private Resource            simpleHbaseDataSourceConfigResource;
 
     //---------------------------runtime-------------------------
     /**
@@ -117,15 +109,11 @@ public class HBaseDataSource {
      * */
     private void parseConfig() {
         try {
-            if (hbaseConfigFilePaths != null) {
-                for (String filePath : hbaseConfigFilePaths) {
-                    finalHbaseConfig
-                            .putAll(ConfigUtil.loadConfigFile(filePath));
+            if (hbaseConfigResources != null) {
+                for (Resource resource : hbaseConfigResources) {
+                    finalHbaseConfig.putAll(ConfigUtil.loadConfigFile(resource
+                            .getInputStream()));
                 }
-            }
-
-            if (hbaseConfig != null) {
-                finalHbaseConfig.putAll(hbaseConfig);
             }
 
             hbaseConfiguration = HBaseConfiguration.create();
@@ -133,12 +121,11 @@ public class HBaseDataSource {
                 hbaseConfiguration.set(entry.getKey(), entry.getValue());
             }
 
-            finalDataSourceConfig.putAll(ConfigUtil
-                    .loadConfigFile(dataSourceConfigFilePath));
-            if (dataSourceConfig != null) {
-                finalDataSourceConfig.putAll(dataSourceConfig);
+            if (simpleHbaseDataSourceConfigResource != null) {
+                finalDataSourceConfig.putAll(ConfigUtil
+                        .loadConfigFile(simpleHbaseDataSourceConfigResource
+                                .getInputStream()));
             }
-
         } catch (Exception e) {
             log.error("parseConfig error.", e);
             throw new SimpleHBaseException("parseConfig error.", e);
@@ -169,57 +156,34 @@ public class HBaseDataSource {
         this.id = id;
     }
 
-    public List<String> getHbaseConfigFilePaths() {
-        return hbaseConfigFilePaths;
-    }
-
-    public void setHbaseConfigFilePaths(List<String> hbaseConfigFilePaths) {
-        this.hbaseConfigFilePaths = hbaseConfigFilePaths;
-    }
-
-    public Map<String, String> getHbaseConfig() {
-        return hbaseConfig;
-    }
-
-    public void setHbaseConfig(Map<String, String> hbaseConfig) {
-        this.hbaseConfig = hbaseConfig;
-    }
-
-    public String getDataSourceConfigFilePath() {
-        return dataSourceConfigFilePath;
-    }
-
-    public void setDataSourceConfigFilePath(String dataSourceConfigFilePath) {
-        this.dataSourceConfigFilePath = dataSourceConfigFilePath;
-    }
-
-    public Map<String, String> getDataSourceConfig() {
-        return dataSourceConfig;
-    }
-
-    public void setDataSourceConfig(Map<String, String> dataSourceConfig) {
-        this.dataSourceConfig = dataSourceConfig;
-    }
-
     public Configuration getHbaseConfiguration() {
         return hbaseConfiguration;
+    }
+
+    public List<Resource> getHbaseConfigResources() {
+        return hbaseConfigResources;
+    }
+
+    public void setHbaseConfigResources(List<Resource> hbaseConfigResources) {
+        this.hbaseConfigResources = hbaseConfigResources;
+    }
+
+    public Resource getSimpleHbaseDataSourceConfigResource() {
+        return simpleHbaseDataSourceConfigResource;
+    }
+
+    public void setSimpleHbaseDataSourceConfigResource(
+            Resource simpleHbaseDataSourceConfigResource) {
+        this.simpleHbaseDataSourceConfigResource = simpleHbaseDataSourceConfigResource;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("---------------datasource--------------------------\n");
-
         StringUtil.append(sb, "#id#", id);
-        StringUtil.append(sb, "#hbaseConfigFilePaths#", hbaseConfigFilePaths);
-        StringUtil.append(sb, "#hbaseConfig#", hbaseConfig);
-        StringUtil.append(sb, "#dataSourceConfigFilePath#",
-                dataSourceConfigFilePath);
-        StringUtil.append(sb, "#dataSourceConfig#", dataSourceConfig);
-
         StringUtil.append(sb, "#finalHbaseConfig#", finalHbaseConfig);
         StringUtil.append(sb, "#finalDataSourceConfig#", finalDataSourceConfig);
-
         sb.append("---------------datasource--------------------------\n");
         return sb.toString();
     }

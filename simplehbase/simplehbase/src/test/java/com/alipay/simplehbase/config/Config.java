@@ -1,15 +1,12 @@
 package com.alipay.simplehbase.config;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.client.HTableInterface;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.alipay.simplehbase.client.SimpleHbaseAdminClient;
 import com.alipay.simplehbase.client.SimpleHbaseAdminClientImpl;
@@ -89,22 +86,19 @@ public class Config {
     static {
         HBaseDataSource hbaseDataSource = new HBaseDataSource();
 
-        List<String> hbaseConfigFilePaths = new ArrayList<String>();
+        List<Resource> hbaseConfigResources = new ArrayList<Resource>();
         //If run on hbase cluster, modify the following config files.
         //If run on hbase stand alone mode, comment out the following config files.
-        hbaseConfigFilePaths.add(Config.HbaseSiteFile);
-        hbaseConfigFilePaths.add(Config.ZkConfigFile);
-        hbaseDataSource.setHbaseConfigFilePaths(hbaseConfigFilePaths);
-
-        // simplehbase config.
-        Map<String, String> dataSourceConfig = new HashMap<String, String>();
-        dataSourceConfig.put(ConfigOfDataSource.HTABLE_POOL_SIZE, "5");
-        hbaseDataSource.setDataSourceConfig(dataSourceConfig);
+        hbaseConfigResources.add(new CachedFileSystemResource(
+                Config.HbaseSiteFile));
+        hbaseConfigResources.add(new CachedFileSystemResource(
+                Config.ZkConfigFile));
+        hbaseDataSource.setHbaseConfigResources(hbaseConfigResources);
 
         hbaseDataSource.init();
 
         HBaseTableConfig hbaseTableConfig = new HBaseTableConfig();
-        hbaseTableConfig.setConfigResource(new FileSystemResource(
+        hbaseTableConfig.setConfigResource(new CachedFileSystemResource(
                 MyRecordXmlFile));
         hbaseTableConfig.init();
 

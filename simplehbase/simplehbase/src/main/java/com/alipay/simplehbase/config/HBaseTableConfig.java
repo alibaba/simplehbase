@@ -30,7 +30,7 @@ public class HBaseTableConfig {
 
     //------------bean config-------------------
     /**
-     * Config file.
+     * Config resource.
      * */
     @ConfigAttr
     private Resource                          configResource;
