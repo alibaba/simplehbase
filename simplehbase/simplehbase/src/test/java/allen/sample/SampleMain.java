@@ -20,7 +20,7 @@ import com.alipay.simplehbase.config.HBaseTableConfig;
 public class SampleMain {
 
     /** log. */
-    private static Logger log = Logger.getLogger(SampleMain.class);
+    final private static Logger log = Logger.getLogger(SampleMain.class);
 
     private static SimpleHbaseClient getSimpleHbaseClient() {
         HBaseDataSource hbaseDataSource = new HBaseDataSource();

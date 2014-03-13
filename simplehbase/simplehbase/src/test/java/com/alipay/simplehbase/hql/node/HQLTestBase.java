@@ -21,7 +21,7 @@ import com.alipay.simplehbase.hql.HQLNode;
 public class HQLTestBase {
 
     /** log. */
-    private static Logger         log     = Logger.getLogger(HQLTestBase.class);
+    final private static Logger   log     = Logger.getLogger(HQLTestBase.class);
 
     protected StringBuilder       sb      = new StringBuilder();
     protected Map<String, Object> para    = new HashMap<String, Object>();

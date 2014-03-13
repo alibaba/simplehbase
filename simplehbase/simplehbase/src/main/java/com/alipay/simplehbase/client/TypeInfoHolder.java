@@ -14,7 +14,7 @@ import com.alipay.simplehbase.util.Util;
 public class TypeInfoHolder {
 
     /** log. */
-    private static Logger                                log       = Logger.getLogger(TypeInfoHolder.class);
+    final private static Logger                                log       = Logger.getLogger(TypeInfoHolder.class);
 
     /** type->typeInfo map. */
     private static ConcurrentHashMap<Class<?>, TypeInfo> typeInfos = new ConcurrentHashMap<Class<?>, TypeInfo>();

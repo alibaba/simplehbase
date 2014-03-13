@@ -25,7 +25,7 @@ import com.alipay.simplehbase.util.Util;
  * */
 public class HBaseTableConfig {
     /** log. */
-    private static Logger                     log              = Logger.getLogger(HBaseTableConfig.class);
+    final private static Logger               log              = Logger.getLogger(HBaseTableConfig.class);
 
     //------------bean config-------------------
     /**

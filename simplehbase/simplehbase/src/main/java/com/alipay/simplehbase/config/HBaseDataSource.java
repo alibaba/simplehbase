@@ -24,7 +24,7 @@ import com.alipay.simplehbase.util.Util;
 public class HBaseDataSource {
 
     /** log. */
-    private static Logger       log                   = Logger.getLogger(HBaseDataSource.class);
+    final private static Logger       log                   = Logger.getLogger(HBaseDataSource.class);
     //----------config--------------
     /**
      * dataSource id.

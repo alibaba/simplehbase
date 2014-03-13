@@ -40,15 +40,15 @@ public class SimpleHbaseClientFactory {
 
     private static class ClientInvocationHandler implements InvocationHandler {
         /** log. */
-        private static Logger     log       = Logger.getLogger(ClientInvocationHandler.class);
+        final private static Logger log       = Logger.getLogger(ClientInvocationHandler.class);
 
         /** performance digest log. */
-        private static Logger     digestLog = Logger.getLogger("simplehbase.digest");
+        private static Logger       digestLog = Logger.getLogger("simplehbase.digest");
 
         /**
          * SimpleHbaseClient.
          * */
-        private SimpleHbaseClient simpleHbaseClient;
+        private SimpleHbaseClient   simpleHbaseClient;
 
         /**
          * ClientInvocationHandler.
