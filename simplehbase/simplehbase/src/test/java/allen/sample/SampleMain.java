@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.core.io.FileSystemResource;
 
 import com.alipay.simplehbase.client.SimpleHbaseClient;
 
@@ -34,7 +35,9 @@ public class SampleMain {
 
         HBaseTableConfig hbaseTableConfig = new HBaseTableConfig();
         //simplehbase config file.
-        hbaseTableConfig.setConfigFilePath("sample\\myRecord.xml");
+        hbaseTableConfig.setConfigResource(new FileSystemResource(
+                "sample\\myRecord.xml"));
+
         hbaseTableConfig.init();
 
         SimpleHbaseClient tClient = new SimpleHbaseClientImpl();

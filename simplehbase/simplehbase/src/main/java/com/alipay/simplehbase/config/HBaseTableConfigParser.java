@@ -1,5 +1,6 @@
 package com.alipay.simplehbase.config;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,15 +27,15 @@ public class HBaseTableConfigParser {
      * Only parse static config data, not runtime config data.
      * </pre>
      * */
-    public static void parseTableSchema(String filePath,
+    public static void parseTableSchema(InputStream inputStream,
             HBaseTableSchema tableSchema,
             List<HBaseColumnSchema> hbaseColumnSchemas) {
 
-        Util.checkEmptyString(filePath);
+        Util.checkNull(inputStream);
         Util.checkNull(tableSchema);
         Util.checkNull(hbaseColumnSchemas);
 
-        Node hbaseTableSchemaNode = XmlUtil.findTopLevelNode(filePath,
+        Node hbaseTableSchemaNode = XmlUtil.findTopLevelNode(inputStream,
                 "HBaseTableSchema");
 
         tableSchema.setTableName(XmlUtil.getAttr(hbaseTableSchemaNode,
@@ -60,6 +61,16 @@ public class HBaseTableConfigParser {
 
             hbaseColumnSchemas.add(columnSchema);
         }
+    }
+
+    /**
+     * Parse HBaseQuery.
+     * */
+    public static List<HBaseQuery> parseHBaseQuery(InputStream inputStream) {
+        Util.checkNull(inputStream);
+        Node statementsNode = XmlUtil.findTopLevelNode(inputStream,
+                "statements");
+        return parseHBaseQueryList(statementsNode);
     }
 
     /**

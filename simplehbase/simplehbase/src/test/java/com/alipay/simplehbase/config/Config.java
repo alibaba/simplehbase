@@ -9,6 +9,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.client.HTableInterface;
+import org.springframework.core.io.FileSystemResource;
 
 import com.alipay.simplehbase.client.SimpleHbaseAdminClient;
 import com.alipay.simplehbase.client.SimpleHbaseAdminClientImpl;
@@ -103,7 +104,8 @@ public class Config {
         hbaseDataSource.init();
 
         HBaseTableConfig hbaseTableConfig = new HBaseTableConfig();
-        hbaseTableConfig.setConfigFilePath(MyRecordXmlFile);
+        hbaseTableConfig.setConfigResource(new FileSystemResource(
+                MyRecordXmlFile));
         hbaseTableConfig.init();
 
         SimpleHbaseClient tClient = new SimpleHbaseClientImpl();

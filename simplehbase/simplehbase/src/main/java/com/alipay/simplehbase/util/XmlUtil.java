@@ -1,7 +1,11 @@
 package com.alipay.simplehbase.util;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,14 +24,15 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
  * @author xinzhi
  * */
 public class XmlUtil {
+
     /** log. */
     private static Logger log = Logger.getLogger(XmlUtil.class);
 
     /**
      * Find top level node.
      * */
-    public static Node findTopLevelNode(String filePath, String nodeName) {
-        Util.checkEmptyString(filePath);
+    public static Node findTopLevelNode(InputStream inputStream, String nodeName) {
+        Util.checkNull(inputStream);
         Util.checkEmptyString(nodeName);
 
         try {
@@ -36,7 +41,7 @@ public class XmlUtil {
             dbf.setIgnoringComments(true);
 
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new File(filePath));
+            Document doc = db.parse(inputStream);
             Node rootNode = doc.getDocumentElement();
             NodeList childNodes = rootNode.getChildNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {
@@ -50,6 +55,19 @@ public class XmlUtil {
         }
 
         return null;
+    }
+
+    /**
+     * Find top level node.
+     * */
+    public static Node findTopLevelNode(String filePath, String nodeName) {
+        Util.checkEmptyString(filePath);
+        try {
+            return findTopLevelNode(new BufferedInputStream(
+                    new FileInputStream(new File(filePath))), nodeName);
+        } catch (FileNotFoundException e1) {
+            throw new SimpleHBaseException("error.", e1);
+        }
     }
 
     /**

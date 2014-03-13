@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
 
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.hql.HBaseQuery;
@@ -32,7 +33,7 @@ public class HBaseTableConfig {
      * Config file.
      * */
     @ConfigAttr
-    private String                            configFilePath;
+    private Resource                          configResource;
 
     //------------bean config-------------------
     private HBaseTableSchema                  hbaseTableSchema = new HBaseTableSchema();
@@ -40,16 +41,17 @@ public class HBaseTableConfig {
     private ConcurrentMap<String, HBaseQuery> queryMap         = new ConcurrentHashMap<String, HBaseQuery>();
 
     public void init() {
-        Util.checkEmptyString(configFilePath);
+        Util.checkNull(configResource);
 
         try {
             List<HBaseColumnSchema> hbaseColumnSchemas = new ArrayList<HBaseColumnSchema>();
-            HBaseTableConfigParser.parseTableSchema(configFilePath,
-                    hbaseTableSchema, hbaseColumnSchemas);
+            HBaseTableConfigParser.parseTableSchema(
+                    configResource.getInputStream(), hbaseTableSchema,
+                    hbaseColumnSchemas);
             hbaseTableSchema.init(hbaseColumnSchemas);
 
             List<HBaseQuery> hbaseQueries = HBaseTableConfigParser
-                    .parseHBaseQuery(configFilePath);
+                    .parseHBaseQuery(configResource.getInputStream());
 
             addHBaseQueryList(hbaseQueries);
 
@@ -70,12 +72,12 @@ public class HBaseTableConfig {
         }
     }
 
-    public String getConfigFilePath() {
-        return configFilePath;
+    public Resource getConfigResource() {
+        return configResource;
     }
 
-    public void setConfigFilePath(String configFilePath) {
-        this.configFilePath = configFilePath;
+    public void setConfigResource(Resource configResource) {
+        this.configResource = configResource;
     }
 
     public HBaseTableSchema getHbaseTableSchema() {
