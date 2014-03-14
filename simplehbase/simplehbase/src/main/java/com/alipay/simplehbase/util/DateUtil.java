@@ -11,10 +11,10 @@ import java.util.Date;
  * */
 public class DateUtil {
 
-    public static final String MSFormat     = "yyyy-MM-dd HH:mm:ss:SSS";
-    public static final String SecondFormat = "yyyy-MM-dd HH:mm:ss";
-    public static final String MinuteFormat = "yyyy-MM-dd HH:mm";
-    public static final String HourFormat   = "yyyy-MM-dd HH";
+    public static final String MSFormat     = "yyyy-MM-dd_HH:mm:ss:SSS";
+    public static final String SecondFormat = "yyyy-MM-dd_HH:mm:ss";
+    public static final String MinuteFormat = "yyyy-MM-dd_HH:mm";
+    public static final String HourFormat   = "yyyy-MM-dd_HH";
     public static final String DayFormat    = "yyyy-MM-dd";
 
     /**

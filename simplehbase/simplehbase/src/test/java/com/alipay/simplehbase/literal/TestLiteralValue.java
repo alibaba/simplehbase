@@ -42,8 +42,8 @@ public class TestLiteralValue {
     @Test
     public void testDate_1() {
         Date cDate = (Date) new DateInterpreter()
-                .interpret("2013-12-01 01:02:03");
-        Date eDate = DateUtil.parse("2013-12-01 01:02:03",
+                .interpret("2013-12-01_01:02:03");
+        Date eDate = DateUtil.parse("2013-12-01_01:02:03",
                 DateUtil.SecondFormat);
         Assert.assertEquals(eDate, cDate);
     }

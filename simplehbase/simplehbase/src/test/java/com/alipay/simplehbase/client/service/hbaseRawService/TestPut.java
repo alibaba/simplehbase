@@ -45,7 +45,7 @@ public class TestPut extends RawServiceTestBase {
 
         String hql = "insert into "
                 + Config.TableName
-                + " ( name,age ) values ( \"allen\", \"30\" ) rowkey is intkey (\"2000\") ts is \"2000-01-01\" ";
+                + " ( name,age ) values ( \"allen\", \"30\" ) rowkey is intkey (\"2000\") ts is \"2000-01-01_10:10:10:123\" ";
         simpleHbaseClient.put(hql);
 
         resultRecord = simpleHbaseClient.findObject(myRecordRowKey,
