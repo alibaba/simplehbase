@@ -10,15 +10,21 @@
 	
 	
 	<statements>	
+		
 		<statement id="queryByNameAndAge">
-			select where id greater #id#
+			select where id greaterequal #id#
 			<isPropertyAvailable prepend="and" property="name">
 				name equal #name#
 			</isPropertyAvailable>
 			<isPropertyAvailable prepend="and" property="age">
 				age greater #age#
 			</isPropertyAvailable>
-		</statement>		
+		</statement>	
+		
+		<statement id="queryById">
+			select where id equal #id#			
+		</statement>			
+				
 	</statements>	
 </SimpleHbase>   
 

@@ -80,14 +80,14 @@ public class SampleMain {
                 new PersonRowKey(1), new PersonRowKey(3), Person.class);
         log.info(resultList);
 
-        //dynamic query.
+        //HQL query.
         Map<String, Object> para = new HashMap<String, Object>();
-        para.put("id", 0);
+        para.put("id", 1);
         resultList = simpleHbaseClient.findObjectList(new PersonRowKey(1),
-                new PersonRowKey(3), Person.class, "queryByNameAndAge", para);
+                new PersonRowKey(3), Person.class, "queryById", para);
         log.info(resultList);
 
-        //dynamic query.
+        //dynamic HQL.
         para.put("name", "allen");
         para.put("age", 0);
         resultList = simpleHbaseClient.findObjectList(new PersonRowKey(1),
