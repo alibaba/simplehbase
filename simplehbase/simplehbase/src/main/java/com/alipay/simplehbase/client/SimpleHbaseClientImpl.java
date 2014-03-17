@@ -184,10 +184,12 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                     continue;
                 }
 
-                resultList.add(convertToDO(result, type));
-
-                if (++resultCounter >= length) {
-                    break;
+                T t = convertToDO(result, type);
+                if (t != null) {
+                    resultList.add(t);
+                    if (++resultCounter >= length) {
+                        break;
+                    }
                 }
             }
         } catch (IOException e) {
