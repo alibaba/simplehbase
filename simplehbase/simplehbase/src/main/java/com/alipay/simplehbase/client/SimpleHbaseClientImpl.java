@@ -130,26 +130,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     private <T> List<T> findObjectList_internal(RowKey startRowKey,
             RowKey endRowKey, Class<? extends T> type, @Nullable Filter filter,
             @Nullable QueryExtInfo queryExtInfo) {
-        List<List<SimpleHbaseDOResult<T>>> temResult = findObjectList_internal_mv(
-                startRowKey, endRowKey, type, filter, queryExtInfo);
-        if (temResult.isEmpty()) {
-            return new ArrayList<T>();
-        } else {
-            List<T> result = new ArrayList<T>();
-            for (List<SimpleHbaseDOResult<T>> list : temResult) {
-                if (list.isEmpty()) {
-                    continue;
-                } else {
-                    result.add(list.get(0).getT());
-                }
-            }
-            return result;
-        }
-    }
 
-    private <T> List<List<SimpleHbaseDOResult<T>>> findObjectList_internal_mv(
-            RowKey startRowKey, RowKey endRowKey, Class<? extends T> type,
-            @Nullable Filter filter, @Nullable QueryExtInfo queryExtInfo) {
         Util.checkRowKey(startRowKey);
         Util.checkRowKey(endRowKey);
         Util.checkNull(type);
@@ -159,6 +140,10 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         scan.setStopRow(endRowKey.toBytes());
         scan.setCaching(getScanCaching());
         scan.setFilter(filter);
+        //only query 1 version.
+        if (queryExtInfo != null) {
+            queryExtInfo.setMaxVersions(1);
+        }
 
         long startIndex = 0L;
         long length = Long.MAX_VALUE;
@@ -187,7 +172,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         HTableInterface htableInterface = htableInterface();
         ResultScanner resultScanner = null;
 
-        List<List<SimpleHbaseDOResult<T>>> resultList = new ArrayList<List<SimpleHbaseDOResult<T>>>();
+        List<T> resultList = new ArrayList<T>();
 
         try {
             resultScanner = htableInterface.getScanner(scan);
@@ -199,7 +184,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                     continue;
                 }
 
-                resultList.add(convertToSimpleHbaseDOResult(result, type));
+                resultList.add(convertToDO(result, type));
 
                 if (++resultCounter >= length) {
                     break;
@@ -215,6 +200,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
 
         return resultList;
+
     }
 
     @Override
@@ -443,6 +429,76 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         return findObjectList_internal_mv(startRowKey, endRowKey, type, filter,
                 queryExtInfo);
+    }
+
+    private <T> List<List<SimpleHbaseDOResult<T>>> findObjectList_internal_mv(
+            RowKey startRowKey, RowKey endRowKey, Class<? extends T> type,
+            @Nullable Filter filter, @Nullable QueryExtInfo queryExtInfo) {
+        Util.checkRowKey(startRowKey);
+        Util.checkRowKey(endRowKey);
+        Util.checkNull(type);
+
+        Scan scan = new Scan();
+        scan.setStartRow(startRowKey.toBytes());
+        scan.setStopRow(endRowKey.toBytes());
+        scan.setCaching(getScanCaching());
+        scan.setFilter(filter);
+
+        long startIndex = 0L;
+        long length = Long.MAX_VALUE;
+
+        if (queryExtInfo != null) {
+            if (queryExtInfo.isMaxVersionSet()) {
+                scan.setMaxVersions(queryExtInfo.getMaxVersions());
+            }
+            if (queryExtInfo.isTimeRangeSet()) {
+                try {
+                    scan.setTimeRange(queryExtInfo.getMinStamp(),
+                            queryExtInfo.getMaxStamp());
+                } catch (IOException e) {
+                    // should never happen.
+                    throw new SimpleHBaseException("should never happen.", e);
+                }
+            }
+            if (queryExtInfo.isLimitSet()) {
+                startIndex = queryExtInfo.getStartIndex();
+                length = queryExtInfo.getLength();
+            }
+        }
+
+        applyRequestFamilyAndQualifier(type, scan);
+
+        HTableInterface htableInterface = htableInterface();
+        ResultScanner resultScanner = null;
+
+        List<List<SimpleHbaseDOResult<T>>> resultList = new ArrayList<List<SimpleHbaseDOResult<T>>>();
+
+        try {
+            resultScanner = htableInterface.getScanner(scan);
+            long ignoreCounter = startIndex;
+            long resultCounter = 0L;
+            Result result = null;
+            while ((result = resultScanner.next()) != null) {
+                if (ignoreCounter-- > 0) {
+                    continue;
+                }
+
+                resultList.add(convertToSimpleHbaseDOResult(result, type));
+
+                if (++resultCounter >= length) {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            throw new SimpleHBaseException(
+                    "findObjectList. startRowKey=" + startRowKey
+                            + " endRowKey=" + endRowKey + " type=" + type, e);
+        } finally {
+            Util.close(resultScanner);
+            Util.close(htableInterface);
+        }
+
+        return resultList;
     }
 
     @Override

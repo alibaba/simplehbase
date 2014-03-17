@@ -135,6 +135,63 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
+     * convert hhbase result to DO.
+     * 
+     * @param hbaseResult hbase result.
+     * @param type POJO type.
+     * 
+     * @return java object.
+     * */
+    protected <T> T convertToDO(Result hbaseResult, Class<? extends T> type) {
+        KeyValue[] keyValues = hbaseResult.raw();
+        if (keyValues == null || keyValues.length == 0) {
+            return null;
+        }
+
+        try {
+
+            TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+            T result = type.newInstance();
+
+            for (KeyValue keyValue : keyValues) {
+                byte[] familyBytes = keyValue.getFamily();
+                byte[] qualifierBytes = keyValue.getQualifier();
+                byte[] hbaseValue = keyValue.getValue();
+
+                ColumnInfo columnInfo = typeInfo.findColumnInfo(
+                        Bytes.toString(familyBytes),
+                        Bytes.toString(qualifierBytes));
+
+                HBaseColumnSchema hbaseColumnSchema = columnSchema(
+                        columnInfo.family, columnInfo.qualifier);
+
+                Class<?> fieldType = columnInfo.field.getType();
+                Class<?> schemaType = hbaseColumnSchema.getType();
+
+                if (!ClassUtil.withSameType(fieldType, schemaType)) {
+                    throw new SimpleHBaseException(
+                            "class does not match. fieldType=" + fieldType
+                                    + " schemaType=" + schemaType);
+                }
+
+                TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
+                Object value = typeHandler.toObject(
+                        hbaseColumnSchema.getType(), hbaseValue);
+
+                if (value != null) {
+                    columnInfo.field.set(result, value);
+                }
+            }
+
+            return result;
+
+        } catch (Exception e) {
+            throw new SimpleHBaseException("convert result exception. result="
+                    + hbaseResult + " type=" + type, e);
+        }
+    }
+
+    /**
      * Convert hbase result to SimpleHbaseCellResult list.
      * 
      * @param hbaseResult hbase result.
