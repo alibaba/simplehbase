@@ -20,6 +20,7 @@ import com.alipay.simplehbase.literal.interpreter.IntegerInterpreter;
 import com.alipay.simplehbase.literal.interpreter.LongInterpreter;
 import com.alipay.simplehbase.literal.interpreter.ShortInterpreter;
 import com.alipay.simplehbase.literal.interpreter.StringInterpreter;
+import com.alipay.simplehbase.literal.interpreter.ext.HexBytesInterpreter;
 import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.Util;
 
@@ -74,6 +75,7 @@ public class SimpleHbaseRuntimeSetting {
         buildInLiteralInterpreterList.add(new LongInterpreter());
         buildInLiteralInterpreterList.add(new ShortInterpreter());
         buildInLiteralInterpreterList.add(new StringInterpreter());
+        buildInLiteralInterpreterList.add(new HexBytesInterpreter());
 
         for (LiteralInterpreter interpreter : buildInLiteralInterpreterList) {
             Class type = ClassUtil.tryConvertToBoxClass(interpreter

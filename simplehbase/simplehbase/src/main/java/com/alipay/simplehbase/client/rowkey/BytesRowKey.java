@@ -2,9 +2,9 @@ package com.alipay.simplehbase.client.rowkey;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.hadoop.hbase.util.Bytes;
 
 import com.alipay.simplehbase.client.RowKey;
+import com.alipay.simplehbase.util.EncodingUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -38,6 +38,6 @@ public class BytesRowKey implements RowKey {
 
     @Override
     public String toString() {
-        return Bytes.toStringBinary(key);
+        return "BytesRowKey [key=" + EncodingUtil.toHexString(key) + "]";
     }
 }
