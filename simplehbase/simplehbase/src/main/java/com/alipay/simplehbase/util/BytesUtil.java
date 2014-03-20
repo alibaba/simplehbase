@@ -31,9 +31,8 @@ public class BytesUtil {
      * </pre>
      * */
     public static byte[] increaseLastByte(byte[] bytes) {
-        if (bytes == null) {
-            return null;
-        }
+        Util.checkNull(bytes);
+
         if (bytes.length == 0) {
             return ZERO;
         }

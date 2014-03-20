@@ -69,7 +69,7 @@ public class StringUtil {
     /**
      * Reverse string.
      * */
-    public static String reverse(String str) {
+    public static String reverse(@Nullable String str) {
         if (str == null || str.length() == 0) {
             return str;
         }

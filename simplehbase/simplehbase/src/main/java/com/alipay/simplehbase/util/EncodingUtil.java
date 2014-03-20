@@ -16,13 +16,11 @@ public class EncodingUtil {
      * Convert bytes to hex string.
      * */
     public static String toHexString(byte[] bytes) {
-        if (bytes == null) {
-            return "";
-        }
+        Util.checkNull(bytes);
 
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
-            sb.append(toHexString(b));
+            sb.append(toHexString(b) + " ");
         }
         return sb.toString();
     }
@@ -45,9 +43,7 @@ public class EncodingUtil {
      * Convert hex string to bytes.
      * */
     public static byte[] parseBytesFromHexString(String hexStr) {
-        if (hexStr == null) {
-            return new byte[0];
-        }
+        Util.checkNull(hexStr);
 
         StringBuilder sb = new StringBuilder();
 
@@ -75,10 +71,7 @@ public class EncodingUtil {
     }
 
     private static byte[] parseBytesFromHexString_0(String hexStr) {
-
-        if (hexStr == null) {
-            return new byte[0];
-        }
+        Util.checkNull(hexStr);
 
         if (hexStr.length() % 2 != 0) {
             throw new SimpleHBaseException("error. hexStr=" + hexStr);

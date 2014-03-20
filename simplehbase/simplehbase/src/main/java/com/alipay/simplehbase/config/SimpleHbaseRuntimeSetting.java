@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alipay.simplehbase.client.rowkeytextfun.HexBytesTextFunc;
 import com.alipay.simplehbase.client.rowkeytextfun.IntTextFunc;
 import com.alipay.simplehbase.client.rowkeytextfun.RowKeyTextFunc;
 import com.alipay.simplehbase.client.rowkeytextfun.StringTextFunc;
@@ -60,6 +61,7 @@ public class SimpleHbaseRuntimeSetting {
         List<RowKeyTextFunc> buildInRowKeyTextFuncList = new ArrayList<RowKeyTextFunc>();
         buildInRowKeyTextFuncList.add(new IntTextFunc());
         buildInRowKeyTextFuncList.add(new StringTextFunc());
+        buildInRowKeyTextFuncList.add(new HexBytesTextFunc());
         for (RowKeyTextFunc func : buildInRowKeyTextFuncList) {
             buildInRowKeyTextFuncCache.put(func.funcName(), func);
         }

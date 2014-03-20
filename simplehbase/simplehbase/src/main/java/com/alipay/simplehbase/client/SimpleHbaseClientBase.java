@@ -32,19 +32,7 @@ import com.alipay.simplehbase.util.Util;
 abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     protected HBaseDataSource           hbaseDataSource;
     protected HBaseTableConfig          hbaseTableConfig;
-    protected SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting;
-
-    @Override
-    public SimpleHbaseRuntimeSetting getSimpleHbaseRuntimeSetting() {
-        if (simpleHbaseRuntimeSetting == null) {
-            simpleHbaseRuntimeSetting = new SimpleHbaseRuntimeSetting();
-        }
-        return simpleHbaseRuntimeSetting;
-    }
-
-    protected SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting() {
-        return getSimpleHbaseRuntimeSetting();
-    }
+    protected SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting = new SimpleHbaseRuntimeSetting();
 
     /**
      * Get HTableInterface.
@@ -97,14 +85,14 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * Get scan's caching size.
      * */
     protected int getScanCaching() {
-        return simpleHbaseRuntimeSetting().getScanCachingSize();
+        return simpleHbaseRuntimeSetting.getScanCachingSize();
     }
 
     /**
      * Get batch size when do delete.
      * */
     protected int getDeleteBatch() {
-        return simpleHbaseRuntimeSetting().getDeleteBatchSize();
+        return simpleHbaseRuntimeSetting.getDeleteBatchSize();
     }
 
     //FIXME [simplehbase] the columns in select list and condition can vary. 
@@ -430,5 +418,10 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     public void setSimpleHbaseRuntimeSetting(
             SimpleHbaseRuntimeSetting simpleHbaseRuntimeSetting) {
         this.simpleHbaseRuntimeSetting = simpleHbaseRuntimeSetting;
+    }
+
+    @Override
+    public SimpleHbaseRuntimeSetting getSimpleHbaseRuntimeSetting() {
+        return simpleHbaseRuntimeSetting;
     }
 }

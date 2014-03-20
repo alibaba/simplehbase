@@ -21,6 +21,7 @@ public interface TypeHandler {
      * @param value java's object.
      * @return hbase's column bytes.
      * */
+    @Nullable
     public byte[] toBytes(Class<?> type, @Nullable Object value);
 
     /**
@@ -30,5 +31,6 @@ public interface TypeHandler {
      * @param bytes hbase's column bytes.
      * @return java object.
      * */
+    @Nullable
     public Object toObject(Class<?> type, @Nullable byte[] bytes);
 }

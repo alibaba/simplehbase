@@ -20,6 +20,7 @@ abstract public class HQLNode {
     protected static final String BlankSpace  = " ";
 
     /** parent hql node. */
+    @Nullable
     protected HQLNode             parent;
 
     /** HQLNodeType. */

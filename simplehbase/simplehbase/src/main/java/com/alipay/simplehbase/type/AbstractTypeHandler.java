@@ -16,12 +16,12 @@ abstract public class AbstractTypeHandler implements TypeHandler {
      * */
     abstract protected boolean aboutToHandle(Class<?> type);
 
-    abstract protected byte[] innerToBytes(Class<?> type, @Nullable Object value);
+    abstract protected byte[] innerToBytes(Class<?> type, Object value);
 
-    abstract protected Object innerToObject(Class<?> type,
-            @Nullable byte[] bytes);
+    abstract protected Object innerToObject(Class<?> type, byte[] bytes);
 
     @Override
+    @Nullable
     public byte[] toBytes(Class<?> type, @Nullable Object value) {
         Util.checkNull(type);
 
@@ -38,6 +38,7 @@ abstract public class AbstractTypeHandler implements TypeHandler {
     }
 
     @Override
+    @Nullable
     public Object toObject(Class<?> type, @Nullable byte[] bytes) {
         Util.checkNull(type);
 

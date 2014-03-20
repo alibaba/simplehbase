@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.alipay.simplehbase.core.Nullable;
+
 /**
  * DateUtil.
  * 
@@ -21,6 +23,7 @@ public class DateUtil {
      * Returns date by parsing string with specified format, or null if parsing
      * fails.
      * */
+    @Nullable
     public static Date parse(String str, String format) {
         Util.checkEmptyString(str);
         Util.checkEmptyString(format);

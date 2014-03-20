@@ -56,11 +56,11 @@ public class Util {
     /**
      * Check string's length.
      * */
-    public static void checkLength(String value, int length) {
-        Util.checkNull(value);
+    public static void checkLength(String str, int length) {
+        Util.checkNull(str);
 
-        if (value.length() != length) {
-            throw new SimpleHBaseException("checkLength error. value=" + value
+        if (str.length() != length) {
+            throw new SimpleHBaseException("checkLength error. str=" + str
                     + " length=" + length);
         }
     }
@@ -80,20 +80,6 @@ public class Util {
         if (rowKey.toBytes() == null) {
             throw new SimpleHBaseException("rowkey bytes is null. rowKey = "
                     + rowKey);
-        }
-    }
-
-    /**
-     * Close Closeable.
-     * */
-    public static void close(@Nullable Closeable closeable) {
-        if (closeable == null) {
-            return;
-        }
-        try {
-            closeable.close();
-        } catch (IOException e) {
-            throw new SimpleHBaseException("close closeable exception.", e);
         }
     }
 
@@ -125,6 +111,20 @@ public class Util {
         if (!one.equals(other)) {
             throw new SimpleHBaseException("not equal object. one = " + one
                     + " other = " + other);
+        }
+    }
+
+    /**
+     * Close Closeable.
+     * */
+    public static void close(@Nullable Closeable closeable) {
+        if (closeable == null) {
+            return;
+        }
+        try {
+            closeable.close();
+        } catch (IOException e) {
+            throw new SimpleHBaseException("close closeable exception.", e);
         }
     }
 

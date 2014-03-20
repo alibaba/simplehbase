@@ -23,7 +23,7 @@ public class HexBytesTextFunc implements RowKeyTextFunc {
 
     @Override
     public String desc() {
-        return "use hex binary as rowkey";
+        return "use hex string as rowkey";
     }
 
 }
