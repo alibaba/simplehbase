@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.coprocessor.AggregationClient;
+import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import com.alipay.simplehbase.client.rowkey.handler.RowKeyHandler;
@@ -19,6 +20,7 @@ import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
+import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.type.TypeHandler;
 import com.alipay.simplehbase.util.ClassUtil;
@@ -93,6 +95,29 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * */
     protected int getDeleteBatch() {
         return simpleHbaseRuntimeSetting.getDeleteBatchSize();
+    }
+
+    /**
+     * Construct Scan.
+     * */
+    protected Scan constructScan(RowKey startRowKey, RowKey endRowKey,
+            @Nullable Filter filter) {
+        Util.checkRowKey(startRowKey);
+        Util.checkRowKey(endRowKey);
+
+        Scan scan = new Scan();
+        scan.setStartRow(startRowKey.toBytes());
+        scan.setStopRow(endRowKey.toBytes());
+        scan.setCaching(getScanCaching());
+        scan.setFilter(filter);
+        return postConstructScan(scan);
+    }
+
+    /**
+     * Post construct Scan.
+     * */
+    protected Scan postConstructScan(Scan scan) {
+        return scan;
     }
 
     //FIXME [simplehbase] the columns in select list and condition can vary. 

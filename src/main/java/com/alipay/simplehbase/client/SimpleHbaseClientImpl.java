@@ -135,11 +135,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkRowKey(endRowKey);
         Util.checkNull(type);
 
-        Scan scan = new Scan();
-        scan.setStartRow(startRowKey.toBytes());
-        scan.setStopRow(endRowKey.toBytes());
-        scan.setCaching(getScanCaching());
-        scan.setFilter(filter);
+        Scan scan = constructScan(startRowKey, endRowKey, filter);
+
         //only query 1 version.
         if (queryExtInfo != null) {
             queryExtInfo.setMaxVersions(1);
@@ -352,11 +349,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkRowKey(startRowKey);
         Util.checkRowKey(endRowKey);
 
-        Scan scan = new Scan();
-        scan.setStartRow(startRowKey.toBytes());
-        scan.setStopRow(endRowKey.toBytes());
-        scan.setCaching(getScanCaching());
-        scan.setFilter(filter);
+        Scan scan = constructScan(startRowKey, endRowKey, filter);
+
         HBaseColumnSchema hbaseColumnSchema = columnSchema();
         scan.addColumn(hbaseColumnSchema.getFamilyBytes(),
                 hbaseColumnSchema.getQualifierBytes());
@@ -440,11 +434,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkRowKey(endRowKey);
         Util.checkNull(type);
 
-        Scan scan = new Scan();
-        scan.setStartRow(startRowKey.toBytes());
-        scan.setStopRow(endRowKey.toBytes());
-        scan.setCaching(getScanCaching());
-        scan.setFilter(filter);
+        Scan scan = constructScan(startRowKey, endRowKey, filter);
 
         long startIndex = 0L;
         long length = Long.MAX_VALUE;
@@ -601,11 +591,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                 simpleHbaseRuntimeSetting);
 
         //scan
-        Scan scan = new Scan();
-        scan.setStartRow(startRowKey.toBytes());
-        scan.setStopRow(endRowKey.toBytes());
-        scan.setCaching(getScanCaching());
-        scan.setFilter(filter);
+        Scan scan = constructScan(startRowKey, endRowKey, filter);
 
         long startIndex = 0L;
         long length = Long.MAX_VALUE;
@@ -676,12 +662,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
         List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
 
-        Scan scan = new Scan();
-        scan.setStartRow(startRowKey.toBytes());
-        scan.setStopRow(endRowKey.toBytes());
-        scan.setCaching(getScanCaching());
-
-        delete_internal(scan, columnInfoList, null, null);
+        delete_internal(startRowKey, endRowKey, null, columnInfoList, null,
+                null);
     }
 
     @Override
@@ -724,30 +706,20 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                     simpleHbaseRuntimeSetting);
         }
 
-        Scan scan = new Scan();
-        scan.setStartRow(startRowKey.toBytes());
-        scan.setStopRow(endRowKey.toBytes());
-        scan.setCaching(getScanCaching());
-        scan.setFilter(filter);
-
-        delete_internal(scan, null, hbaseColumnSchemaList, ts);
+        delete_internal(startRowKey, endRowKey, filter, null,
+                hbaseColumnSchemaList, ts);
     }
 
-    private void delete_internal(Scan scan,
-            @Nullable List<ColumnInfo> columnInfoList,
+    private void delete_internal(RowKey startRowKey, RowKey endRowKey,
+            @Nullable Filter filter, @Nullable List<ColumnInfo> columnInfoList,
             @Nullable List<HBaseColumnSchema> hbaseColumnSchemaList,
             @Nullable Date ts) {
 
         final int deleteBatch = getDeleteBatch();
 
         while (true) {
-            Scan temScan = null;
-            try {
-                temScan = new Scan(scan);
-            } catch (IOException e) {
-                throw new SimpleHBaseException("delete_internal. scan = "
-                        + temScan, e);
-            }
+
+            Scan temScan = constructScan(startRowKey, endRowKey, filter);
 
             List<Delete> deletes = new LinkedList<Delete>();
 
