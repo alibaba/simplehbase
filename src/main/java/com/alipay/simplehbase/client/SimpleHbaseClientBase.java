@@ -148,14 +148,15 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * convert hhbase result to DO.
+     * convert hhbase result to SimpleHbaseDOWithKeyResult.
      * 
      * @param hbaseResult hbase result.
      * @param type POJO type.
      * 
-     * @return java object.
+     * @return SimpleHbaseDOWithKeyResult.
      * */
-    protected <T> T convertToDO(Result hbaseResult, Class<? extends T> type) {
+    protected <T> SimpleHbaseDOWithKeyResult<T> convertToSimpleHbaseDOWithKeyResult(
+            Result hbaseResult, Class<? extends T> type) {
         KeyValue[] keyValues = hbaseResult.raw();
         if (keyValues == null || keyValues.length == 0) {
             return null;
@@ -196,7 +197,16 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                 }
             }
 
-            return result;
+            byte[] row = keyValues[0].getRow();
+            RowKeyHandler rowKeyHandler = hbaseTableConfig
+                    .getHbaseTableSchema().getRowKeyHandler();
+            RowKey rowKey = rowKeyHandler.convert(row);
+
+            SimpleHbaseDOWithKeyResult<T> pojoWithKey = new SimpleHbaseDOWithKeyResult<T>();
+            pojoWithKey.setRowKey(rowKey);
+            pojoWithKey.setT(result);
+
+            return pojoWithKey;
 
         } catch (Exception e) {
             throw new SimpleHBaseException("convert result exception. result="
@@ -218,14 +228,10 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             return new ArrayList<SimpleHbaseCellResult>();
         }
 
-        List<SimpleHbaseCellResult> resultList = new ArrayList<SimpleHbaseCellResult>();
-
         try {
+            List<SimpleHbaseCellResult> resultList = new ArrayList<SimpleHbaseCellResult>();
+
             for (KeyValue keyValue : keyValues) {
-                byte[] row = keyValue.getRow();
-                RowKeyHandler rowKeyHandler = hbaseTableConfig
-                        .getHbaseTableSchema().getRowKeyHandler();
-                Object rowObject = rowKeyHandler.convert(row);
 
                 byte[] familyBytes = keyValue.getFamily();
                 String familyStr = Bytes.toString(familyBytes);
@@ -242,7 +248,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                 Date tsDate = new Date(ts);
 
                 SimpleHbaseCellResult cellResult = new SimpleHbaseCellResult();
-                cellResult.setRowObject(rowObject);
+
                 cellResult.setFamilyStr(familyStr);
                 cellResult.setQualifierStr(qualifierStr);
                 cellResult.setValueObject(valueObject);
@@ -250,12 +256,23 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
                 resultList.add(cellResult);
             }
+
+            byte[] row = keyValues[0].getRow();
+            RowKeyHandler rowKeyHandler = hbaseTableConfig
+                    .getHbaseTableSchema().getRowKeyHandler();
+            RowKey rowKey = rowKeyHandler.convert(row);
+
+            for (SimpleHbaseCellResult cell : resultList) {
+                cell.setRowKey(rowKey);
+            }
+
+            return resultList;
+
         } catch (Exception e) {
             throw new SimpleHBaseException("convert result exception. result="
                     + hbaseResult, e);
         }
 
-        return resultList;
     }
 
     /**
@@ -314,19 +331,26 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                     columnInfo.field.set(temMap.get(ts), value);
                 }
             }
+
+            byte[] row = keyValues[0].getRow();
+            RowKeyHandler rowKeyHandler = hbaseTableConfig
+                    .getHbaseTableSchema().getRowKeyHandler();
+            RowKey rowKey = rowKeyHandler.convert(row);
+
+            List<SimpleHbaseDOResult<T>> result = new ArrayList<SimpleHbaseDOResult<T>>();
+
+            for (Long ts : temMap.keySet()) {
+                SimpleHbaseDOResult<T> r = new SimpleHbaseDOResult<T>();
+                r.setRowKey(rowKey);
+                r.setTimestamp(ts);
+                r.setT(temMap.get(ts));
+                result.add(r);
+            }
+            return result;
         } catch (Exception e) {
             throw new SimpleHBaseException("convert result exception. result="
                     + hbaseResult + " type=" + type, e);
         }
-
-        List<SimpleHbaseDOResult<T>> result = new ArrayList<SimpleHbaseDOResult<T>>();
-        for (Long ts : temMap.keySet()) {
-            SimpleHbaseDOResult<T> r = new SimpleHbaseDOResult<T>();
-            r.setTimestamp(ts);
-            r.setT(temMap.get(ts));
-            result.add(r);
-        }
-        return result;
     }
 
     /**

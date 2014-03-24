@@ -17,18 +17,18 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * */
 public class SimpleHbaseCellResult {
 
-    private Object rowObject;
+    private RowKey rowKey;
     private String familyStr;
     private String qualifierStr;
     private Object valueObject;
     private Date   tsDate;
 
-    public Object getRowObject() {
-        return rowObject;
+    public RowKey getRowKey() {
+        return rowKey;
     }
 
-    public void setRowObject(Object rowObject) {
-        this.rowObject = rowObject;
+    public void setRowKey(RowKey rowKey) {
+        this.rowKey = rowKey;
     }
 
     public void setFamilyStr(String familyStr) {

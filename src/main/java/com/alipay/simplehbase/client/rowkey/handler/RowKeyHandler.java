@@ -1,5 +1,7 @@
 package com.alipay.simplehbase.client.rowkey.handler;
 
+import com.alipay.simplehbase.client.RowKey;
+
 /**
  * Convert hbase's rowkey to rowkey object.
  * 
@@ -8,10 +10,10 @@ package com.alipay.simplehbase.client.rowkey.handler;
 public interface RowKeyHandler {
 
     /**
-     * Convert row key bytes to Object.
+     * Convert hbase row key bytes to rowkey Object.
      * 
      * @param row hbase row key.
-     * @return Object.
+     * @return rowkey Object.
      * */
-    public Object convert(byte[] row);
+    public RowKey convert(byte[] row);
 }

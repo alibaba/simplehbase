@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.alipay.simplehbase.client.QueryExtInfo;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.SimpleHbaseDOResult;
+import com.alipay.simplehbase.client.rowkey.BytesRowKey;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
@@ -72,6 +73,10 @@ public class TestFindMV extends MyRecordTestBase {
         Assert.assertTrue(list.size() == 2);
         Assert.assertEquals(myRecord_2, list.get(0).getT());
         Assert.assertEquals(myRecord_1, list.get(1).getT());
+
+        //verify rowkey.
+        Assert.assertEquals(new BytesRowKey(rowKey.toBytes()), list.get(1)
+                .getRowKey());
 
     }
 }

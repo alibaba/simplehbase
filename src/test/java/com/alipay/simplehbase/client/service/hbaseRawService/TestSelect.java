@@ -7,6 +7,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.alipay.simplehbase.client.SimpleHbaseCellResult;
+import com.alipay.simplehbase.client.rowkey.BytesRowKey;
+import com.alipay.simplehbase.client.rowkey.IntRowKey;
 import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.config.CreateTestTable;
 import com.alipay.simplehbase.config.TimeDepend;
@@ -36,6 +38,10 @@ public class TestSelect extends RawServiceTestBase {
 
         assertSimpleHbaseCellResult(list.get(0), "name", "allen");
         assertSimpleHbaseCellResult(list.get(0), "age", 30L);
+
+        //verify rowkey.
+        Assert.assertEquals(new BytesRowKey(new IntRowKey(0).toBytes()), list
+                .get(0).get(0).getRowKey());
     }
 
     @Test

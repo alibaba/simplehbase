@@ -1,35 +1,23 @@
 package com.alipay.simplehbase.client;
 
-import java.util.Date;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * TimeSnapshotDOResult.
+ * DOWithKeyResult.
  * 
  * <pre>
- * All the cell on exact same timestamp are mapped to one DO.
+ * All the cell on latest timestamp are mapped to one DO.
  * </pre>
  * 
  * @author xinzhi.zhang
  * */
-public class SimpleHbaseDOResult<T> {
+public class SimpleHbaseDOWithKeyResult<T> {
     /** rowkey. */
     private RowKey rowKey;
     /** The mapping result of DO. */
     private T      t;
-
-    /** Hbase timestamp. */
-    private long   timestamp;
-    /** Hbase timestamp. */
-    private Date   tsDate;
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-        this.tsDate = new Date(this.timestamp);
-    }
 
     public void setT(T t) {
         this.t = t;
@@ -37,14 +25,6 @@ public class SimpleHbaseDOResult<T> {
 
     public T getT() {
         return t;
-    }
-
-    public Date getTsDate() {
-        return tsDate;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
     }
 
     public RowKey getRowKey() {
