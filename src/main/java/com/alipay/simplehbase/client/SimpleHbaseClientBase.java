@@ -23,7 +23,6 @@ import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.type.TypeHandler;
-import com.alipay.simplehbase.util.ClassUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -148,73 +147,6 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * convert hhbase result to SimpleHbaseDOWithKeyResult.
-     * 
-     * @param hbaseResult hbase result.
-     * @param type POJO type.
-     * 
-     * @return SimpleHbaseDOWithKeyResult.
-     * */
-    protected <T> SimpleHbaseDOWithKeyResult<T> convertToSimpleHbaseDOWithKeyResult(
-            Result hbaseResult, Class<? extends T> type) {
-        KeyValue[] keyValues = hbaseResult.raw();
-        if (keyValues == null || keyValues.length == 0) {
-            return null;
-        }
-
-        try {
-
-            TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
-            T result = type.newInstance();
-
-            for (KeyValue keyValue : keyValues) {
-                byte[] familyBytes = keyValue.getFamily();
-                byte[] qualifierBytes = keyValue.getQualifier();
-                byte[] hbaseValue = keyValue.getValue();
-
-                ColumnInfo columnInfo = typeInfo.findColumnInfo(
-                        Bytes.toString(familyBytes),
-                        Bytes.toString(qualifierBytes));
-
-                HBaseColumnSchema hbaseColumnSchema = columnSchema(
-                        columnInfo.family, columnInfo.qualifier);
-
-                Class<?> fieldType = columnInfo.field.getType();
-                Class<?> schemaType = hbaseColumnSchema.getType();
-
-                if (!ClassUtil.withSameType(fieldType, schemaType)) {
-                    throw new SimpleHBaseException(
-                            "class does not match. fieldType=" + fieldType
-                                    + " schemaType=" + schemaType);
-                }
-
-                TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
-                Object value = typeHandler.toObject(
-                        hbaseColumnSchema.getType(), hbaseValue);
-
-                if (value != null) {
-                    columnInfo.field.set(result, value);
-                }
-            }
-
-            byte[] row = keyValues[0].getRow();
-            RowKeyHandler rowKeyHandler = hbaseTableConfig
-                    .getHbaseTableSchema().getRowKeyHandler();
-            RowKey rowKey = rowKeyHandler.convert(row);
-
-            SimpleHbaseDOWithKeyResult<T> pojoWithKey = new SimpleHbaseDOWithKeyResult<T>();
-            pojoWithKey.setRowKey(rowKey);
-            pojoWithKey.setT(result);
-
-            return pojoWithKey;
-
-        } catch (Exception e) {
-            throw new SimpleHBaseException("convert result exception. result="
-                    + hbaseResult + " type=" + type, e);
-        }
-    }
-
-    /**
      * Convert hbase result to SimpleHbaseCellResult list.
      * 
      * @param hbaseResult hbase result.
@@ -276,6 +208,65 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
+     * convert hhbase result to SimpleHbaseDOWithKeyResult.
+     * 
+     * @param hbaseResult hbase result.
+     * @param type POJO type.
+     * 
+     * @return SimpleHbaseDOWithKeyResult.
+     * */
+    protected <T> SimpleHbaseDOWithKeyResult<T> convertToSimpleHbaseDOWithKeyResult(
+            Result hbaseResult, Class<? extends T> type) {
+
+        KeyValue[] keyValues = hbaseResult.raw();
+        if (keyValues == null || keyValues.length == 0) {
+            return null;
+        }
+
+        try {
+
+            TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+            T result = type.newInstance();
+
+            for (KeyValue keyValue : keyValues) {
+                byte[] familyBytes = keyValue.getFamily();
+                byte[] qualifierBytes = keyValue.getQualifier();
+                byte[] hbaseValue = keyValue.getValue();
+
+                ColumnInfo columnInfo = typeInfo.findColumnInfo(
+                        Bytes.toString(familyBytes),
+                        Bytes.toString(qualifierBytes));
+
+                HBaseColumnSchema hbaseColumnSchema = columnSchema(
+                        columnInfo.family, columnInfo.qualifier);
+
+                TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
+                Object value = typeHandler.toObject(
+                        hbaseColumnSchema.getType(), hbaseValue);
+
+                if (value != null) {
+                    columnInfo.field.set(result, value);
+                }
+            }
+
+            byte[] row = keyValues[0].getRow();
+            RowKeyHandler rowKeyHandler = hbaseTableConfig
+                    .getHbaseTableSchema().getRowKeyHandler();
+            RowKey rowKey = rowKeyHandler.convert(row);
+
+            SimpleHbaseDOWithKeyResult<T> pojoWithKey = new SimpleHbaseDOWithKeyResult<T>();
+            pojoWithKey.setRowKey(rowKey);
+            pojoWithKey.setT(result);
+
+            return pojoWithKey;
+
+        } catch (Exception e) {
+            throw new SimpleHBaseException("convert result exception. result="
+                    + hbaseResult + " type=" + type, e);
+        }
+    }
+
+    /**
      * Convert hbase result to SimpleHbaseDOResult.
      * 
      * @param hbaseResult hbase result.
@@ -313,15 +304,6 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
                 HBaseColumnSchema hbaseColumnSchema = columnSchema(
                         columnInfo.family, columnInfo.qualifier);
-
-                Class<?> fieldType = columnInfo.field.getType();
-                Class<?> schemaType = hbaseColumnSchema.getType();
-
-                if (!ClassUtil.withSameType(fieldType, schemaType)) {
-                    throw new SimpleHBaseException(
-                            "class does not match. fieldType=" + fieldType
-                                    + " schemaType=" + schemaType);
-                }
 
                 TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
                 Object value = typeHandler.toObject(
@@ -369,23 +351,9 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * Convert value to bytes.
      * */
     protected byte[] convertValueToBytes(Object value, ColumnInfo columnInfo) {
-        try {
-            HBaseColumnSchema hbaseColumnSchema = columnSchema(
-                    columnInfo.family, columnInfo.qualifier);
-
-            Class<?> fieldType = columnInfo.field.getType();
-            Class<?> schemaType = hbaseColumnSchema.getType();
-            if (!ClassUtil.withSameType(fieldType, schemaType)) {
-                throw new SimpleHBaseException(
-                        "class does not match. fieldType=" + fieldType
-                                + " schemaType=" + schemaType);
-            }
-
-            TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
-            return typeHandler.toBytes(fieldType, value);
-        } catch (Exception e) {
-            throw new SimpleHBaseException(e);
-        }
+        HBaseColumnSchema hbaseColumnSchema = columnSchema(columnInfo.family,
+                columnInfo.qualifier);
+        return convertValueToBytes(value, hbaseColumnSchema);
     }
 
     /**
@@ -393,25 +361,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * */
     protected byte[] convertValueToBytes(Object value,
             HBaseColumnSchema hbaseColumnSchema) {
-
-        if (value == null) {
-            return null;
-        }
-
-        try {
-            Class<?> valueType = value.getClass();
-            Class<?> schemaType = hbaseColumnSchema.getType();
-            if (!ClassUtil.withSameType(valueType, schemaType)) {
-                throw new SimpleHBaseException(
-                        "class does not match. valueType=" + valueType
-                                + " schemaType=" + schemaType);
-            }
-
-            TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
-            return typeHandler.toBytes(valueType, value);
-        } catch (Exception e) {
-            throw new SimpleHBaseException(e);
-        }
+        TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
+        return typeHandler.toBytes(hbaseColumnSchema.getType(), value);
     }
 
     /**

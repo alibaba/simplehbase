@@ -78,6 +78,9 @@ public class TypeInfo {
      * */
     private Map<String, Map<String, ColumnInfo>> columnInfosMap = new HashMap<String, Map<String, ColumnInfo>>();
 
+    private TypeInfo() {
+    }
+
     /**
      * Is versioned TypeInfo.
      * */
