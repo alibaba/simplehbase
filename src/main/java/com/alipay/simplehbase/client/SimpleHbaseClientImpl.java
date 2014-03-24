@@ -30,6 +30,7 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.TsexpContext;
 import com.alipay.simplehbase.antlr.manual.ContextUtil;
 import com.alipay.simplehbase.antlr.manual.RowKeyRange;
 import com.alipay.simplehbase.antlr.manual.TreeUtil;
+import com.alipay.simplehbase.client.rowkey.BytesRowKey;
 import com.alipay.simplehbase.config.HBaseColumnSchema;
 import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
@@ -793,7 +794,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         while (true) {
 
-            Scan temScan = constructScan(startRowKey, endRowKey, filter);
+            RowKey nextStartRowkey = startRowKey;
+            Scan temScan = constructScan(nextStartRowkey, endRowKey, filter);
 
             List<Delete> deletes = new LinkedList<Delete>();
 
@@ -805,6 +807,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                 while ((result = resultScanner.next()) != null) {
 
                     Delete delete = new Delete(result.getRow());
+                    nextStartRowkey = new BytesRowKey(result.getRow());
 
                     if (columnInfoList != null) {
                         for (ColumnInfo columnInfo : columnInfoList) {
