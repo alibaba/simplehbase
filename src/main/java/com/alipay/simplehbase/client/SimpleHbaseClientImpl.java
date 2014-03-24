@@ -46,98 +46,74 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
     @Override
     public <T> T findObject(RowKey rowKey, Class<? extends T> type) {
-        return findObject(rowKey, type, (QueryExtInfo) null);
+        return unwrap(findObjectAndKey(rowKey, type));
     }
 
     @Override
     public <T> T findObject(RowKey rowKey, Class<? extends T> type,
             QueryExtInfo queryExtInfo) {
-        List<T> result = findObjectList_internal(rowKey, rowKey, type, null,
-                queryExtInfo);
-        if (result.isEmpty()) {
-            return null;
-        } else {
-            return result.get(0);
-        }
+        return unwrap(findObjectAndKey(rowKey, type, queryExtInfo));
     }
 
     @Override
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type) {
-        return findObjectList(startRowKey, endRowKey, type, null);
+        return unwrap(findObjectAndKeyList(startRowKey, endRowKey, type));
     }
 
     @Override
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, QueryExtInfo queryExtInfo) {
-        return findObjectList_internal(startRowKey, endRowKey, type, null,
-                queryExtInfo);
+        return unwrap(findObjectAndKeyList(startRowKey, endRowKey, type,
+                queryExtInfo));
     }
 
     @Override
     public <T> T findObject(RowKey rowKey, Class<? extends T> type, String id,
             Map<String, Object> para) {
-        return findObject(rowKey, type, id, para, null);
-
+        return unwrap(findObjectAndKey(rowKey, type, id, para));
     }
 
     @Override
     public <T> T findObject(RowKey rowKey, Class<? extends T> type, String id,
             @Nullable Map<String, Object> para, QueryExtInfo queryExtInfo) {
-        List<T> result = findObjectList(rowKey, rowKey, type, id, para,
-                queryExtInfo);
-        if (result.isEmpty()) {
-            return null;
-        } else {
-            return result.get(0);
-        }
+        return unwrap(findObjectAndKey(rowKey, type, id, para, queryExtInfo));
     }
 
     @Override
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, String id,
             @Nullable Map<String, Object> para) {
-        return findObjectList(startRowKey, endRowKey, type, id, para, null);
+        return unwrap(findObjectAndKeyList(startRowKey, endRowKey, type, id,
+                para));
     }
 
     @Override
     public <T> List<T> findObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<? extends T> type, String id,
             @Nullable Map<String, Object> para, QueryExtInfo queryExtInfo) {
-        HBaseQuery hbaseQuery = getHbaseTableConfig().getQueryMap().get(id);
-        Util.checkNull(hbaseQuery);
-
-        StringBuilder sb = new StringBuilder();
-        Map<Object, Object> context = new HashMap<Object, Object>();
-        hbaseQuery.getHqlNode().applyParaMap(para, sb, context,
-                simpleHbaseRuntimeSetting);
-
-        String hql = sb.toString().trim();
-
-        if (StringUtil.isEmptyString(hql)) {
-            return findObjectList_internal(startRowKey, endRowKey, type, null,
-                    queryExtInfo);
-        }
-
-        ProgContext progContext = TreeUtil.parseProgContext(hql);
-        Filter filter = ContextUtil.parseSelectFilter(progContext,
-                hbaseTableConfig, para, simpleHbaseRuntimeSetting);
-
-        return findObjectList_internal(startRowKey, endRowKey, type, filter,
-                queryExtInfo);
+        return unwrap(findObjectAndKeyList(startRowKey, endRowKey, type, id,
+                para, queryExtInfo));
     }
 
-    private <T> List<T> findObjectList_internal(RowKey startRowKey,
-            RowKey endRowKey, Class<? extends T> type, @Nullable Filter filter,
-            @Nullable QueryExtInfo queryExtInfo) {
-
-        List<SimpleHbaseDOWithKeyResult<T>> doWithKeyResultList = findObjectAndKeyList_internal(
-                startRowKey, endRowKey, type, filter, queryExtInfo);
+    private <T> List<T> unwrap(
+            List<SimpleHbaseDOWithKeyResult<T>> simpleHbaseDOWithKeyResultList) {
         List<T> resultList = new ArrayList<T>();
-        for (SimpleHbaseDOWithKeyResult<T> t : doWithKeyResultList) {
-            resultList.add(t.getT());
+        if (!simpleHbaseDOWithKeyResultList.isEmpty()) {
+            for (SimpleHbaseDOWithKeyResult<T> t : simpleHbaseDOWithKeyResultList) {
+                resultList.add(unwrap(t));
+            }
         }
         return resultList;
+    }
+
+    private <T> T unwrap(
+            SimpleHbaseDOWithKeyResult<T> simpleHbaseDOWithKeyResult) {
+        if (simpleHbaseDOWithKeyResult == null) {
+            return null;
+        }
+
+        return simpleHbaseDOWithKeyResult.getT();
     }
 
     @Override
@@ -279,8 +255,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                     continue;
                 }
 
-                SimpleHbaseDOWithKeyResult<T> t = convertToSimpleHbaseDOWithKeyResult(result,
-                        type);
+                SimpleHbaseDOWithKeyResult<T> t = convertToSimpleHbaseDOWithKeyResult(
+                        result, type);
                 if (t != null) {
                     resultList.add(t);
                     if (++resultCounter >= length) {
