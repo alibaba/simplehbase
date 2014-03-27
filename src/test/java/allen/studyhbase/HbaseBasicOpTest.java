@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Get;
 
@@ -25,6 +26,15 @@ import com.alipay.simplehbase.util.Util;
 
 /**
  * HbaseBasicOpTest.
+ * 
+ * <pre>
+ * Mock data.
+ * 
+ * rowKey1 Q1/100L Q2/100L
+ * rowKey2 Q1/20L  Q2/200L
+ * rowKey3 Q1/NULL Q2/NULL
+ * rowKey4                   Q3/"test"
+ * </pre>
  * 
  * @author xinzhi.zhang
  * */
@@ -48,8 +58,7 @@ public class HbaseBasicOpTest extends HbaseTestBase {
 
     @Test
     public void testDeleteNotExistRow() throws Exception {
-        byte[] rowKey = Bytes.toBytes("allen_test_row");
-        Delete delete = new Delete(rowKey);
+        Delete delete = new Delete(rowKey_NotExist);
         table.delete(delete);
     }
 
@@ -61,14 +70,14 @@ public class HbaseBasicOpTest extends HbaseTestBase {
 
         Date ts = DateUtil.parse("2000-01-01", DateUtil.DayFormat);
 
-        byte[] rowKey = Bytes.toBytes("allen_test_row");
-        Put put = new Put(rowKey);
+        Put put = new Put(rowKey_ForTest);
+
         put.add(ColumnFamilyName, QName1, ts.getTime(), Bytes.toBytes("a"));
 
         table.put(put);
 
         Set<String> resultRowKeys = new HashSet<String>();
-        Scan scan = new Scan(rowKey, rowKey);
+        Scan scan = new Scan(rowKey_ForTest, rowKey_ForTest);
         scan.setTimeRange(ts.getTime(), ts.getTime());
 
         ResultScanner resultScanner = table.getScanner(scan);
@@ -161,27 +170,29 @@ public class HbaseBasicOpTest extends HbaseTestBase {
 
     @Test
     public void testCheckAndPut() throws Exception {
-        byte[] rowKey = Bytes.toBytes("allen_test_row");
-        Put put = new Put(rowKey);
+
+        Put put = new Put(rowKey_ForTest);
         put.add(ColumnFamilyName, QName1, Bytes.toBytes("a"));
         put.add(ColumnFamilyName, QName2, Bytes.toBytes("b"));
 
         boolean result = false;
 
-        result = table.checkAndPut(rowKey, ColumnFamilyName, QName2,
+        result = table.checkAndPut(rowKey_ForTest, ColumnFamilyName, QName2,
                 Bytes.toBytes("b"), put);
         // check fail, put fail.
         Assert.assertFalse(result);
 
-        result = table.checkAndPut(rowKey, ColumnFamilyName, QName2, null, put);
+        result = table.checkAndPut(rowKey_ForTest, ColumnFamilyName, QName2,
+                null, put);
         // check ok, put ok.
         Assert.assertTrue(result);
 
-        result = table.checkAndPut(rowKey, ColumnFamilyName, QName2, null, put);
+        result = table.checkAndPut(rowKey_ForTest, ColumnFamilyName, QName2,
+                null, put);
         // check fail, put fail.
         Assert.assertFalse(result);
 
-        result = table.checkAndPut(rowKey, ColumnFamilyName, QName2,
+        result = table.checkAndPut(rowKey_ForTest, ColumnFamilyName, QName2,
                 Bytes.toBytes("b"), put);
         // check ok, put ok.
         Assert.assertTrue(result);
@@ -189,13 +200,12 @@ public class HbaseBasicOpTest extends HbaseTestBase {
 
     @Test
     public void testPutAndGet() throws Exception {
-        byte[] rowKey = Bytes.toBytes("allen_test_row");
-        Put put = new Put(rowKey);
+        Put put = new Put(rowKey_ForTest);
         put.add(ColumnFamilyName, QName1, Bytes.toBytes("a"));
         put.add(ColumnFamilyName, QName3, null);
         table.put(put);
 
-        Get get = new Get(rowKey);
+        Get get = new Get(rowKey_ForTest);
         Result result = table.get(get);
 
         byte[] q1 = result.getValue(ColumnFamilyName, QName1);
@@ -207,18 +217,41 @@ public class HbaseBasicOpTest extends HbaseTestBase {
         Assert.assertEquals(null, Bytes.toString(q2));
         // we get empty byte array here. not a null.
         Assert.assertEquals("", Bytes.toString(q3));
+    }
 
-        // get a row doesn't exist.
-        byte[] rowKey2 = Bytes.toBytes("allen_test_row_not_exist");
-        get = new Get(rowKey2);
-        result = table.get(get);
+    @Test
+    public void testGet_NotExistRowKey() throws Exception {
+        // get a row doesn't exist.        
+        Get get = new Get(rowKey_NotExist);
+        Result result = table.get(get);
         Assert.assertTrue(result.isEmpty());
+    }
+
+    @TimeDepend
+    @Test
+    public void testPutMultiVersionSameTime() throws Exception {
+        CreateTestTable.main(null);
+
+        Put put = new Put(rowKey_ForTest);
+        put.add(ColumnFamilyName, QName1, 1000, Bytes.toBytes("a"));
+        put.add(ColumnFamilyName, QName1, 2000, Bytes.toBytes("b"));
+        table.put(put);
+
+        Get get = new Get(rowKey_ForTest);
+        get.setMaxVersions(10);
+        Result result = table.get(get);
+        KeyValue[] keyValues = result.raw();
+        Assert.assertEquals(2, keyValues.length);
+        //have a and b both.
+        Assert.assertEquals('a' + 'b', keyValues[0].getValue()[0]
+                + keyValues[1].getValue()[0]);
+
+        CreateTestTable.main(null);
     }
 
     @Test
     public void testPutWithoutColumn() throws Exception {
-        byte[] rowKey = Bytes.toBytes("allen_test_row");
-        Put put = new Put(rowKey);
+        Put put = new Put(rowKey_ForTest);
         try {
             table.put(put);
             Assert.fail();
