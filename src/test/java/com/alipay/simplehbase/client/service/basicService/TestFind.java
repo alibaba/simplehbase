@@ -6,6 +6,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
@@ -19,10 +20,10 @@ public class TestFind extends MyRecordTestBase {
     public void findObject() {
 
         MyRecord myRecord = mockSlim(0);
-        MyRecordRowKey myRecordRowKey = new MyRecordRowKey(0);
+        RowKey rowKey = myRecord.rowKey();
 
-        simpleHbaseClient.putObject(myRecordRowKey, myRecord);
-        MyRecord resultRecord = simpleHbaseClient.findObject(myRecordRowKey,
+        simpleHbaseClient.putObject(rowKey, myRecord);
+        MyRecord resultRecord = simpleHbaseClient.findObject(rowKey,
                 MyRecord.class);
 
         Assert.assertTrue(myRecord.equals(resultRecord));

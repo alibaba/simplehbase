@@ -3,9 +3,10 @@ package com.alipay.simplehbase.client.service.basicService;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.myrecord.MyRecord;
-import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
+
 /**
  * @author xinzhi
  */
@@ -15,13 +16,12 @@ public class TestPutObject extends MyRecordTestBase {
     public void putObject() {
 
         MyRecord myRecord = mockSlim(0);
-        MyRecordRowKey myRecordRowKey = new MyRecordRowKey(0);
+        RowKey rowKey = myRecord.rowKey();
 
-        simpleHbaseClient.putObject(myRecordRowKey, myRecord);
+        simpleHbaseClient.putObject(rowKey, myRecord);
 
-        MyRecord myRecord2 = simpleHbaseClient.findObject(myRecordRowKey,
-                MyRecord.class);
+        MyRecord result = simpleHbaseClient.findObject(rowKey, MyRecord.class);
 
-        Assert.assertTrue(myRecord.equals(myRecord2));
+        Assert.assertTrue(myRecord.equals(result));
     }
 }

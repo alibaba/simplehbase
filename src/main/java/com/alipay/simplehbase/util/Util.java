@@ -3,6 +3,7 @@ package com.alipay.simplehbase.util;
 import java.io.Closeable;
 import java.io.IOException;
 
+import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
@@ -81,6 +82,15 @@ public class Util {
             throw new SimpleHBaseException("rowkey bytes is null. rowKey = "
                     + rowKey);
         }
+    }
+
+    /**
+     * Check put request.
+     * */
+    public static void checkPutRequest(PutRequest<?> putRequest) {
+        checkNull(putRequest);
+        checkRowKey(putRequest.getRowKey());
+        checkNull(putRequest.getT());
     }
 
     /**

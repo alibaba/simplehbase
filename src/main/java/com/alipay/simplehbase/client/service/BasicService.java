@@ -3,6 +3,7 @@ package com.alipay.simplehbase.client.service;
 import java.util.List;
 import java.util.Map;
 
+import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.client.QueryExtInfo;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.SimpleHbaseDOWithKeyResult;
@@ -240,6 +241,13 @@ public interface BasicService {
      * @param t POJO.
      * */
     public <T> void putObject(RowKey rowKey, T t);
+
+    /**
+     * Put POJO list.
+     * 
+     * @param putRequestList putObjectList.
+     * */
+    public <T> void putObjectList(List<PutRequest<T>> putRequestList);
 
     /**
      * Delete POJO.

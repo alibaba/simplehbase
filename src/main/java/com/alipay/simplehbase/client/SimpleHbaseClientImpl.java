@@ -278,48 +278,77 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     }
 
     @Override
-    public <T> void putObjectMV(RowKey rowKey, T t, long timestamp) {
-        putObject_internal(rowKey, t, timestamp);
+    public <T> void putObjectMV(RowKey rowKey, T t, Date timestamp) {
+        Util.checkNull(timestamp);
 
+        putObjectMV(rowKey, t, timestamp.getTime());
     }
 
     @Override
-    public <T> void putObjectMV(RowKey rowKey, T t, Date timestamp) {
-        Util.checkNull(timestamp);
-        putObject_internal(rowKey, t, timestamp.getTime());
+    public <T> void putObjectMV(RowKey rowKey, T t, long timestamp) {
+        PutRequest<T> putRequest = new PutRequest<T>(rowKey, t);
+        List<PutRequest<T>> putRequestList = new ArrayList<PutRequest<T>>();
+        putRequestList.add(putRequest);
+        putObjectList_internal(putRequestList, timestamp);
+
     }
 
     @Override
     public <T> void putObject(RowKey rowKey, T t) {
-        putObject_internal(rowKey, t, null);
+        PutRequest<T> putRequest = new PutRequest<T>(rowKey, t);
+        List<PutRequest<T>> putRequestList = new ArrayList<PutRequest<T>>();
+        putRequestList.add(putRequest);
+        putObjectList_internal(putRequestList, null);
     }
 
-    private <T> void putObject_internal(RowKey rowKey, T t,
-            @Nullable Long timestamp) {
-        Util.checkRowKey(rowKey);
-        Util.checkNull(t);
+    @Override
+    public <T> void putObjectList(List<PutRequest<T>> putRequestList) {
+        putObjectList_internal(putRequestList, null);
+    }
 
-        Put put = new Put(rowKey.toBytes());
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(t.getClass());
-        for (ColumnInfo columnInfo : typeInfo.getColumnInfos()) {
-            byte[] value = convertPOJOFieldToBytes(t, columnInfo);
-            if (timestamp == null) {
-                put.add(columnInfo.familyBytes, columnInfo.qualifierBytes,
-                        value);
-            } else {
-                put.add(columnInfo.familyBytes, columnInfo.qualifierBytes,
-                        timestamp.longValue(), value);
+    private <T> void putObjectList_internal(List<PutRequest<T>> putRequestList,
+            @Nullable Long timestamp) {
+
+        Util.checkNull(putRequestList);
+
+        if (putRequestList.isEmpty()) {
+            return;
+        }
+
+        for (PutRequest<T> putRequest : putRequestList) {
+            Util.checkPutRequest(putRequest);
+        }
+
+        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(putRequestList.get(0)
+                .getT().getClass());
+
+        List<Put> puts = new ArrayList<Put>();
+
+        for (PutRequest<T> putRequest : putRequestList) {
+            Put put = new Put(putRequest.getRowKey().toBytes());
+            for (ColumnInfo columnInfo : typeInfo.getColumnInfos()) {
+                byte[] value = convertPOJOFieldToBytes(putRequest.getT(),
+                        columnInfo);
+                if (timestamp == null) {
+                    put.add(columnInfo.familyBytes, columnInfo.qualifierBytes,
+                            value);
+                } else {
+                    put.add(columnInfo.familyBytes, columnInfo.qualifierBytes,
+                            timestamp.longValue(), value);
+                }
             }
 
+            puts.add(put);
         }
 
         HTableInterface htableInterface = htableInterface();
 
         try {
-            htableInterface.put(put);
+            htableInterface.put(puts);
         } catch (IOException e) {
-            throw new SimpleHBaseException("putObject. rowkey=" + rowKey
-                    + " t=" + t, e);
+            throw new SimpleHBaseException(
+                    "putObjectList_internal. putRequestList=" + putRequestList
+                            + " timestamp=" + timestamp, e);
         } finally {
             Util.close(htableInterface);
         }
