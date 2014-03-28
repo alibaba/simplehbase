@@ -785,10 +785,17 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                 hbaseColumnSchemaList, ts);
     }
 
+    /**
+     * columnInfoList and hbaseColumnSchemaList can not be null or empty both.
+     * */
     private void delete_internal(RowKey startRowKey, RowKey endRowKey,
             @Nullable Filter filter, @Nullable List<ColumnInfo> columnInfoList,
             @Nullable List<HBaseColumnSchema> hbaseColumnSchemaList,
             @Nullable Date ts) {
+
+        Util.check((columnInfoList != null && !columnInfoList.isEmpty())
+                || (hbaseColumnSchemaList != null && !hbaseColumnSchemaList
+                        .isEmpty()));
 
         final int deleteBatch = getDeleteBatch();
 
