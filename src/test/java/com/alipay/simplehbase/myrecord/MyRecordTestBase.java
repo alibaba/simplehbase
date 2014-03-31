@@ -12,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.SimpleHbaseAdminClient;
 import com.alipay.simplehbase.client.SimpleHbaseClient;
@@ -85,9 +86,7 @@ public class MyRecordTestBase {
 
     protected void putMockSlims(int size) {
         MyRecord[] myRecords = mockSlims(size);
-        for (int i = 0; i < myRecords.length; i++) {
-            putRecord(mockSlim(i));
-        }
+        putRecords(myRecords);
     }
 
     protected List<RowKey> rowkeyList(int start, int length) {
@@ -244,6 +243,17 @@ public class MyRecordTestBase {
     protected void putRecord(MyRecord myRecord) {
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(myRecord.getId());
         simpleHbaseClient.putObject(myRecordRowKey, myRecord);
+    }
+
+    protected void putRecords(MyRecord[] myRecords) {
+        List<PutRequest<MyRecord>> putRequests = new ArrayList<PutRequest<MyRecord>>();
+        for (MyRecord myRecord : myRecords) {
+            PutRequest<MyRecord> putRequest = new PutRequest<MyRecord>(
+                    myRecord.rowKey(), myRecord);
+            putRequests.add(putRequest);
+        }
+
+        simpleHbaseClient.putObjectList(putRequests);
     }
 
     protected void putRecord(MyFatRecord myFatRecord) {
