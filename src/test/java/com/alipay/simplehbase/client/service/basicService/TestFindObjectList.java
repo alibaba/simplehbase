@@ -13,7 +13,7 @@ import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 /**
  * @author xinzhi
  */
-public class TestFindList extends MyRecordTestBase {
+public class TestFindObjectList extends MyRecordTestBase {
 
     @Test
     public void findObjectList() {

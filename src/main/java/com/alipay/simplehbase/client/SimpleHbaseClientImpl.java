@@ -753,7 +753,53 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
     @Override
     public void deleteObject(RowKey rowKey, Class<?> type) {
-        deleteObjectList(rowKey, rowKey, type);
+        List<RowKey> rowKeyList = new ArrayList<RowKey>();
+        rowKeyList.add(rowKey);
+        deleteObjectList(rowKeyList, type);
+    }
+
+    @Override
+    public void deleteObjectList(List<RowKey> rowKeyList, Class<?> type) {
+
+        Util.checkNull(rowKeyList);
+        Util.checkNull(type);
+
+        if (rowKeyList.isEmpty()) {
+            return;
+        }
+        for (RowKey rowKey : rowKeyList) {
+            Util.checkRowKey(rowKey);
+        }
+
+        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+        List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
+
+        List<Delete> deletes = new LinkedList<Delete>();
+
+        for (RowKey rowKey : rowKeyList) {
+            Delete delete = new Delete(rowKey.toBytes());
+            for (ColumnInfo columnInfo : columnInfoList) {
+                delete.deleteColumns(columnInfo.familyBytes,
+                        columnInfo.qualifierBytes);
+            }
+            deletes.add(delete);
+        }
+
+        HTableInterface htableInterface = htableInterface();
+        try {
+            htableInterface.delete(deletes);
+        } catch (IOException e) {
+            throw new SimpleHBaseException("deleteObjectList. rowKeyList = "
+                    + rowKeyList, e);
+        } finally {
+            Util.close(htableInterface);
+        }
+
+        //successful delete will clear the items of deletes list.
+        if (deletes.size() > 0) {
+            throw new SimpleHBaseException("deleteObjectList. deletes="
+                    + deletes);
+        }
     }
 
     @Override

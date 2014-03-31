@@ -1,5 +1,6 @@
 package com.alipay.simplehbase.myrecord;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.SimpleHbaseAdminClient;
 import com.alipay.simplehbase.client.SimpleHbaseClient;
 
@@ -19,7 +21,6 @@ import com.alipay.simplehbase.config.HBaseTableConfigParser;
 import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 
 import com.alipay.simplehbase.hql.HBaseQuery;
-
 
 /**
  * @author xinzhi
@@ -87,6 +88,14 @@ public class MyRecordTestBase {
         for (int i = 0; i < myRecords.length; i++) {
             putRecord(mockSlim(i));
         }
+    }
+
+    protected List<RowKey> rowkeyList(int start, int length) {
+        List<RowKey> list = new ArrayList<RowKey>();
+        for (int i = start; i < start + length; i++) {
+            list.add(new MyRecordRowKey(i));
+        }
+        return list;
     }
 
     protected void putSlim(String str) {

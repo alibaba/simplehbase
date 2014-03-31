@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
@@ -12,25 +13,35 @@ import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 /**
  * @author xinzhi
  */
-public class TestDelete extends MyRecordTestBase {
-    @Test
-    public void deleteObject() {
+public class TestDeleteObjectList extends MyRecordTestBase {
 
-        putMockSlims(1);
+    @Test
+    public void deleteObjectList() {
+
+        putMockSlims(10);
 
         MyRecordRowKey myRecordRowKey = new MyRecordRowKey(0);
-
         Assert.assertNotNull(simpleHbaseClient.findObject(myRecordRowKey,
                 MyRecord.class));
 
-        simpleHbaseClient.deleteObject(myRecordRowKey, MyRecord.class);
+        myRecordRowKey = new MyRecordRowKey(9);
+        Assert.assertNotNull(simpleHbaseClient.findObject(myRecordRowKey,
+                MyRecord.class));
 
+        List<RowKey> rowkeyList = rowkeyList(0, 10);
+
+        simpleHbaseClient.deleteObjectList(rowkeyList, MyRecord.class);
+
+        myRecordRowKey = new MyRecordRowKey(0);
+        Assert.assertNull(simpleHbaseClient.findObject(myRecordRowKey,
+                MyRecord.class));
+        myRecordRowKey = new MyRecordRowKey(9);
         Assert.assertNull(simpleHbaseClient.findObject(myRecordRowKey,
                 MyRecord.class));
     }
 
     @Test
-    public void deleteObjectList() {
+    public void deleteObjectList2() {
         putMockSlims(100);
 
         MyRecordRowKey myRecordRowKey1 = new MyRecordRowKey(0);

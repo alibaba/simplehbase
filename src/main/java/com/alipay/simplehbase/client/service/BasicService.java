@@ -258,6 +258,14 @@ public interface BasicService {
     public void deleteObject(RowKey rowKey, Class<?> type);
 
     /**
+     * Delete POJO list.
+     * 
+     * @param rowKeyList rowKeyList.
+     * @param type POJO type.
+     * */
+    public void deleteObjectList(List<RowKey> rowKeyList, Class<?> type);
+
+    /**
      * Batch delete POJO list.
      * 
      * @param startRowKey startRowKey.
@@ -267,5 +275,4 @@ public interface BasicService {
      * */
     public void deleteObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<?> type);
-
 }
