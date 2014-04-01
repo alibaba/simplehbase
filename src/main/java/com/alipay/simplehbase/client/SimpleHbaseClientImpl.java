@@ -286,27 +286,30 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
     @Override
     public <T> void putObjectMV(RowKey rowKey, T t, long timestamp) {
-        PutRequest<T> putRequest = new PutRequest<T>(rowKey, t);
+        PutRequest<T> putRequest = new PutRequest<T>(rowKey, t, timestamp);
         List<PutRequest<T>> putRequestList = new ArrayList<PutRequest<T>>();
         putRequestList.add(putRequest);
 
-        putObjectListMV(putRequestList, timestamp);
-
+        putObjectList_internal(putRequestList);
     }
 
     @Override
-    public <T> void putObjectListMV(List<PutRequest<T>> putRequests,
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequestList,
             Date timestamp) {
         Util.checkNull(timestamp);
-
-        putObjectListMV(putRequests, timestamp.getTime());
-
+        putObjectListMV(putRequestList, timestamp.getTime());
     }
 
     @Override
-    public <T> void putObjectListMV(List<PutRequest<T>> putRequests,
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequestList,
             long timestamp) {
-        putObjectList_internal(putRequests, timestamp);
+        applyTimeStamp(putRequestList, timestamp);
+        putObjectList_internal(putRequestList);
+    }
+
+    @Override
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequestList) {
+        putObjectList_internal(putRequestList);
     }
 
     @Override
@@ -320,11 +323,37 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
     @Override
     public <T> void putObjectList(List<PutRequest<T>> putRequestList) {
-        putObjectList_internal(putRequestList, null);
+        cleanTimeStamp(putRequestList);
+
+        putObjectList_internal(putRequestList);
     }
 
-    private <T> void putObjectList_internal(List<PutRequest<T>> putRequestList,
-            @Nullable Long timestamp) {
+    private <T> void cleanTimeStamp(List<PutRequest<T>> putRequestList) {
+        if (putRequestList == null || putRequestList.isEmpty()) {
+            return;
+        }
+
+        for (PutRequest<T> putRequest : putRequestList) {
+            if (putRequest != null) {
+                putRequest.cleanTimestamp();
+            }
+        }
+    }
+
+    private <T> void applyTimeStamp(List<PutRequest<T>> putRequestList,
+            long timeStamp) {
+        if (putRequestList == null || putRequestList.isEmpty()) {
+            return;
+        }
+
+        for (PutRequest<T> putRequest : putRequestList) {
+            if (putRequest != null) {
+                putRequest.setTimestamp(timeStamp);
+            }
+        }
+    }
+
+    private <T> void putObjectList_internal(List<PutRequest<T>> putRequestList) {
 
         Util.checkNull(putRequestList);
 
@@ -346,12 +375,12 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             for (ColumnInfo columnInfo : typeInfo.getColumnInfos()) {
                 byte[] value = convertPOJOFieldToBytes(putRequest.getT(),
                         columnInfo);
-                if (timestamp == null) {
+                if (putRequest.getTimestamp() == null) {
                     put.add(columnInfo.familyBytes, columnInfo.qualifierBytes,
                             value);
                 } else {
                     put.add(columnInfo.familyBytes, columnInfo.qualifierBytes,
-                            timestamp.longValue(), value);
+                            putRequest.getTimestamp().longValue(), value);
                 }
             }
 
@@ -364,8 +393,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             htableInterface.put(puts);
         } catch (IOException e) {
             throw new SimpleHBaseException(
-                    "putObjectList_internal. putRequestList=" + putRequestList
-                            + " timestamp=" + timestamp, e);
+                    "putObjectList_internal. putRequestList=" + putRequestList,
+                    e);
         } finally {
             Util.close(htableInterface);
         }
@@ -829,8 +858,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
         List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
 
-        delete_internal(startRowKey, endRowKey, null, columnInfoList, null,
-                null);
+        delete_internal_with_scan_first(startRowKey, endRowKey, null,
+                columnInfoList, null, null);
     }
 
     @Override
@@ -873,15 +902,16 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                     simpleHbaseRuntimeSetting);
         }
 
-        delete_internal(startRowKey, endRowKey, filter, null,
+        delete_internal_with_scan_first(startRowKey, endRowKey, filter, null,
                 hbaseColumnSchemaList, ts);
     }
 
     /**
      * columnInfoList and hbaseColumnSchemaList can not be null or empty both.
      * */
-    private void delete_internal(RowKey startRowKey, RowKey endRowKey,
-            @Nullable Filter filter, @Nullable List<ColumnInfo> columnInfoList,
+    private void delete_internal_with_scan_first(RowKey startRowKey,
+            RowKey endRowKey, @Nullable Filter filter,
+            @Nullable List<ColumnInfo> columnInfoList,
             @Nullable List<HBaseColumnSchema> hbaseColumnSchemaList,
             @Nullable Date ts) {
 

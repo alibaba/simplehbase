@@ -42,20 +42,27 @@ public interface HbaseMultipleVersionService {
     /**
      * Put POJO list with specified timestamp.
      * 
-     * @param putRequests putRequests.
+     * @param putRequestList putRequestList.
      * @param timestamp timestamp.
      * */
-    public <T> void putObjectListMV(List<PutRequest<T>> putRequests,
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequestList,
             long timestamp);
 
     /**
      * Put POJO list with specified timestamp.
      * 
-     * @param putRequests putRequests.
+     * @param putRequestList putRequestList.
      * @param timestamp timestamp.
      * */
-    public <T> void putObjectListMV(List<PutRequest<T>> putRequests,
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequestList,
             Date timestamp);
+
+    /**
+     * Put list of POJO with its timestamp.
+     * 
+     * @param putRequestList putRequestList.
+     * */
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequestList);
 
     /**
      * Find object with row key.

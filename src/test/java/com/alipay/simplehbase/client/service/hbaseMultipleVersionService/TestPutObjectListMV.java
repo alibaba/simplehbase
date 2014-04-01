@@ -57,4 +57,43 @@ public class TestPutObjectListMV extends MyRecordTestBase {
 
         CreateTestTable.main(null);
     }
+
+    @TimeDepend
+    @Test
+    public void putObjectListMV2() {
+        CreateTestTable.main(null);
+
+        MyRecord myRecord_1 = parseSlim("id=1000,name=namea,age=1");
+        MyRecord myRecord_2 = parseSlim("id=2000,name=nameb,age=2");
+
+        RowKey rowKey_1 = myRecord_1.rowKey();
+        RowKey rowKey_2 = myRecord_2.rowKey();
+        List<SimpleHbaseDOResult<MyRecord>> resultList = simpleHbaseClient
+                .findObjectMV(rowKey_1, MyRecord.class, null);
+        Assert.assertTrue(resultList.isEmpty());
+
+        resultList = simpleHbaseClient.findObjectMV(rowKey_2, MyRecord.class,
+                null);
+        Assert.assertTrue(resultList.isEmpty());
+
+        List<PutRequest<MyRecord>> putRequestList = new ArrayList<PutRequest<MyRecord>>();
+        putRequestList.add(new PutRequest<MyRecord>(myRecord_1.rowKey(),
+                myRecord_1, 1L));
+        putRequestList.add(new PutRequest<MyRecord>(myRecord_2.rowKey(),
+                myRecord_2, 2L));
+
+        simpleHbaseClient.putObjectListMV(putRequestList);
+
+        resultList = simpleHbaseClient.findObjectMV(rowKey_1, MyRecord.class,
+                null);
+        Assert.assertTrue(resultList.size() == 1);
+        Assert.assertEquals(myRecord_1, resultList.get(0).getT());
+
+        resultList = simpleHbaseClient.findObjectMV(rowKey_2, MyRecord.class,
+                null);
+        Assert.assertTrue(resultList.size() == 1);
+        Assert.assertEquals(myRecord_2, resultList.get(0).getT());
+
+        CreateTestTable.main(null);
+    }
 }

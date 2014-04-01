@@ -1,8 +1,13 @@
 package com.alipay.simplehbase.client;
 
+import java.util.Date;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+
+import com.alipay.simplehbase.core.Nullable;
+import com.alipay.simplehbase.util.Util;
 
 /**
  * PutRequest.
@@ -13,29 +18,51 @@ public class PutRequest<T> {
 
     private RowKey rowKey;
     private T      t;
-
-    public PutRequest() {
-    }
+    @Nullable
+    private Long   timestamp;
 
     public PutRequest(RowKey rowKey, T t) {
         this.rowKey = rowKey;
         this.t = t;
     }
 
+    public PutRequest(RowKey rowKey, T t, long timestamp) {
+        this.rowKey = rowKey;
+        this.t = t;
+        this.timestamp = timestamp;
+    }
+
+    public PutRequest(RowKey rowKey, T t, Date timestamp) {
+        Util.checkNull(timestamp);
+
+        this.rowKey = rowKey;
+        this.t = t;
+        this.timestamp = timestamp.getTime();
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        Util.checkNull(timestamp);
+        this.timestamp = timestamp.getTime();
+    }
+
+    public void cleanTimestamp() {
+        this.timestamp = null;
+    }
+
     public RowKey getRowKey() {
         return rowKey;
     }
 
-    public void setRowKey(RowKey rowKey) {
-        this.rowKey = rowKey;
-    }
-
     public T getT() {
         return t;
-    }
-
-    public void setT(T t) {
-        this.t = t;
     }
 
     @Override
