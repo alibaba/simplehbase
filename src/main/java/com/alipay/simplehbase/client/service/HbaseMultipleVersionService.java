@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.client.QueryExtInfo;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.SimpleHbaseDOResult;
@@ -37,6 +38,24 @@ public interface HbaseMultipleVersionService {
      * @param timestamp timestamp.
      * */
     public <T> void putObjectMV(RowKey rowKey, T t, Date timestamp);
+
+    /**
+     * Put POJO list with specified timestamp.
+     * 
+     * @param putRequests putRequests.
+     * @param timestamp timestamp.
+     * */
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequests,
+            long timestamp);
+
+    /**
+     * Put POJO list with specified timestamp.
+     * 
+     * @param putRequests putRequests.
+     * @param timestamp timestamp.
+     * */
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequests,
+            Date timestamp);
 
     /**
      * Find object with row key.

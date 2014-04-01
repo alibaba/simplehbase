@@ -16,7 +16,7 @@ import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 /**
  * @author xinzhi
  * */
-public class TestFindListMV extends MyRecordTestBase {
+public class TestFindObjectListMV extends MyRecordTestBase {
 
     private RowKey   rowKey_1     = new MyRecordRowKey(1);
     private MyRecord myRecord_1_1 = parseSlim("id=1,name=a,age=1");

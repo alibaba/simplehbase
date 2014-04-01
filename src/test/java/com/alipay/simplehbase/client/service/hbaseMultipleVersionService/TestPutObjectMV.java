@@ -17,7 +17,7 @@ import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 /**
  * @author xinzhi
  * */
-public class TestPutMV extends MyRecordTestBase {
+public class TestPutObjectMV extends MyRecordTestBase {
 
     @TimeDepend
     @Test

@@ -289,8 +289,24 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         PutRequest<T> putRequest = new PutRequest<T>(rowKey, t);
         List<PutRequest<T>> putRequestList = new ArrayList<PutRequest<T>>();
         putRequestList.add(putRequest);
-        putObjectList_internal(putRequestList, timestamp);
 
+        putObjectListMV(putRequestList, timestamp);
+
+    }
+
+    @Override
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequests,
+            Date timestamp) {
+        Util.checkNull(timestamp);
+
+        putObjectListMV(putRequests, timestamp.getTime());
+
+    }
+
+    @Override
+    public <T> void putObjectListMV(List<PutRequest<T>> putRequests,
+            long timestamp) {
+        putObjectList_internal(putRequests, timestamp);
     }
 
     @Override
@@ -298,7 +314,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         PutRequest<T> putRequest = new PutRequest<T>(rowKey, t);
         List<PutRequest<T>> putRequestList = new ArrayList<PutRequest<T>>();
         putRequestList.add(putRequest);
-        putObjectList_internal(putRequestList, null);
+
+        putObjectList(putRequestList);
     }
 
     @Override
