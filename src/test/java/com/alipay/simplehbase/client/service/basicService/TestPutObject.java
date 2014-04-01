@@ -24,4 +24,5 @@ public class TestPutObject extends MyRecordTestBase {
 
         Assert.assertTrue(myRecord.equals(result));
     }
+
 }

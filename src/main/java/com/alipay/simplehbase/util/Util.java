@@ -3,6 +3,7 @@ package com.alipay.simplehbase.util;
 import java.io.Closeable;
 import java.io.IOException;
 
+import com.alipay.simplehbase.client.DeleteRequest;
 import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.core.Nullable;
@@ -91,6 +92,14 @@ public class Util {
         checkNull(putRequest);
         checkRowKey(putRequest.getRowKey());
         checkNull(putRequest.getT());
+    }
+
+    /**
+     * Check Delete request.
+     * */
+    public static void checkDeleteRequest(DeleteRequest deleteRequest) {
+        checkNull(deleteRequest);
+        checkRowKey(deleteRequest.getRowKey());
     }
 
     /**

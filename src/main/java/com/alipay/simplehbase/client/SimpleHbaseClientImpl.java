@@ -279,6 +279,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
     @Override
     public <T> void putObjectMV(RowKey rowKey, T t, Date timestamp) {
+
         Util.checkNull(timestamp);
 
         putObjectMV(rowKey, t, timestamp.getTime());
@@ -286,9 +287,9 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
     @Override
     public <T> void putObjectMV(RowKey rowKey, T t, long timestamp) {
-        PutRequest<T> putRequest = new PutRequest<T>(rowKey, t, timestamp);
+
         List<PutRequest<T>> putRequestList = new ArrayList<PutRequest<T>>();
-        putRequestList.add(putRequest);
+        putRequestList.add(new PutRequest<T>(rowKey, t, timestamp));
 
         putObjectList_internal(putRequestList);
     }
@@ -296,39 +297,47 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     @Override
     public <T> void putObjectListMV(List<PutRequest<T>> putRequestList,
             Date timestamp) {
+
         Util.checkNull(timestamp);
+
         putObjectListMV(putRequestList, timestamp.getTime());
     }
 
     @Override
     public <T> void putObjectListMV(List<PutRequest<T>> putRequestList,
             long timestamp) {
-        applyTimeStamp(putRequestList, timestamp);
+
+        applyTimeStampForPutRequest(putRequestList, timestamp);
+
         putObjectList_internal(putRequestList);
     }
 
     @Override
     public <T> void putObjectListMV(List<PutRequest<T>> putRequestList) {
+
+        checkTimeStampForPutRequest(putRequestList);
+
         putObjectList_internal(putRequestList);
     }
 
     @Override
     public <T> void putObject(RowKey rowKey, T t) {
-        PutRequest<T> putRequest = new PutRequest<T>(rowKey, t);
+
         List<PutRequest<T>> putRequestList = new ArrayList<PutRequest<T>>();
-        putRequestList.add(putRequest);
+        putRequestList.add(new PutRequest<T>(rowKey, t));
 
         putObjectList(putRequestList);
     }
 
     @Override
     public <T> void putObjectList(List<PutRequest<T>> putRequestList) {
-        cleanTimeStamp(putRequestList);
 
+        cleanTimeStampForPutRequest(putRequestList);
         putObjectList_internal(putRequestList);
     }
 
-    private <T> void cleanTimeStamp(List<PutRequest<T>> putRequestList) {
+    private <T> void cleanTimeStampForPutRequest(
+            List<PutRequest<T>> putRequestList) {
         if (putRequestList == null || putRequestList.isEmpty()) {
             return;
         }
@@ -340,8 +349,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         }
     }
 
-    private <T> void applyTimeStamp(List<PutRequest<T>> putRequestList,
-            long timeStamp) {
+    private <T> void applyTimeStampForPutRequest(
+            List<PutRequest<T>> putRequestList, long timeStamp) {
         if (putRequestList == null || putRequestList.isEmpty()) {
             return;
         }
@@ -349,6 +358,18 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         for (PutRequest<T> putRequest : putRequestList) {
             if (putRequest != null) {
                 putRequest.setTimestamp(timeStamp);
+            }
+        }
+    }
+
+    private <T> void checkTimeStampForPutRequest(
+            List<PutRequest<T>> putRequestList) {
+        if (putRequestList == null || putRequestList.isEmpty()) {
+            return;
+        }
+        for (PutRequest<T> putRequest : putRequestList) {
+            if (putRequest != null) {
+                Util.checkNull(putRequest.getTimestamp());
             }
         }
     }
@@ -798,26 +819,98 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     }
 
     @Override
+    public void deleteObjectMV(RowKey rowKey, Class<?> type, Date timeStamp) {
+
+        Util.checkNull(timeStamp);
+
+        deleteObjectMV(rowKey, type, timeStamp.getTime());
+    }
+
+    @Override
+    public void deleteObjectMV(RowKey rowKey, Class<?> type, long timeStamp) {
+
+        List<DeleteRequest> deleteRequestList = new ArrayList<DeleteRequest>();
+        deleteRequestList.add(new DeleteRequest(rowKey, timeStamp));
+
+        deleteObjectList_internal(deleteRequestList, type);
+    }
+
+    @Override
+    public void deleteObjectListMV(List<RowKey> rowKeyList, Class<?> type,
+            Date timeStamp) {
+
+        Util.checkNull(timeStamp);
+
+        deleteObjectListMV(rowKeyList, type, timeStamp.getTime());
+    }
+
+    @Override
+    public void deleteObjectListMV(List<RowKey> rowKeyList, Class<?> type,
+            long timeStamp) {
+
+        Util.checkNull(rowKeyList);
+
+        List<DeleteRequest> deleteRequestList = new ArrayList<DeleteRequest>();
+        for (RowKey rowKey : rowKeyList) {
+            deleteRequestList.add(new DeleteRequest(rowKey, timeStamp));
+        }
+
+        deleteObjectList_internal(deleteRequestList, type);
+    }
+
+    @Override
+    public void deleteObjectListMV(List<DeleteRequest> deleteRequestList,
+            Class<?> type) {
+
+        checkTimeStampForDeleteRequest(deleteRequestList);
+
+        deleteObjectList_internal(deleteRequestList, type);
+    }
+
+    @Override
     public void deleteObject(RowKey rowKey, Class<?> type) {
         List<RowKey> rowKeyList = new ArrayList<RowKey>();
         rowKeyList.add(rowKey);
-        delete_internal(rowKeyList, type);
+        deleteObjectList(rowKeyList, type);
     }
 
     @Override
     public void deleteObjectList(List<RowKey> rowKeyList, Class<?> type) {
-        delete_internal(rowKeyList, type);
+        Util.checkNull(rowKeyList);
+
+        List<DeleteRequest> deleteRequestList = new ArrayList<DeleteRequest>();
+        for (RowKey rowKey : rowKeyList) {
+            deleteRequestList.add(new DeleteRequest(rowKey));
+        }
+
+        deleteObjectList_internal(deleteRequestList, type);
     }
 
-    private void delete_internal(List<RowKey> rowKeyList, Class<?> type) {
-        Util.checkNull(rowKeyList);
-        Util.checkNull(type);
-
-        if (rowKeyList.isEmpty()) {
+    private void checkTimeStampForDeleteRequest(
+            List<DeleteRequest> deleteRequestList) {
+        if (deleteRequestList == null || deleteRequestList.isEmpty()) {
             return;
         }
-        for (RowKey rowKey : rowKeyList) {
-            Util.checkRowKey(rowKey);
+
+        for (DeleteRequest deleteRequest : deleteRequestList) {
+            if (deleteRequest != null) {
+                Util.checkNull(deleteRequest.getTimestamp());
+            }
+        }
+    }
+
+    private void deleteObjectList_internal(
+            List<DeleteRequest> deleteRequestList, Class<?> type) {
+
+        Util.checkNull(deleteRequestList);
+        Util.checkNull(type);
+
+        if (deleteRequestList.isEmpty()) {
+            return;
+        }
+
+        for (DeleteRequest deleteRequest : deleteRequestList) {
+            Util.checkDeleteRequest(deleteRequest);
         }
 
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
@@ -825,11 +918,19 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         List<Delete> deletes = new LinkedList<Delete>();
 
-        for (RowKey rowKey : rowKeyList) {
-            Delete delete = new Delete(rowKey.toBytes());
+        for (DeleteRequest deleteRequest : deleteRequestList) {
+            Delete delete = new Delete(deleteRequest.getRowKey().toBytes());
             for (ColumnInfo columnInfo : columnInfoList) {
-                delete.deleteColumns(columnInfo.familyBytes,
-                        columnInfo.qualifierBytes);
+                if (deleteRequest.getTimestamp() == null) {
+                    //delete all versions.
+                    delete.deleteColumns(columnInfo.familyBytes,
+                            columnInfo.qualifierBytes);
+                } else {
+                    //delete specified version.
+                    delete.deleteColumn(columnInfo.familyBytes,
+                            columnInfo.qualifierBytes, deleteRequest
+                                    .getTimestamp().longValue());
+                }
             }
             deletes.add(delete);
         }
@@ -838,16 +939,17 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         try {
             htableInterface.delete(deletes);
         } catch (IOException e) {
-            throw new SimpleHBaseException("deleteObjectList. rowKeyList = "
-                    + rowKeyList, e);
+            throw new SimpleHBaseException(
+                    "deleteObjectList_internal. deleteRequestList = "
+                            + deleteRequestList, e);
         } finally {
             Util.close(htableInterface);
         }
 
         //successful delete will clear the items of deletes list.
         if (deletes.size() > 0) {
-            throw new SimpleHBaseException("deleteObjectList. deletes="
-                    + deletes);
+            throw new SimpleHBaseException(
+                    "deleteObjectList_internal. deletes=" + deletes);
         }
     }
 
@@ -944,9 +1046,11 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                     if (columnInfoList != null) {
                         for (ColumnInfo columnInfo : columnInfoList) {
                             if (ts == null) {
+                                //delete all versions.
                                 delete.deleteColumns(columnInfo.familyBytes,
                                         columnInfo.qualifierBytes);
                             } else {
+                                //delete specified version.
                                 delete.deleteColumn(columnInfo.familyBytes,
                                         columnInfo.qualifierBytes, ts.getTime());
                             }
@@ -956,10 +1060,12 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                     if (hbaseColumnSchemaList != null) {
                         for (HBaseColumnSchema hbaseColumnSchema : hbaseColumnSchemaList) {
                             if (ts == null) {
+                                //delete all versions.
                                 delete.deleteColumns(
                                         hbaseColumnSchema.getFamilyBytes(),
                                         hbaseColumnSchema.getQualifierBytes());
                             } else {
+                                //delete specified version.
                                 delete.deleteColumn(
                                         hbaseColumnSchema.getFamilyBytes(),
                                         hbaseColumnSchema.getQualifierBytes(),

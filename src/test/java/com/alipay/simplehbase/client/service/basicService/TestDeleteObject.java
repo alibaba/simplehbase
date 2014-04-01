@@ -27,4 +27,22 @@ public class TestDeleteObject extends MyRecordTestBase {
                 MyRecord.class));
     }
 
+    @Test
+    public void deleteObject_PutObjectManyTimes() {
+
+        putMockSlims(1);
+        sleep(2);
+        putMockSlims(1);
+
+        MyRecordRowKey myRecordRowKey = new MyRecordRowKey(0);
+
+        Assert.assertNotNull(simpleHbaseClient.findObject(myRecordRowKey,
+                MyRecord.class));
+
+        simpleHbaseClient.deleteObject(myRecordRowKey, MyRecord.class);
+
+        Assert.assertNull(simpleHbaseClient.findObject(myRecordRowKey,
+                MyRecord.class));
+    }
+
 }

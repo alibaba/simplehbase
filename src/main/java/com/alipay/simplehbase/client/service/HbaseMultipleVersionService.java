@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.alipay.simplehbase.client.DeleteRequest;
 import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.client.QueryExtInfo;
 import com.alipay.simplehbase.client.RowKey;
@@ -124,4 +125,50 @@ public interface HbaseMultipleVersionService {
             String id, @Nullable Map<String, Object> para,
             QueryExtInfo queryExtInfo);
 
+    /**
+     * Delete POJO.
+     * 
+     * @param rowKey rowKey.
+     * @param type POJO type.
+     * @param timeStamp timeStamp.
+     * */
+    public void deleteObjectMV(RowKey rowKey, Class<?> type, long timeStamp);
+
+    /**
+     * Delete POJO.
+     * 
+     * @param rowKey rowKey.
+     * @param type POJO type.
+     * @param timeStamp timeStamp.
+     * */
+    public void deleteObjectMV(RowKey rowKey, Class<?> type, Date timeStamp);
+
+    /**
+     * Delete POJO list.
+     * 
+     * @param rowKeyList rowKeyList.
+     * @param type POJO type.
+     * @param timeStamp timeStamp.
+     * */
+    public void deleteObjectListMV(List<RowKey> rowKeyList, Class<?> type,
+            long timeStamp);
+
+    /**
+     * Delete POJO list.
+     * 
+     * @param rowKeyList rowKeyList.
+     * @param type POJO type.
+     * @param timeStamp timeStamp.
+     * */
+    public void deleteObjectListMV(List<RowKey> rowKeyList, Class<?> type,
+            Date timeStamp);
+
+    /**
+     * Delete POJO list with its timestamp.
+     * 
+     * @param deleteRequestList deleteRequestList.
+     * @param type POJO type.
+     * */
+    public void deleteObjectListMV(List<DeleteRequest> deleteRequestList,
+            Class<?> type);
 }
