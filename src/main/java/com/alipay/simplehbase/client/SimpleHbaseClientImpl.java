@@ -801,12 +801,15 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
     public void deleteObject(RowKey rowKey, Class<?> type) {
         List<RowKey> rowKeyList = new ArrayList<RowKey>();
         rowKeyList.add(rowKey);
-        deleteObjectList(rowKeyList, type);
+        delete_internal(rowKeyList, type);
     }
 
     @Override
     public void deleteObjectList(List<RowKey> rowKeyList, Class<?> type) {
+        delete_internal(rowKeyList, type);
+    }
 
+    private void delete_internal(List<RowKey> rowKeyList, Class<?> type) {
         Util.checkNull(rowKeyList);
         Util.checkNull(type);
 
