@@ -1,7 +1,9 @@
 package allen.studyhbase;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.hadoop.hbase.KeyValue;
@@ -12,6 +14,11 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.filter.BinaryComparator;
+import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
+import org.apache.hadoop.hbase.filter.Filter;
+import org.apache.hadoop.hbase.filter.FilterList;
+import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -166,6 +173,40 @@ public class HbaseBasicOpTest extends HbaseTestBase {
         Assert.assertTrue(resultRowKeys.contains(rowKeyStr2));
         Assert.assertTrue(resultRowKeys.contains(rowKeyStr3));
 
+    }
+
+    @Test
+    public void testScan_withFilter() throws Exception {
+        Put put = new Put(rowKey_ForTest);
+        put.add(ColumnFamilyName, QName1, Bytes.toBytes("2"));
+        table.put(put);
+
+        List<Filter> filters = new ArrayList<Filter>();
+        SingleColumnValueFilter filter1 = new SingleColumnValueFilter(
+                ColumnFamilyName, QName1, CompareOp.GREATER,
+                new BinaryComparator(Bytes.toBytes("1000")));
+        filters.add(filter1);
+
+        SingleColumnValueFilter filter2 = new SingleColumnValueFilter(
+                ColumnFamilyName, QName1, CompareOp.LESS, new BinaryComparator(
+                        Bytes.toBytes("5000")));
+
+        filters.add(filter2);
+
+        FilterList filterList = new FilterList(filters);
+
+        Scan scan = new Scan();
+        scan.setFilter(filterList);
+
+        List<String> resultRowKeys = new ArrayList<String>();
+        ResultScanner resultScanner = table.getScanner(scan);
+        for (Result result = resultScanner.next(); result != null; result = resultScanner
+                .next()) {
+            resultRowKeys.add(Bytes.toString(result.getRow()));
+        }
+        Util.close(resultScanner);
+
+        Assert.assertEquals(1, resultRowKeys.size());
     }
 
     @Test
