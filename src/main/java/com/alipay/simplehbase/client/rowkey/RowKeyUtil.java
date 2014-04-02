@@ -1,6 +1,7 @@
 package com.alipay.simplehbase.client.rowkey;
 
 import com.alipay.simplehbase.client.RowKey;
+import com.alipay.simplehbase.exception.SimpleHBaseException;
 import com.alipay.simplehbase.util.BytesUtil;
 import com.alipay.simplehbase.util.Util;
 
@@ -29,5 +30,38 @@ public class RowKeyUtil {
         byte[] oldKey = rowKey.toBytes();
         byte[] newKey = BytesUtil.merge(oldKey, BytesUtil.ZERO);
         return new BytesRowKey(newKey);
+    }
+
+    /**
+     * Compute the end row key of specified prefix rowkey.
+     * 
+     * <pre>
+     * The prefixRowKey's bytes can not be empty or all of 0xFF.
+     * </pre>
+     * 
+     * @param prefixRowKey prefixRowKey.
+     * @return endRowKey for this prefixRowKey.
+     * */
+    public static RowKey getEndRowKeyOfPrefix(RowKey prefixRowKey) {
+        Util.checkRowKey(prefixRowKey);
+        byte[] rowkeyBytes = prefixRowKey.toBytes();
+
+        Util.check(rowkeyBytes.length != 0);
+
+        boolean isAllByteIsFF = true;
+        for (byte b : rowkeyBytes) {
+            if ((b & 0xFF) != 0xFF) {
+                isAllByteIsFF = false;
+                break;
+            }
+        }
+
+        if (isAllByteIsFF) {
+            throw new SimpleHBaseException(
+                    "the prefix row key is all of 0xFF. prefixRowKey="
+                            + prefixRowKey);
+        }
+
+        return new BytesRowKey(BytesUtil.increaseLastByte(rowkeyBytes));
     }
 }
