@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.perf;
+package allen.perf;
 
 import java.util.ArrayList;
 import java.util.List;

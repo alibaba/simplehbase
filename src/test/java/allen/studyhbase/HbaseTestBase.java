@@ -73,18 +73,18 @@ public class HbaseTestBase {
         Util.close(table);
     }
 
-    String rowKeyStr1      = "allen_test_row1";
-    String rowKeyStr2      = "allen_test_row2";
-    String rowKeyStr3      = "allen_test_row3";
-    String rowKeyStr4      = "allen_test_row4";
+    String           rowKeyStr1      = "allen_test_row1";
+    String           rowKeyStr2      = "allen_test_row2";
+    String           rowKeyStr3      = "allen_test_row3";
+    String           rowKeyStr4      = "allen_test_row4";
 
-    byte[] rowKey1         = Bytes.toBytes(rowKeyStr1);
-    byte[] rowKey2         = Bytes.toBytes(rowKeyStr2);
-    byte[] rowKey3         = Bytes.toBytes(rowKeyStr3);
-    byte[] rowKey4         = Bytes.toBytes(rowKeyStr4);
+    byte[]           rowKey1         = Bytes.toBytes(rowKeyStr1);
+    byte[]           rowKey2         = Bytes.toBytes(rowKeyStr2);
+    byte[]           rowKey3         = Bytes.toBytes(rowKeyStr3);
+    byte[]           rowKey4         = Bytes.toBytes(rowKeyStr4);
 
-    byte[] rowKey_NotExist = Bytes.toBytes("NotExistRowKey");
-    byte[] rowKey_ForTest  = Bytes.toBytes("RowKey_ForTest");
+    byte[]           rowKey_NotExist = Bytes.toBytes("NotExistRowKey");
+    protected byte[] rowKey_ForTest  = Bytes.toBytes("RowKey_ForTest");
 
     /**
      * Fill mockData.

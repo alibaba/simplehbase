@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.perf;
+package allen.perf;
 
 import org.junit.Test;
 
