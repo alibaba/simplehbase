@@ -195,7 +195,7 @@ public class HbaseBasicOpTest extends HbaseTestBase {
 
         FilterList filterList = new FilterList(filters);
 
-        Scan scan = new Scan();
+        Scan scan = new Scan(rowKey_ForTest,rowKey_ForTest);
         scan.setFilter(filterList);
 
         List<String> resultRowKeys = new ArrayList<String>();
