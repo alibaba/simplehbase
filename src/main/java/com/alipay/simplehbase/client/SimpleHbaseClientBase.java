@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Result;
@@ -119,6 +120,24 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         return scan;
     }
 
+    /**
+     * Construct Get.
+     * */
+    protected Get constructGet(RowKey rowkey, @Nullable Filter filter) {
+        Util.checkRowKey(rowkey);
+
+        Get get = new Get(rowkey.toBytes());
+        get.setFilter(filter);
+        return postConstructGet(get);
+    }
+
+    /**
+     * Post construct Get.
+     * */
+    protected Get postConstructGet(Get get) {
+        return get;
+    }
+
     //FIXME [simplehbase] the columns in select list and condition can vary. 
     /**
      * Apply family and qualifier to scan request, to prevent return more data
@@ -130,6 +149,15 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
         for (ColumnInfo columnInfo : columnInfoList) {
             scan.addColumn(columnInfo.familyBytes, columnInfo.qualifierBytes);
+        }
+    }
+
+    protected <T> void applyRequestFamilyAndQualifier(Class<? extends T> type,
+            Get get) {
+        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+        List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            get.addColumn(columnInfo.familyBytes, columnInfo.qualifierBytes);
         }
     }
 
