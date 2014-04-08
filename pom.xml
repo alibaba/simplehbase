@@ -6,7 +6,7 @@
 	<groupId>allen</groupId>
 	<artifactId>simplehbase</artifactId>
 	<packaging>jar</packaging>
-	<version>0.7</version>
+	<version>0.8</version>
 	<name>simplehbase</name>
 
 
