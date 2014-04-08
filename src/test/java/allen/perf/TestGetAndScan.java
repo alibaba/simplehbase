@@ -25,7 +25,7 @@ public class TestGetAndScan extends HbaseTestBase {
         put.add(ColumnFamilyName, QName1, Bytes.toBytes("2"));
         table.put(put);
 
-        int loopSize = 100;
+        int loopSize = 1;
 
         long start = System.currentTimeMillis();
         for (int i = 0; i < loopSize; i++) {
