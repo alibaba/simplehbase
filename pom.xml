@@ -6,7 +6,7 @@
 	<groupId>allen</groupId>
 	<artifactId>simplehbase</artifactId>
 	<packaging>jar</packaging>
-	<version>0.8</version>
+	<version>0.9</version>
 	<name>simplehbase</name>
 
 
@@ -41,8 +41,8 @@
 			<artifactId>hbase</artifactId>
 			<version>0.94-adh3u2.2</version>
 		</dependency>
-	-->		
-		
+	
+		-->		
 		<dependency>
                 <groupId>org.apache.hbase</groupId>
                 <artifactId>hbase</artifactId>  

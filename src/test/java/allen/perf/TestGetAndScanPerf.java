@@ -15,12 +15,12 @@ import allen.studyhbase.HbaseTestBase;
 /**
  * @author xinzhi
  */
-public class TestGetAndScan extends HbaseTestBase {
+public class TestGetAndScanPerf extends HbaseTestBase {
 
-    private static Log log = LogFactory.getLog(TestGetAndScan.class);
+    private static Log log = LogFactory.getLog(TestGetAndScanPerf.class);
 
     @Test
-    public void testScan_withFilter() throws Exception {
+    public void testGetAndScanPerf() throws Exception {
         Put put = new Put(rowKey_ForTest);
         put.add(ColumnFamilyName, QName1, Bytes.toBytes("2"));
         table.put(put);
