@@ -7,10 +7,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
-import org.junit.AfterClass;
-
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.client.RowKey;
@@ -37,16 +34,6 @@ public class MyRecordTestBase {
     static {
         simpleHbaseClient = Config.getSimpleHbaseClient();
         simpleHbaseAdminClient = Config.getSimpleHbaseAdminClient();
-    }
-
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        Config.beforeClass();
-    }
-
-    @AfterClass
-    public static void afterClass() throws Exception {
-        Config.afterClass();
     }
 
     @Before

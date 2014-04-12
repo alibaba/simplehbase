@@ -19,24 +19,13 @@ import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
  * */
 public class Config {
 
-    final public static String                     TableName                         = "MyRecordV05";
-    final public static String                     ColumnFamilyName                  = "MyRecordFamily";
+    final public static String                     TableName          = "MyRecordV05";
+    final public static String                     ColumnFamilyName   = "MyRecordFamily";
 
-    public static String                           TestHqlNodeXmlFile                = "test\\hql\\testHqlNode.xml";
-    public static String                           HbaseSiteFile                     = "test\\hbase_site";
-    public static String                           ZkConfigFile                      = "test\\zk_conf";
-    public static String                           MyRecordXmlFile                   = "test\\hql\\myRecord.xml";
-
-    /**
-     * Flag to control table creation.
-     * 
-     * <pre>
-     * run CreateTestTable before set to false. 
-     * run DeleteTestTable after running tests when set to false.
-     * </pre>
-     * 
-     * */
-    public static boolean                          ShouldDeleteAndCreateTablePerTest = false;
+    public static String                           TestHqlNodeXmlFile = "test\\hql\\testHqlNode.xml";
+    public static String                           HbaseSiteFile      = "test\\hbase_site";
+    public static String                           ZkConfigFile       = "test\\zk_conf";
+    public static String                           MyRecordXmlFile    = "test\\hql\\myRecord.xml";
 
     private static volatile SimpleHbaseClient      simpleHbaseClient;
 
@@ -68,19 +57,6 @@ public class Config {
 
     public static void deleteTable() throws Exception {
         simpleHbaseAdminClient.deleteTable(TableName);
-    }
-
-    public static void beforeClass() throws Exception {
-        if (Config.ShouldDeleteAndCreateTablePerTest) {
-            deleteTable();
-            createTable();
-        }
-    }
-
-    public static void afterClass() throws Exception {
-        if (Config.ShouldDeleteAndCreateTablePerTest) {
-            deleteTable();
-        }
     }
 
     static {

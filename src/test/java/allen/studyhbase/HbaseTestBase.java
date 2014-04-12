@@ -16,9 +16,7 @@ import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.util.Util;
@@ -49,16 +47,6 @@ public class HbaseTestBase {
     protected static byte[]   QName_NotExistColumn = Bytes.toBytes("NotExistColumn");
 
     protected HTableInterface table;
-
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        Config.beforeClass();
-    }
-
-    @AfterClass
-    public static void afterClass() throws Exception {
-        Config.afterClass();
-    }
 
     @Before
     public void before() throws Throwable {
