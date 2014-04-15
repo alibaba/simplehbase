@@ -24,6 +24,9 @@ public class TestGetPerf extends HbaseTestBase {
         table.put(put);
 
         int loopSize = 1;
+        if (PerfConfig.isPerfTestOn) {
+            loopSize = 100;
+        }
 
         for (int i = 0; i < loopSize; i++) {
             Get get = new Get(rowKey_ForTest);

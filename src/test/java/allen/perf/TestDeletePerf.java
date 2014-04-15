@@ -14,8 +14,11 @@ public class TestDeletePerf extends MyRecordTestBase {
     @Test
     public void deleteObjectListPerf() {
 
-        //        int[] testSizes = new int[] { 1, 10, 100, 1000, 2000, 5000, 10000 };
         int[] testSizes = new int[] { 1 };
+        if (PerfConfig.isPerfTestOn) {
+            testSizes = new int[] { 1, 10, 100, 1000, 2000, 5000, 10000 };
+        }
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < testSizes.length; i++) {
             final int size = testSizes[i];

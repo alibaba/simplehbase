@@ -2,6 +2,11 @@ package com.alipay.simplehbase.literal.interpreter;
 
 import com.alipay.simplehbase.literal.AbstractLiteralInterpreter;
 
+/**
+ * DoubleInterpreter.
+ * 
+ * @author xinzhi.zhang
+ * */
 public class DoubleInterpreter extends AbstractLiteralInterpreter {
 
     @Override

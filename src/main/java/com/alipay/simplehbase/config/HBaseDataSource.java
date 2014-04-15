@@ -8,11 +8,16 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTableInterface;
+import org.apache.hadoop.hbase.client.HTableInterfaceFactory;
 import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
+import com.alipay.simplehbase.core.Nullable;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.hbase.HTablePoolAdaptor;
+import com.alipay.simplehbase.hbase.HTablePoolService;
+import com.alipay.simplehbase.hbase.SimpleHbaseHTablePool;
 import com.alipay.simplehbase.util.ConfigUtil;
 import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
@@ -25,56 +30,81 @@ import com.alipay.simplehbase.util.Util;
 public class HBaseDataSource {
 
     /** log. */
-    final private static Logger log                   = Logger.getLogger(HBaseDataSource.class);
+    final private static Logger    log              = Logger.getLogger(HBaseDataSource.class);
     //----------config--------------
     /**
      * dataSource id.
      * */
     @ConfigAttr
-    private String              id;
+    private String                 id;
     /**
      * hbase's config resources, such as hbase zk config.
      * */
     @ConfigAttr
-    private List<Resource>      hbaseConfigResources;
+    private List<Resource>         hbaseConfigResources;
 
     /**
-     * simplehbase's private config resource.
+     * Config the htablepool impl.
+     * 
+     * <pre>
+     * "SimpleHbaseHTablePool" -> SimpleHbaseHTablePool
+     * "HTablePool" -> HTablePool
+     * 
+     * default to HTablePool.
+     * </pre>
      * */
+    @Nullable
     @ConfigAttr
-    private Resource            simpleHbaseDataSourceConfigResource;
+    private String                 htablePoolType;
+
+    @ConfigAttr
+    private int                    poolMaxSize      = 10;
+
+    @ConfigAttr
+    @Nullable
+    private HTableInterfaceFactory tableFactory;
+
+    @ConfigAttr
+    private long                   flushInterval    = -1L;
 
     //---------------------------runtime-------------------------
     /**
      * final hbase's config item.
      * */
-    private Map<String, String> finalHbaseConfig      = new HashMap<String, String>();
-    /**
-     * final simplehbase's config item.
-     * */
-    private Map<String, String> finalDataSourceConfig = new HashMap<String, String>();
+    private Map<String, String>    finalHbaseConfig = new HashMap<String, String>();
+
     /**
      * hbase Configuration.
      * */
-    private Configuration       hbaseConfiguration;
-    /**
-     * HTablePool.
-     * */
-    private HTablePool          htablePool;
+    private Configuration          hbaseConfiguration;
+
+    /** PoolType */
+    private PoolType               poolType         = PoolType.HTablePool;
+
+    /** HTablePoolService */
+    private HTablePoolService      htablePoolService;
 
     /**
      * init dataSource.
      * */
     public void init() {
         try {
+
             System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
                     "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
             System.setProperty("javax.xml.parsers.SAXParserFactory",
                     "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
 
-            parseConfig();
+            if ("SimpleHbaseHTablePool".equals(htablePoolType)) {
+                poolType = PoolType.SimpleHbaseHTablePool;
+            }
+
+            initHbaseConfiguration();
+
             initHtablePool();
+
             log.info(this);
+
         } catch (Exception e) {
             log.error(e);
             throw new SimpleHBaseException(e);
@@ -89,7 +119,7 @@ public class HBaseDataSource {
      * */
     public HTableInterface getHTable(String tableName) {
         Util.checkEmptyString(tableName);
-        return htablePool.getTable(tableName);
+        return htablePoolService.getTable(tableName);
     }
 
     /**
@@ -105,9 +135,9 @@ public class HBaseDataSource {
     }
 
     /**
-     * Parse config.
+     * init HbaseConfiguration
      * */
-    private void parseConfig() {
+    private void initHbaseConfiguration() {
         try {
             if (hbaseConfigResources != null) {
                 for (Resource resource : hbaseConfigResources) {
@@ -121,11 +151,6 @@ public class HBaseDataSource {
                 hbaseConfiguration.set(entry.getKey(), entry.getValue());
             }
 
-            if (simpleHbaseDataSourceConfigResource != null) {
-                finalDataSourceConfig.putAll(ConfigUtil
-                        .loadConfigFile(simpleHbaseDataSourceConfigResource
-                                .getInputStream()));
-            }
         } catch (Exception e) {
             log.error("parseConfig error.", e);
             throw new SimpleHBaseException("parseConfig error.", e);
@@ -136,15 +161,31 @@ public class HBaseDataSource {
      * Initial HTablePool.
      * */
     private void initHtablePool() {
-        try {
-            int hbasePoolSize = ConfigUtil.parsePositiveInt(
-                    finalDataSourceConfig, ConfigOfDataSource.HTABLE_POOL_SIZE,
-                    ConfigOfDataSource.HTABLE_POOL_SIZE_DEFAULT);
+        //user can provide the htablePoolService.
+        if (htablePoolService != null) {
+            return;
+        }
 
-            htablePool = new HTablePool(hbaseConfiguration, hbasePoolSize);
+        try {
+            switch (poolType) {
+
+                case HTablePool:
+                    htablePoolService = new HTablePoolAdaptor(new HTablePool(
+                            hbaseConfiguration, poolMaxSize, tableFactory));
+                    break;
+
+                case SimpleHbaseHTablePool:
+                    htablePoolService = new SimpleHbaseHTablePool(
+                            hbaseConfiguration, poolMaxSize, tableFactory,
+                            flushInterval);
+                    break;
+
+                default:
+                    throw new SimpleHBaseException("can not init pool.");
+            }
         } catch (Exception e) {
-            log.error("initHTablePoolHolder error.", e);
-            throw new SimpleHBaseException("initHTablePoolHolder error.", e);
+            log.error("initHtablePool error.", e);
+            throw new SimpleHBaseException("initHtablePool error.", e);
         }
     }
 
@@ -168,13 +209,44 @@ public class HBaseDataSource {
         this.hbaseConfigResources = hbaseConfigResources;
     }
 
-    public Resource getSimpleHbaseDataSourceConfigResource() {
-        return simpleHbaseDataSourceConfigResource;
+    public String getHtablePoolType() {
+        return htablePoolType;
     }
 
-    public void setSimpleHbaseDataSourceConfigResource(
-            Resource simpleHbaseDataSourceConfigResource) {
-        this.simpleHbaseDataSourceConfigResource = simpleHbaseDataSourceConfigResource;
+    public void setHtablePoolType(String htablePoolType) {
+        this.htablePoolType = htablePoolType;
+    }
+
+    public int getPoolMaxSize() {
+        return poolMaxSize;
+    }
+
+    public void setPoolMaxSize(int poolMaxSize) {
+        this.poolMaxSize = poolMaxSize;
+    }
+
+    public HTableInterfaceFactory getTableFactory() {
+        return tableFactory;
+    }
+
+    public void setTableFactory(HTableInterfaceFactory tableFactory) {
+        this.tableFactory = tableFactory;
+    }
+
+    public long getFlushInterval() {
+        return flushInterval;
+    }
+
+    public void setFlushInterval(long flushInterval) {
+        this.flushInterval = flushInterval;
+    }
+
+    public HTablePoolService getHtablePoolService() {
+        return htablePoolService;
+    }
+
+    public void setHtablePoolService(HTablePoolService htablePoolService) {
+        this.htablePoolService = htablePoolService;
     }
 
     @Override
@@ -183,8 +255,14 @@ public class HBaseDataSource {
         sb.append("---------------datasource--------------------------\n");
         StringUtil.append(sb, "#id#", id);
         StringUtil.append(sb, "#finalHbaseConfig#", finalHbaseConfig);
-        StringUtil.append(sb, "#finalDataSourceConfig#", finalDataSourceConfig);
         sb.append("---------------datasource--------------------------\n");
         return sb.toString();
+    }
+
+    /**
+     * PoolType.
+     * */
+    private static enum PoolType {
+        HTablePool, SimpleHbaseHTablePool;
     }
 }

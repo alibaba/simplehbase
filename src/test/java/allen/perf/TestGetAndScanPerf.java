@@ -26,6 +26,9 @@ public class TestGetAndScanPerf extends HbaseTestBase {
         table.put(put);
 
         int loopSize = 1;
+        if (PerfConfig.isPerfTestOn) {
+            loopSize = 100;
+        }
 
         long start = System.currentTimeMillis();
         for (int i = 0; i < loopSize; i++) {
