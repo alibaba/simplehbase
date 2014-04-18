@@ -1,0 +1,3 @@
+insert into T_CONSUME_RECORD ( OWNER_CARD_NO ) values ( "2088123456781234" ) rowkey is consumerecordkey ( "111$2000-01-01_01:01:01$TRADE$222" ) 
+select * from  T_CONSUME_RECORD  rowkey is consumerecordkey ( "111$2000-01-01_01:01:01$TRADE$222" )
+delete  * from  T_CONSUME_RECORD  rowkey is consumerecordkey ( "111$2000-01-01_01:01:01$TRADE$222" )
