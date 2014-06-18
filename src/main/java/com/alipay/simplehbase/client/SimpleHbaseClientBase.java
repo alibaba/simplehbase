@@ -101,15 +101,32 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * Construct Scan.
      * */
     protected Scan constructScan(RowKey startRowKey, RowKey endRowKey,
-            @Nullable Filter filter) {
+            @Nullable Filter filter, @Nullable QueryExtInfo queryExtInfo) {
         Util.checkRowKey(startRowKey);
         Util.checkRowKey(endRowKey);
 
         Scan scan = new Scan();
         scan.setStartRow(startRowKey.toBytes());
         scan.setStopRow(endRowKey.toBytes());
-        scan.setCaching(getScanCaching());
+
+        int cachingSize = getScanCaching();
+
+        if (simpleHbaseRuntimeSetting.isIntelligentScanSize()) {
+            if (queryExtInfo != null && queryExtInfo.isLimitSet()) {
+                long limitScanSize = queryExtInfo.getStartIndex()
+                        + queryExtInfo.getLength();
+                if (limitScanSize > Integer.MAX_VALUE) {
+                    cachingSize = Integer.MAX_VALUE;
+                } else {
+                    cachingSize = (int) limitScanSize;
+                }
+            }
+        }
+
+        scan.setCaching(cachingSize);
+
         scan.setFilter(filter);
+
         return postConstructScan(scan);
     }
 

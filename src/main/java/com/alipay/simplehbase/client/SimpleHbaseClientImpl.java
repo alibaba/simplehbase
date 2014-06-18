@@ -220,7 +220,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkRowKey(endRowKey);
         Util.checkNull(type);
 
-        Scan scan = constructScan(startRowKey, endRowKey, filter);
+        Scan scan = constructScan(startRowKey, endRowKey, filter, queryExtInfo);
 
         //only query 1 version.
         if (queryExtInfo != null) {
@@ -360,7 +360,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkRowKey(endRowKey);
         Util.checkNull(type);
 
-        Scan scan = constructScan(startRowKey, endRowKey, filter);
+        Scan scan = constructScan(startRowKey, endRowKey, filter, queryExtInfo);
 
         long startIndex = 0L;
         long length = Long.MAX_VALUE;
@@ -685,7 +685,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkRowKey(startRowKey);
         Util.checkRowKey(endRowKey);
 
-        Scan scan = constructScan(startRowKey, endRowKey, filter);
+        Scan scan = constructScan(startRowKey, endRowKey, filter, null);
 
         HBaseColumnSchema hbaseColumnSchema = columnSchema();
         scan.addColumn(hbaseColumnSchema.getFamilyBytes(),
@@ -797,7 +797,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
                 simpleHbaseRuntimeSetting);
 
         //scan
-        Scan scan = constructScan(startRowKey, endRowKey, filter);
+        Scan scan = constructScan(startRowKey, endRowKey, filter, queryExtInfo);
 
         long startIndex = 0L;
         long length = Long.MAX_VALUE;
@@ -1064,7 +1064,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         while (true) {
 
             RowKey nextStartRowkey = startRowKey;
-            Scan temScan = constructScan(nextStartRowkey, endRowKey, filter);
+            Scan temScan = constructScan(nextStartRowkey, endRowKey, filter,
+                    null);
 
             List<Delete> deletes = new LinkedList<Delete>();
 

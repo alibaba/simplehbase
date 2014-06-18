@@ -40,6 +40,12 @@ public class SimpleHbaseRuntimeSetting {
      * delete batch size.
      * */
     private int                            deleteBatchSize                = 50;
+
+    /**
+     * determine whether scan can use query's limit to compute the cache size.
+     * */
+    private boolean                        intelligentScanSize;
+
     /**
      * rowkey text func list.
      * */
@@ -182,4 +188,11 @@ public class SimpleHbaseRuntimeSetting {
         return literalInterpreterList;
     }
 
+    public boolean isIntelligentScanSize() {
+        return intelligentScanSize;
+    }
+
+    public void setIntelligentScanSize(boolean intelligentScanSize) {
+        this.intelligentScanSize = intelligentScanSize;
+    }
 }
