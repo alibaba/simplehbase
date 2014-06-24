@@ -64,6 +64,9 @@ public class HBaseDataSource {
     @Nullable
     private HTableInterfaceFactory tableFactory;
 
+    /**
+     * Only used with SimpleHbaseHTablePool.
+     * */
     @ConfigAttr
     private long                   flushInterval    = -1L;
 
@@ -81,7 +84,13 @@ public class HBaseDataSource {
     /** PoolType */
     private PoolType               poolType         = PoolType.HTablePool;
 
-    /** HTablePoolService */
+    /**
+     * HTablePoolService
+     * 
+     * <pre>
+     * user can provide customized HTablePoolService.
+     * </pre>
+     * */
     private HTablePoolService      htablePoolService;
 
     /**
