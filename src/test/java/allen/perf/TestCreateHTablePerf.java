@@ -51,6 +51,14 @@ public class TestCreateHTablePerf {
         StringBuilder sb = new StringBuilder();
         sb.append("\ncreateHTablePerf size=" + getTableMax);
 
+        getHTableFromNewHTable(getTableMax, sb);
+        getHTableFromPool(getTableMax, poolsize, sb);
+
+        log.info(sb);
+    }
+
+    private void getHTableFromNewHTable(int getTableMax, StringBuilder sb)
+            throws Exception {
         List<HTableInterface> tables = new ArrayList<HTableInterface>();
         for (int i = 0; i < getTableMax; i++) {
             long start = System.currentTimeMillis();
@@ -61,8 +69,12 @@ public class TestCreateHTablePerf {
                     + createHTableConsumeTime);
         }
         cleanTableAndCloseConnections(tables);
+    }
 
-        HTablePool htablePool = new HTablePool(configuration, poolsize);
+    private void getHTableFromPool(int getTableMax, int poolSize,
+            StringBuilder sb) throws Exception {
+        List<HTableInterface> tables = new ArrayList<HTableInterface>();
+        HTablePool htablePool = new HTablePool(configuration, poolSize);
         for (int i = 0; i < getTableMax; i++) {
             long start = System.currentTimeMillis();
             tables.add(htablePool.getTable(Config.TableName));
@@ -73,8 +85,6 @@ public class TestCreateHTablePerf {
         }
         cleanTableAndCloseConnections(tables);
         htablePool.close();
-
-        log.info(sb);
     }
 
     private void cleanTableAndCloseConnections(List<HTableInterface> tables)
