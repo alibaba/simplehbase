@@ -19,7 +19,7 @@ import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
  * */
 public class Config {
 
-    final public static String                     TableName          = "MyRecordV05";
+    final public static String                     TableName          = "MyRecordV_Allen";
     final public static String                     ColumnFamilyName   = "MyRecordFamily";
 
     public static String                           TestHqlNodeXmlFile = "test\\hql\\testHqlNode.xml";
@@ -51,6 +51,8 @@ public class Config {
         // create new table.
         HTableDescriptor tableDescriptor = new HTableDescriptor(TableName);
         tableDescriptor.addFamily(new HColumnDescriptor(ColumnFamilyName));
+        tableDescriptor
+                .addCoprocessor("org.apache.hadoop.hbase.coprocessor.AggregateImplementation");
         simpleHbaseAdminClient.createTable(tableDescriptor);
 
     }
