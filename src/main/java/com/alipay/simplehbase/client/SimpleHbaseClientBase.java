@@ -77,7 +77,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * Find HBaseColumnSchema by qualifier.
+     * Find one HBaseColumnSchema by random.
      */
     protected HBaseColumnSchema columnSchema() {
         return hbaseTableConfig.getHbaseTableSchema().findOneColumnSchema();
