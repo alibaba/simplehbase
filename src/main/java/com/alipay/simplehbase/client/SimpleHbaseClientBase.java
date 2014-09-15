@@ -205,15 +205,18 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             return new ArrayList<SimpleHbaseCellResult>();
         }
 
+        String familyStr = null;
+        String qualifierStr = null;
+
         try {
             List<SimpleHbaseCellResult> resultList = new ArrayList<SimpleHbaseCellResult>();
 
             for (KeyValue keyValue : keyValues) {
 
                 byte[] familyBytes = keyValue.getFamily();
-                String familyStr = Bytes.toString(familyBytes);
+                familyStr = Bytes.toString(familyBytes);
                 byte[] qualifierBytes = keyValue.getQualifier();
-                String qualifierStr = Bytes.toString(qualifierBytes);
+                qualifierStr = Bytes.toString(qualifierBytes);
                 byte[] hbaseValue = keyValue.getValue();
                 HBaseColumnSchema hbaseColumnSchema = columnSchema(familyStr,
                         qualifierStr);
@@ -246,8 +249,10 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             return resultList;
 
         } catch (Exception e) {
-            throw new SimpleHBaseException("convert result exception. result="
-                    + hbaseResult, e);
+            throw new SimpleHBaseException(
+                    "convert result exception. familyStr=" + familyStr
+                            + " qualifierStr=" + qualifierStr + " result="
+                            + hbaseResult, e);
         }
 
     }
@@ -268,6 +273,9 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             return null;
         }
 
+        String familyStr = null;
+        String qualifierStr = null;
+
         try {
 
             TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
@@ -275,12 +283,13 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
             for (KeyValue keyValue : keyValues) {
                 byte[] familyBytes = keyValue.getFamily();
+                familyStr = Bytes.toString(familyBytes);
                 byte[] qualifierBytes = keyValue.getQualifier();
+                qualifierStr = Bytes.toString(qualifierBytes);
                 byte[] hbaseValue = keyValue.getValue();
 
-                ColumnInfo columnInfo = typeInfo.findColumnInfo(
-                        Bytes.toString(familyBytes),
-                        Bytes.toString(qualifierBytes));
+                ColumnInfo columnInfo = typeInfo.findColumnInfo(familyStr,
+                        qualifierStr);
 
                 HBaseColumnSchema hbaseColumnSchema = columnSchema(
                         columnInfo.family, columnInfo.qualifier);
@@ -306,8 +315,10 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             return pojoWithKey;
 
         } catch (Exception e) {
-            throw new SimpleHBaseException("convert result exception. result="
-                    + hbaseResult + " type=" + type, e);
+            throw new SimpleHBaseException(
+                    "convert result exception. familyStr=" + familyStr
+                            + " qualifierStr=" + qualifierStr + " result="
+                            + hbaseResult + " type=" + type, e);
         }
     }
 
@@ -332,10 +343,15 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
         TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
 
+        String familyStr = null;
+        String qualifierStr = null;
+
         try {
             for (KeyValue keyValue : keyValues) {
                 byte[] familyBytes = keyValue.getFamily();
+                familyStr = Bytes.toString(familyBytes);
                 byte[] qualifierBytes = keyValue.getQualifier();
+                qualifierStr = Bytes.toString(qualifierBytes);
                 byte[] hbaseValue = keyValue.getValue();
                 long ts = keyValue.getTimestamp();
 
@@ -343,9 +359,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                     temMap.put(ts, type.newInstance());
                 }
 
-                ColumnInfo columnInfo = typeInfo.findColumnInfo(
-                        Bytes.toString(familyBytes),
-                        Bytes.toString(qualifierBytes));
+                ColumnInfo columnInfo = typeInfo.findColumnInfo(familyStr,
+                        qualifierStr);
 
                 HBaseColumnSchema hbaseColumnSchema = columnSchema(
                         columnInfo.family, columnInfo.qualifier);
@@ -375,8 +390,10 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             }
             return result;
         } catch (Exception e) {
-            throw new SimpleHBaseException("convert result exception. result="
-                    + hbaseResult + " type=" + type, e);
+            throw new SimpleHBaseException(
+                    "convert result exception. familyStr=" + familyStr
+                            + " qualifierStr=" + qualifierStr + " result="
+                            + hbaseResult + " type=" + type, e);
         }
     }
 
