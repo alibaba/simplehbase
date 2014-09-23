@@ -200,6 +200,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * */
     protected List<SimpleHbaseCellResult> convertToSimpleHbaseCellResultList(
             Result hbaseResult) {
+
         KeyValue[] keyValues = hbaseResult.raw();
         if (keyValues == null || keyValues.length == 0) {
             return new ArrayList<SimpleHbaseCellResult>();
@@ -207,6 +208,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
         String familyStr = null;
         String qualifierStr = null;
+        RowKeyHandler rowKeyHandler = null;
 
         try {
             List<SimpleHbaseCellResult> resultList = new ArrayList<SimpleHbaseCellResult>();
@@ -237,9 +239,13 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                 resultList.add(cellResult);
             }
 
+            //reset to empty.
+            familyStr = "";
+            qualifierStr = "";
+
             byte[] row = keyValues[0].getRow();
-            RowKeyHandler rowKeyHandler = hbaseTableConfig
-                    .getHbaseTableSchema().getRowKeyHandler();
+            rowKeyHandler = hbaseTableConfig.getHbaseTableSchema()
+                    .getRowKeyHandler();
             RowKey rowKey = rowKeyHandler.convert(row);
 
             for (SimpleHbaseCellResult cell : resultList) {
@@ -251,7 +257,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         } catch (Exception e) {
             throw new SimpleHBaseException(
                     "convert result exception. familyStr=" + familyStr
-                            + " qualifierStr=" + qualifierStr + " result="
+                            + " qualifierStr=" + qualifierStr
+                            + " rowKeyHandler=" + rowKeyHandler + " result="
                             + hbaseResult, e);
         }
 
@@ -275,6 +282,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
         String familyStr = null;
         String qualifierStr = null;
+        RowKeyHandler rowKeyHandler = null;
 
         try {
 
@@ -302,10 +310,13 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                     columnInfo.field.set(result, value);
                 }
             }
+            //reset to empty.
+            familyStr = "";
+            qualifierStr = "";
 
             byte[] row = keyValues[0].getRow();
-            RowKeyHandler rowKeyHandler = hbaseTableConfig
-                    .getHbaseTableSchema().getRowKeyHandler();
+            rowKeyHandler = hbaseTableConfig.getHbaseTableSchema()
+                    .getRowKeyHandler();
             RowKey rowKey = rowKeyHandler.convert(row);
 
             SimpleHbaseDOWithKeyResult<T> pojoWithKey = new SimpleHbaseDOWithKeyResult<T>();
@@ -317,7 +328,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         } catch (Exception e) {
             throw new SimpleHBaseException(
                     "convert result exception. familyStr=" + familyStr
-                            + " qualifierStr=" + qualifierStr + " result="
+                            + " qualifierStr=" + qualifierStr
+                            + " rowKeyHandler=" + rowKeyHandler + " result="
                             + hbaseResult + " type=" + type, e);
         }
     }
@@ -345,7 +357,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
         String familyStr = null;
         String qualifierStr = null;
-
+        RowKeyHandler rowKeyHandler = null;
         try {
             for (KeyValue keyValue : keyValues) {
                 byte[] familyBytes = keyValue.getFamily();
@@ -373,10 +385,13 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                     columnInfo.field.set(temMap.get(ts), value);
                 }
             }
+            //reset to empty.
+            familyStr = "";
+            qualifierStr = "";
 
             byte[] row = keyValues[0].getRow();
-            RowKeyHandler rowKeyHandler = hbaseTableConfig
-                    .getHbaseTableSchema().getRowKeyHandler();
+            rowKeyHandler = hbaseTableConfig.getHbaseTableSchema()
+                    .getRowKeyHandler();
             RowKey rowKey = rowKeyHandler.convert(row);
 
             List<SimpleHbaseDOResult<T>> result = new ArrayList<SimpleHbaseDOResult<T>>();
@@ -392,7 +407,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         } catch (Exception e) {
             throw new SimpleHBaseException(
                     "convert result exception. familyStr=" + familyStr
-                            + " qualifierStr=" + qualifierStr + " result="
+                            + " qualifierStr=" + qualifierStr
+                            + " rowKeyHandler=" + rowKeyHandler + " result="
                             + hbaseResult + " type=" + type, e);
         }
     }
