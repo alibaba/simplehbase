@@ -78,7 +78,8 @@ public class HBaseTableConfigParser {
      * */
     public static List<HBaseQuery> parseHBaseQuery(String filePath) {
         Util.checkEmptyString(filePath);
-        Node statementsNode = XmlUtil.findTopLevelNodeInFile(filePath, "statements");
+        Node statementsNode = XmlUtil.findTopLevelNodeInFile(filePath,
+                "statements");
         return parseHBaseQueryList(statementsNode);
     }
 
@@ -125,4 +126,5 @@ public class HBaseTableConfigParser {
 
         return hbaseQueries;
     }
+
 }

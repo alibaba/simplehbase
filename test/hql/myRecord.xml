@@ -1,6 +1,7 @@
 <SimpleHbase>
 
-	<HBaseTableSchema tableName="MyRecordV_Allen" defaultFamily="MyRecordFamily">
+	<HBaseTableSchema tableName="MyRecordV_Allen"
+		defaultFamily="MyRecordFamily">
 		<HBaseColumnSchema qualifier="id" typeName="int" />
 		<HBaseColumnSchema qualifier="name" typeName="string" />
 		<HBaseColumnSchema qualifier="age" typeName="long" />
@@ -8,7 +9,7 @@
 		<HBaseColumnSchema qualifier="gender"
 			typeName="com.alipay.simplehbase.myrecord.Gender" />
 		<HBaseColumnSchema qualifier="version" typeName="long" />
-		
+
 		<HBaseColumnSchema qualifier="fatid" typeName="int" />
 		<HBaseColumnSchema qualifier="fatname" typeName="string" />
 		<HBaseColumnSchema qualifier="fatage" typeName="long" />
@@ -16,9 +17,17 @@
 		<HBaseColumnSchema qualifier="fatgender"
 			typeName="com.alipay.simplehbase.myrecord.Gender" />
 		<HBaseColumnSchema qualifier="fatversion" typeName="long" />
-		
+
 	</HBaseTableSchema>
 
+	<MappingType className="com.alipay.simplehbase.myrecord.MyRecordV3" defaultFamily="MyRecordFamily">
+		<field name="id" qualifier="id" family="MyRecordFamily"
+			isVersioned="false" />
+		<field name="name" qualifier="name" />
+		<field name="age" />
+		<field name="date" />
+		<field name="gender" />
+	</MappingType>
 
 </SimpleHbase>   
 

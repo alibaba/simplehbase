@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * SimpleHbase POJO-Hbase annotation.
  * 
  * <pre>
- * Applied on POJO type.
+ * Can be applied on POJO type.
  * The family of @HBaseColumn(if not empty) will override @HBaseTable's family.
  * </pre>
  * 

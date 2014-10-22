@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -58,8 +60,21 @@ public class XmlUtil {
      * */
     @Nullable
     public static Node findTopLevelNode(InputStream inputStream, String nodeName) {
-        Util.checkNull(inputStream);
-        Util.checkEmptyString(nodeName);
+        List<Node> nodeList = findTopLevelNodes(inputStream, nodeName);
+        if (nodeList.size() == 1) {
+            return nodeList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Find top level nodes.
+     * */
+    public static List<Node> findTopLevelNodes(InputStream inputStream,
+            String nodeName) {
+
+        List<Node> nodeList = new ArrayList<Node>();
 
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -72,7 +87,7 @@ public class XmlUtil {
             NodeList childNodes = rootNode.getChildNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {
                 if (childNodes.item(i).getNodeName().equals(nodeName)) {
-                    return childNodes.item(i);
+                    nodeList.add(childNodes.item(i));
                 }
             }
         } catch (Exception e) {
@@ -80,7 +95,7 @@ public class XmlUtil {
             throw new SimpleHBaseException("parse error.", e);
         }
 
-        return null;
+        return nodeList;
     }
 
     /**

@@ -1,12 +1,22 @@
 package com.alipay.simplehbase.client;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.alipay.simplehbase.config.HBaseColumnSchema;
+import com.alipay.simplehbase.config.HBaseTableSchema;
 import com.alipay.simplehbase.exception.SimpleHBaseException;
+import com.alipay.simplehbase.util.ClassUtil;
+import com.alipay.simplehbase.util.StringUtil;
 import com.alipay.simplehbase.util.Util;
+import com.alipay.simplehbase.util.XmlUtil;
 
 /**
  * POJO type and Hbase table mapping info.
@@ -29,8 +39,6 @@ public class TypeInfo {
 
         Field[] fields = type.getDeclaredFields();
 
-        int versionFieldCounter = 0;
-
         for (Field field : fields) {
 
             field.setAccessible(true);
@@ -42,26 +50,88 @@ public class TypeInfo {
 
             typeInfo.columnInfos.add(columnInfo);
 
-            if (field.isAnnotationPresent(HBaseVersion.class)) {
-                typeInfo.versionedColumnInfo = columnInfo;
-                versionFieldCounter++;
+        }
+
+        typeInfo.init();
+
+        return typeInfo;
+    }
+
+    /**
+     * Parse TypeInfo from POJO's type and HBaseTableSchema.
+     * */
+    public static TypeInfo parseInAir(Class<?> type,
+            HBaseTableSchema hbaseTableSchema) {
+        Util.checkNull(type);
+        Util.checkNull(hbaseTableSchema);
+
+        TypeInfo typeInfo = new TypeInfo();
+        typeInfo.type = type;
+        Field[] fields = type.getDeclaredFields();
+
+        for (Field field : fields) {
+
+            field.setAccessible(true);
+
+            //don't handle static field.
+            if (Modifier.isStatic(field.getModifiers())) {
+                continue;
             }
 
-            if (!typeInfo.columnInfosMap.containsKey(columnInfo.qualifier)) {
-                typeInfo.columnInfosMap.put(columnInfo.qualifier,
-                        new HashMap<String, ColumnInfo>());
+            //use field name as qualifier.
+            String qualifier = field.getName();
+            HBaseColumnSchema hbaseColumnSchema = hbaseTableSchema
+                    .findColumnSchema(qualifier);
+
+            ColumnInfo columnInfo = ColumnInfo.parseInAir(type, field,
+                    hbaseColumnSchema.getFamily());
+
+            if (columnInfo == null) {
+                continue;
             }
-            typeInfo.columnInfosMap.get(columnInfo.qualifier).put(
-                    columnInfo.family, columnInfo);
+
+            typeInfo.columnInfos.add(columnInfo);
+
         }
 
-        if (versionFieldCounter > 1) {
-            throw new SimpleHBaseException("more than one versioned fields.");
+        typeInfo.init();
+
+        return typeInfo;
+    }
+
+    /**
+     * Parse TypeInfo from Node.
+     * */
+    public static TypeInfo parseNode(Node node,
+            HBaseTableSchema hbaseTableSchema) {
+        Util.checkNull(node);
+        Util.checkNull(hbaseTableSchema);
+
+        TypeInfo typeInfo = new TypeInfo();
+
+        String typeName = XmlUtil.getAttr(node, "className");
+        if (StringUtil.isEmptyString(typeName)) {
+            throw new SimpleHBaseException("No class name attr.");
         }
 
-        if (typeInfo.columnInfos.isEmpty()) {
-            throw new SimpleHBaseException("columnInfos is empty.");
+        Class<?> type = ClassUtil.forName(typeName);
+        typeInfo.type = type;
+
+        String defaultFamily = XmlUtil.getAttr(node, "defaultFamily");
+
+        NodeList nodeList = node.getChildNodes();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node fieldNode = nodeList.item(i);
+            ColumnInfo columnInfo = ColumnInfo.parseNode(type, fieldNode,
+                    hbaseTableSchema, defaultFamily);
+            if (columnInfo == null) {
+                continue;
+            }
+            typeInfo.columnInfos.add(columnInfo);
         }
+
+        typeInfo.init();
 
         return typeInfo;
     }
@@ -79,6 +149,38 @@ public class TypeInfo {
     private Map<String, Map<String, ColumnInfo>> columnInfosMap = new HashMap<String, Map<String, ColumnInfo>>();
 
     private TypeInfo() {
+    }
+
+    /**
+     * Init this object.
+     * */
+    public void init() {
+
+        Util.checkNull(type);
+        Util.checkNull(columnInfos);
+        Util.check(!columnInfos.isEmpty());
+
+        int versionFieldCounter = 0;
+
+        for (ColumnInfo columnInfo : columnInfos) {
+
+            if (columnInfo.isVersioned) {
+                versionFieldCounter++;
+                versionedColumnInfo = columnInfo;
+            }
+
+            if (!columnInfosMap.containsKey(columnInfo.qualifier)) {
+                columnInfosMap.put(columnInfo.qualifier,
+                        new HashMap<String, ColumnInfo>());
+            }
+            columnInfosMap.get(columnInfo.qualifier).put(columnInfo.family,
+                    columnInfo);
+        }
+
+        if (versionFieldCounter > 1) {
+            throw new SimpleHBaseException("more than one versioned fields.");
+        }
+
     }
 
     /**

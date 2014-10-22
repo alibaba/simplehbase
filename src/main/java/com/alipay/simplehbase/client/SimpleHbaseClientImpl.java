@@ -551,8 +551,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             Util.checkPutRequest(putRequest);
         }
 
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(putRequestList.get(0)
-                .getT().getClass());
+        TypeInfo typeInfo = findTypeInfo(putRequestList.get(0).getT()
+                .getClass());
 
         List<Put> puts = new ArrayList<Put>();
 
@@ -598,7 +598,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkNull(newT);
         Util.checkIdentityType(oldT, newT);
 
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(newT.getClass());
+        TypeInfo typeInfo = findTypeInfo(newT.getClass());
         checkVersioned(typeInfo);
 
         ColumnInfo versionedColumnInfo = typeInfo.getVersionedColumnInfo();
@@ -621,7 +621,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkNull(t);
         //not check oldVersion, oldVersion can be null.
 
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(t.getClass());
+        TypeInfo typeInfo = findTypeInfo(t.getClass());
         checkVersioned(typeInfo);
 
         Put put = new Put(rowKey.toBytes());
@@ -948,7 +948,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             Util.checkDeleteRequest(deleteRequest);
         }
 
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+        TypeInfo typeInfo = findTypeInfo(type);
         List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
 
         List<Delete> deletes = new LinkedList<Delete>();
@@ -995,7 +995,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
         Util.checkRowKey(endRowKey);
         Util.checkNull(type);
 
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+        TypeInfo typeInfo = findTypeInfo(type);
         List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
 
         delete_internal_with_scan_first(startRowKey, endRowKey, null,

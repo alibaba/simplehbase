@@ -1,4 +1,3 @@
-hbase.zookeeper.quorum=hbdev-1.alipay.net,hbdev-2.alipay.net,hbdev-3.alipay.net,hbdev-4.alipay.net,hbdev-5.alipay.net
+hbase.zookeeper.quorum=10.209.192.33,10.209.192.34,10.209.192.35,10.209.192.36,10.209.192.37
 hbase.zookeeper.property.clientPort=2181
 zookeeper.znode.parent=/hbase-94
-

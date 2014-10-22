@@ -162,7 +162,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
      * */
     protected <T> void applyRequestFamilyAndQualifier(Class<? extends T> type,
             Scan scan) {
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+        TypeInfo typeInfo = findTypeInfo(type);
         List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
         for (ColumnInfo columnInfo : columnInfoList) {
             scan.addColumn(columnInfo.familyBytes, columnInfo.qualifierBytes);
@@ -171,7 +171,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
     protected <T> void applyRequestFamilyAndQualifier(Class<? extends T> type,
             Get get) {
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+        TypeInfo typeInfo = findTypeInfo(type);
         List<ColumnInfo> columnInfoList = typeInfo.getColumnInfos();
         for (ColumnInfo columnInfo : columnInfoList) {
             get.addColumn(columnInfo.familyBytes, columnInfo.qualifierBytes);
@@ -286,7 +286,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
 
         try {
 
-            TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+            TypeInfo typeInfo = findTypeInfo(type);
             T result = type.newInstance();
 
             for (KeyValue keyValue : keyValues) {
@@ -353,7 +353,7 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         TreeMap<Long, T> temMap = new TreeMap<Long, T>(
                 Collections.reverseOrder());
 
-        TypeInfo typeInfo = TypeInfoHolder.findTypeInfo(type);
+        TypeInfo typeInfo = findTypeInfo(type);
 
         String familyStr = null;
         String qualifierStr = null;
@@ -460,6 +460,13 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     protected void checkTableName(String tableName) {
         Util.checkEquals(tableName, hbaseTableConfig.getHbaseTableSchema()
                 .getTableName());
+    }
+
+    /**
+     * Find type info.
+     * */
+    protected TypeInfo findTypeInfo(Class<?> type) {
+        return getHbaseTableConfig().findTypeInfo(type);
     }
 
     @Override
