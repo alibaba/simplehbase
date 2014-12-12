@@ -13,9 +13,11 @@ import org.apache.hadoop.hbase.client.HConnectionManager;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.HTablePool;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import com.alipay.simplehbase.config.Config;
+
+import allen.test.Config;
+
 import com.alipay.simplehbase.util.ConfigUtil;
 
 /**
@@ -23,12 +25,11 @@ import com.alipay.simplehbase.util.ConfigUtil;
  * */
 public class TestCreateHTablePerf {
 
-    private static Log           log = LogFactory
-                                             .getLog(TestCreateHTablePerf.class);
-    private static Configuration configuration;
+    private static Log    log = LogFactory.getLog(TestCreateHTablePerf.class);
+    private Configuration configuration;
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
+    @Before
+    public void before() throws Exception {
         Map<String, String> config = ConfigUtil
                 .loadConfigFile(new FileInputStream(Config.ZkConfigFile));
 
@@ -42,7 +43,7 @@ public class TestCreateHTablePerf {
     public void createHTablePerf() throws Exception {
 
         int getTableMax = 1;
-        if (PerfConfig.isPerfTestOn) {
+        if (Config.isPerfTestOn) {
             getTableMax = 20;
         }
 

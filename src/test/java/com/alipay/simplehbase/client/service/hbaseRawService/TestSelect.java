@@ -6,12 +6,13 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import allen.studyhbase.TimeDepend;
+import allen.test.Config;
+import allen.test.CreateTestTable;
+
 import com.alipay.simplehbase.client.SimpleHbaseCellResult;
 import com.alipay.simplehbase.client.rowkey.BytesRowKey;
 import com.alipay.simplehbase.client.rowkey.IntRowKey;
-import com.alipay.simplehbase.config.Config;
-import com.alipay.simplehbase.config.CreateTestTable;
-import com.alipay.simplehbase.config.TimeDepend;
 
 import com.alipay.simplehbase.util.DateUtil;
 

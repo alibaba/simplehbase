@@ -1,8 +1,10 @@
-package com.alipay.simplehbase.config;
+package allen.test;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.Coprocessor;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.client.HTableInterface;
@@ -13,19 +15,25 @@ import com.alipay.simplehbase.client.SimpleHbaseAdminClientImpl;
 import com.alipay.simplehbase.client.SimpleHbaseClient;
 import com.alipay.simplehbase.client.SimpleHbaseClientFactory;
 import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
+import com.alipay.simplehbase.config.HBaseDataSource;
+import com.alipay.simplehbase.config.HBaseTableConfig;
 
 /**
  * @author xinzhi
  * */
 public class Config {
 
-    final public static String                     TableName          = "MyRecordV_Allen3";
-    final public static String                     ColumnFamilyName   = "MyRecordFamily";
+    final public static String                     TableName              = "MyRecordV_Allen3";
+    final public static String                     ColumnFamilyName       = "MyRecordFamily";
+    final public static String                     SimpleHbaseCpPath      = "hdfs://hbdev-1.alipay.net:9000/corp/jar/simplehbase-0.9.2.jar";
+    final public static String                     SimpleHbaseCpClassName = "allen.hbase.cp.ext2.CommonEndpointImpl2";
 
-    public static String                           TestHqlNodeXmlFile = "test\\hql\\testHqlNode.xml";
-    public static String                           HbaseSiteFile      = "test\\hbase_site";
-    public static String                           ZkConfigFile       = "test\\zk_conf";
-    public static String                           MyRecordXmlFile    = "test\\hql\\myRecord.xml";
+    final public static String                     TestHqlNodeXmlFile     = "test\\hql\\testHqlNode.xml";
+    final public static String                     HbaseSiteFile          = "test\\hbase_site";
+    final public static String                     ZkConfigFile           = "test\\zk_conf";
+    final public static String                     MyRecordXmlFile        = "test\\hql\\myRecord.xml";
+
+    final public static boolean                    isPerfTestOn           = false;
 
     private static volatile SimpleHbaseClient      simpleHbaseClient;
 
@@ -53,6 +61,10 @@ public class Config {
         tableDescriptor.addFamily(new HColumnDescriptor(ColumnFamilyName));
         tableDescriptor
                 .addCoprocessor("org.apache.hadoop.hbase.coprocessor.AggregateImplementation");
+
+        Path jarFilePath = new Path(SimpleHbaseCpPath);
+        tableDescriptor.addCoprocessor(SimpleHbaseCpClassName, jarFilePath,
+                Coprocessor.PRIORITY_USER, null);
         simpleHbaseAdminClient.createTable(tableDescriptor);
 
     }
@@ -87,7 +99,8 @@ public class Config {
         simpleHbaseClient = SimpleHbaseClientFactory
                 .getSimpleHbaseClient(tClient);
 
-        simpleHbaseAdminClient = new SimpleHbaseAdminClientImpl();
+        simpleHbaseAdminClient = SimpleHbaseClientFactory.getWrapper(
+                SimpleHbaseAdminClient.class, new SimpleHbaseAdminClientImpl());
         simpleHbaseAdminClient.setHbaseDataSource(simpleHbaseClient
                 .getHbaseDataSource());
     }

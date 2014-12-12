@@ -11,6 +11,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
 import com.alipay.simplehbase.util.Util;
 import allen.studyhbase.HbaseTestBase;
+import allen.test.Config;
 
 /**
  * @author xinzhi
@@ -22,18 +23,18 @@ public class TestGetAndScanPerf extends HbaseTestBase {
     @Test
     public void testGetAndScanPerf() throws Exception {
         Put put = new Put(rowKey_ForTest);
-        put.add(ColumnFamilyName, QName1, Bytes.toBytes("2"));
+        put.add(ColumnFamilyNameBytes, QName1, Bytes.toBytes("2"));
         table.put(put);
 
         int loopSize = 1;
-        if (PerfConfig.isPerfTestOn) {
+        if (Config.isPerfTestOn) {
             loopSize = 100;
         }
 
         long start = System.currentTimeMillis();
         for (int i = 0; i < loopSize; i++) {
             Get get = new Get(rowKey_ForTest);
-            get.addColumn(ColumnFamilyName, QName1);
+            get.addColumn(ColumnFamilyNameBytes, QName1);
             table.get(get);
         }
         long end = System.currentTimeMillis();
@@ -43,7 +44,7 @@ public class TestGetAndScanPerf extends HbaseTestBase {
         for (int i = 0; i < loopSize; i++) {
             Scan scan = new Scan(rowKey_ForTest, rowKey_ForTest);
             scan.setCaching(20);
-            scan.addColumn(ColumnFamilyName, QName1);
+            scan.addColumn(ColumnFamilyNameBytes, QName1);
             ResultScanner resultScanner = table.getScanner(scan);
             while (resultScanner.next() != null) {
             }

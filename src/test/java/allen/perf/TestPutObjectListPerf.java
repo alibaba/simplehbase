@@ -7,6 +7,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
+import allen.test.Config;
+
 import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
@@ -22,7 +24,7 @@ public class TestPutObjectListPerf extends MyRecordTestBase {
     public void putObjectListPerf() {
 
         int[] testSizes = new int[] { 1, };
-        if (PerfConfig.isPerfTestOn) {
+        if (Config.isPerfTestOn) {
             testSizes = new int[] { 1, 10, 100, 1000, 2000, 5000, 10000 };
         }
 

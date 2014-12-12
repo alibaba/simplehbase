@@ -235,6 +235,28 @@ public interface BasicService {
             QueryExtInfo queryExtInfo);
 
     /**
+     * Find POJO in batch mode.
+     * 
+     * @param rowKeyList rowKeyList.
+     * @param type type.
+     * 
+     * @return POJO list.
+     * */
+    public <T> List<T> findObjectBatch(List<RowKey> rowKeyList,
+            Class<? extends T> type);
+
+    /**
+     * Find POJO and key in batch mode.
+     * 
+     * @param rowKeyList rowKeyList.
+     * @param type type.
+     * 
+     * @return POJO and key list.
+     * */
+    public <T> List<SimpleHbaseDOWithKeyResult<T>> findObjectAndKeyBatch(
+            List<RowKey> rowKeyList, Class<? extends T> type);
+
+    /**
      * Put POJO.
      * 
      * @param rowKey rowKey.

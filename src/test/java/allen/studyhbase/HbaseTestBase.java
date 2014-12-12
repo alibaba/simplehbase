@@ -1,139 +1,47 @@
 package allen.studyhbase;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.hadoop.hbase.client.Delete;
-import org.apache.hadoop.hbase.client.HTableInterface;
+import org.apache.hadoop.conf.Configuration;
 
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.ResultScanner;
-import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.junit.After;
-import org.junit.Before;
 
-import com.alipay.simplehbase.config.Config;
-import com.alipay.simplehbase.util.Util;
+import allen.test.Config;
+import allen.test.CreateTestTable;
 
 /**
- * HbaseTestBase.
- * 
  * @author xinzhi.zhang
  * */
-public class HbaseTestBase {
+public class HbaseTestBase extends HbaseTest {
 
-    protected static Log      log                  = LogFactory
-                                                           .getLog(HbaseTestBase.class);
+    protected static Log log = LogFactory.getLog(HbaseTestBase.class);
 
-    protected static String   TableName            = Config.TableName;
+    static {
+        TableName = Config.TableName;
+        TableNameBytes = Bytes.toBytes(TableName);
+        ColumnFamilyName = Config.ColumnFamilyName;
+        ColumnFamilyNameBytes = Bytes.toBytes(ColumnFamilyName);
+    }
 
-    protected static byte[]   TableNameBytes       = Bytes.toBytes(TableName);
-    protected static byte[]   ColumnFamilyName     = Bytes.toBytes(Config.ColumnFamilyName);
-
-    protected static String   QNameStr1            = "q1";
-    protected static String   QNameStr2            = "q2";
-    protected static String   QNameStr3            = "q3";
-
-    protected static byte[]   QName1               = Bytes.toBytes(QNameStr1);
-    protected static byte[]   QName2               = Bytes.toBytes(QNameStr2);
-    protected static byte[]   QName3               = Bytes.toBytes(QNameStr3);
-
-    protected static byte[]   QName_NotExistColumn = Bytes.toBytes("NotExistColumn");
-
-    protected HTableInterface table;
-
-    @Before
-    public void before() throws Throwable {
+    @Override
+    protected void initHTable() {
         table = Config.getHTableInterface(TableName);
-        deleteData();
-        fillData();
     }
 
-    @After
-    public void after() throws Exception {
-        deleteData();
-        Util.close(table);
+    @Override
+    protected Configuration getConfiguration() {
+        return Config.getConfiguration();
     }
 
-    String           rowKeyStr1      = "allen_test_row1";
-    String           rowKeyStr2      = "allen_test_row2";
-    String           rowKeyStr3      = "allen_test_row3";
-    String           rowKeyStr4      = "allen_test_row4";
-
-    byte[]           rowKey1         = Bytes.toBytes(rowKeyStr1);
-    byte[]           rowKey2         = Bytes.toBytes(rowKeyStr2);
-    byte[]           rowKey3         = Bytes.toBytes(rowKeyStr3);
-    byte[]           rowKey4         = Bytes.toBytes(rowKeyStr4);
-
-    byte[]           rowKey_NotExist = Bytes.toBytes("NotExistRowKey");
-    protected byte[] rowKey_ForTest  = Bytes.toBytes("RowKey_ForTest");
-
-    /**
-     * Fill mockData.
-     * 
-     * <pre>
-     * rowKey1 Q1/100L Q2/100L
-     * rowKey2 Q1/20L  Q2/200L
-     * rowKey3 Q1/NULL Q2/NULL
-     * rowKey4                   Q3/"test"
-     * </pre>
-     * */
-    private void fillData() throws Throwable {
-
-        Put put = new Put(rowKey1);
-        put.add(ColumnFamilyName, QName1, Bytes.toBytes(100L));
-        put.add(ColumnFamilyName, QName2, Bytes.toBytes(100L));
-        table.put(put);
-
-        put = new Put(rowKey2);
-        put.add(ColumnFamilyName, QName1, Bytes.toBytes(20L));
-        put.add(ColumnFamilyName, QName2, Bytes.toBytes(200L));
-        table.put(put);
-
-        // set null case.
-        put = new Put(rowKey3);
-        put.add(ColumnFamilyName, QName1, null);
-        put.add(ColumnFamilyName, QName2, null);
-        table.put(put);
-
-        // empty case.
-        put = new Put(rowKey4);
-        put.add(ColumnFamilyName, QName3, Bytes.toBytes("test"));
-        table.put(put);
+    @Override
+    protected HBaseVersion hBaseVersion() {
+        return HBaseVersion._94adh3u5;
     }
 
-    /**
-     * Delte all the data in table.
-     * */
-    private void deleteData() throws Exception {
-        try {
-            // full scan.
-            Scan scan = new Scan();
-
-            ResultScanner resultScanner = table.getScanner(scan);
-
-            List<byte[]> rows = new LinkedList<byte[]>();
-            for (Result result = resultScanner.next(); result != null; result = resultScanner
-                    .next()) {
-                rows.add(result.getRow());
-            }
-
-            resultScanner.close();
-
-            for (byte[] row : rows) {
-                table.delete(new Delete(row));
-                log.info("delete " + Bytes.toString(row));
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    protected void recreateTable() {
+        CreateTestTable.main(null);
     }
 
 }

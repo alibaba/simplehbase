@@ -4,7 +4,7 @@
 		<HBaseColumnSchema qualifier="id" typeName="int" />
 		<HBaseColumnSchema qualifier="name" typeName="string" />
 		<HBaseColumnSchema qualifier="date" typeName="date" />
-		<HBaseColumnSchema qualifier="gender" typeName="allen.sample.Gender" />
+		<HBaseColumnSchema qualifier="gender" typeName="allen.demo.Gender" />
 		<HBaseColumnSchema qualifier="age" typeName="int" />
 	</HBaseTableSchema>
 	

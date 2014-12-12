@@ -6,11 +6,12 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import allen.test.Config;
+
 import com.alipay.simplehbase.client.HBaseColumn;
 import com.alipay.simplehbase.client.HBaseTable;
 import com.alipay.simplehbase.client.HBaseVersion;
 import com.alipay.simplehbase.client.RowKey;
-import com.alipay.simplehbase.config.Config;
 
 /**
  * @author xinzhi

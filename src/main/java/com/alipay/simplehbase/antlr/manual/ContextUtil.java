@@ -10,10 +10,10 @@ import org.apache.hadoop.hbase.filter.Filter;
 
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CidContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CidListContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.ConditioncContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Constant2Context;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CountclContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CountsumclContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.DeleteHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.DeletehqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertHqlClContext;
@@ -295,12 +295,9 @@ public class ContextUtil {
         Util.checkNull(hbaseTableConfig);
         Util.checkNull(runtimeSetting);
 
-        SelectclContext SelectclContext = ((SelectclContext) progContext);
-        ConditioncContext conditioncContext = SelectclContext.selectc()
-                .wherec().conditionc();
-
-        return parseFilter(conditioncContext, hbaseTableConfig, para,
-                runtimeSetting);
+        SelectclContext selectclContext = ((SelectclContext) progContext);
+        return parseFilter(selectclContext.selectc().wherec(),
+                hbaseTableConfig, para, runtimeSetting);
     }
 
     /**
@@ -316,15 +313,32 @@ public class ContextUtil {
         Util.checkNull(runtimeSetting);
 
         CountclContext countclContext = ((CountclContext) progContext);
-        ConditioncContext conditioncContext = countclContext.countc().wherec()
-                .conditionc();
 
-        return parseFilter(conditioncContext, hbaseTableConfig, para,
-                runtimeSetting);
+        return parseFilter(countclContext.countc().wherec(), hbaseTableConfig,
+                para, runtimeSetting);
     }
 
     /**
-     * Parse filter from WherecContext.
+     * Parse filter from countsum hql's progContext.
+     * */
+    @Nullable
+    public static Filter parseCountSumFilter(
+            @NotNullable ProgContext progContext,
+            @NotNullable HBaseTableConfig hbaseTableConfig,
+            @Nullable Map<String, Object> para,
+            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
+        Util.checkNull(progContext);
+        Util.checkNull(hbaseTableConfig);
+        Util.checkNull(runtimeSetting);
+
+        CountsumclContext countsumclContext = ((CountsumclContext) progContext);
+
+        return parseFilter(countsumclContext.countsumc().wherec(),
+                hbaseTableConfig, para, runtimeSetting);
+    }
+
+    /**
+     * Parse filter from ConditioncContext.
      * */
     @Nullable
     public static Filter parseFilter(@Nullable WherecContext wherecContext,
@@ -333,20 +347,15 @@ public class ContextUtil {
         Util.checkNull(hbaseTableConfig);
         Util.checkNull(runtimeSetting);
 
-        if (wherecContext == null) {
-            return null;
-        } else {
-            return parseFilter(wherecContext.conditionc(), hbaseTableConfig,
-                    null, runtimeSetting);
-        }
+        return parseFilter(wherecContext, hbaseTableConfig, null,
+                runtimeSetting);
     }
 
     /**
      * Parse filter from ConditioncContext.
      * */
     @Nullable
-    private static Filter parseFilter(
-            @Nullable ConditioncContext conditioncContext,
+    private static Filter parseFilter(@Nullable WherecContext wherecContext,
             @NotNullable HBaseTableConfig hbaseTableConfig,
             @Nullable Map<String, Object> para,
             @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
@@ -354,13 +363,14 @@ public class ContextUtil {
         Util.checkNull(hbaseTableConfig);
         Util.checkNull(runtimeSetting);
 
-        if (conditioncContext == null) {
+        if (wherecContext == null)
             return null;
-        }
+        if (wherecContext.conditionc() == null)
+            return null;
 
         FilterVisitor visitor = new FilterVisitor(hbaseTableConfig, para,
                 runtimeSetting);
-        return conditioncContext.accept(visitor);
+        return wherecContext.conditionc().accept(visitor);
     }
 
     /**

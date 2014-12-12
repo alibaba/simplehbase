@@ -1,8 +1,10 @@
 package com.alipay.simplehbase.config;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.hadoop.hbase.util.Bytes;
@@ -148,19 +150,6 @@ public class HBaseTableSchema {
     }
 
     /**
-     * Find one HBaseColumnSchema by random.
-     * */
-    public HBaseColumnSchema findOneColumnSchema() {
-        for (Map<String, HBaseColumnSchema> t : columnSchemas.values()) {
-            for (HBaseColumnSchema hbaseColumnSchema : t.values()) {
-                return hbaseColumnSchema;
-            }
-        }
-
-        throw new SimpleHBaseException("no HBaseColumnSchema found.");
-    }
-
-    /**
      * Find all HBaseColumnSchemas.
      * */
     public List<HBaseColumnSchema> findAllColumnSchemas() {
@@ -172,6 +161,18 @@ public class HBaseTableSchema {
             }
         }
         return result;
+    }
+
+    /**
+     * Find all families.
+     * */
+    public List<String> findAllFamilies() {
+        List<HBaseColumnSchema> list = findAllColumnSchemas();
+        Set<String> allFamilies = new HashSet<String>();
+        for (HBaseColumnSchema columnSchema : list) {
+            allFamilies.add(columnSchema.getFamily());
+        }
+        return new ArrayList<String>(allFamilies);
     }
 
     public String getDefaultFamily() {

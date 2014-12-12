@@ -6,12 +6,13 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import allen.studyhbase.TimeDepend;
+import allen.test.CreateTestTable;
+
 import com.alipay.simplehbase.client.DeleteRequest;
 import com.alipay.simplehbase.client.QueryExtInfo;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.SimpleHbaseDOResult;
-import com.alipay.simplehbase.config.CreateTestTable;
-import com.alipay.simplehbase.config.TimeDepend;
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;

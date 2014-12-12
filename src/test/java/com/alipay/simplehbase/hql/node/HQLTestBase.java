@@ -10,8 +10,9 @@ import org.junit.Before;
 
 import junit.framework.Assert;
 
+import allen.test.Config;
+
 import com.alipay.simplehbase.config.HBaseTableConfigParser;
-import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.hql.HBaseQuery;
 import com.alipay.simplehbase.hql.HQLNode;
 

@@ -77,13 +77,6 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     }
 
     /**
-     * Find one HBaseColumnSchema by random.
-     */
-    protected HBaseColumnSchema columnSchema() {
-        return hbaseTableConfig.getHbaseTableSchema().findOneColumnSchema();
-    }
-
-    /**
      * Get scan's caching size.
      * */
     protected int getScanCaching() {
@@ -169,6 +162,11 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         }
     }
 
+    //FIXME [simplehbase] the columns in select list and condition can vary. 
+    /**
+     * Apply family and qualifier to scan request, to prevent return more data
+     * than we need.
+     * */
     protected <T> void applyRequestFamilyAndQualifier(Class<? extends T> type,
             Get get) {
         TypeInfo typeInfo = findTypeInfo(type);
@@ -188,6 +186,19 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         for (HBaseColumnSchema hbaseColumnSchema : hbaseColumnSchemaList) {
             scan.addColumn(hbaseColumnSchema.getFamilyBytes(),
                     hbaseColumnSchema.getQualifierBytes());
+        }
+    }
+
+    //FIXME [simplehbase] the columns in select list and condition can vary. 
+    /**
+     * Apply family and qualifier to scan request, to prevent return more data
+     * than we need.
+     * */
+    protected void applyRequestFamilyAndQualifier(Scan scan) {
+        List<String> families = hbaseTableConfig.getHbaseTableSchema()
+                .findAllFamilies();
+        for (String s : families) {
+            scan.addFamily(Bytes.toBytes(s));
         }
     }
 

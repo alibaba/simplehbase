@@ -1,10 +1,19 @@
 package allen.studyhbase;
 
-import org.apache.hadoop.hbase.client.Delete;
+import java.util.Date;
+import java.util.HashSet;
+
+import java.util.Set;
+
+import org.apache.hadoop.hbase.KeyValue;
+
 import org.apache.hadoop.hbase.client.Get;
 
+import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.ResultScanner;
+import org.apache.hadoop.hbase.client.Scan;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -12,37 +21,159 @@ import org.junit.Assert;
 
 import org.junit.Test;
 
-import com.alipay.simplehbase.config.CreateTestTable;
-import com.alipay.simplehbase.config.TimeDepend;
-
 /**
- * HbaseBasicOpAboutTsTest.
- * 
  * @author xinzhi.zhang
  * */
-public class HbaseBasicOpAboutTsTest extends HbaseTestBase {
+public class TestHbaseMisc extends HbaseTestBase {
 
     private void fillData() throws Exception {
 
         Put put = new Put(rowKey_ForTest);
 
-        put.add(ColumnFamilyName, QName1, 1L, Bytes.toBytes("a"));
+        put.add(ColumnFamilyNameBytes, QName1, 1L, Bytes.toBytes("a"));
 
-        put.add(ColumnFamilyName, QName1, 2L, Bytes.toBytes("b"));
+        put.add(ColumnFamilyNameBytes, QName1, 2L, Bytes.toBytes("b"));
 
-        put.add(ColumnFamilyName, QName1, 3L, Bytes.toBytes("c"));
+        put.add(ColumnFamilyNameBytes, QName1, 3L, Bytes.toBytes("c"));
 
         table.put(put);
     }
 
     @TimeDepend
     @Test
+    public void testScan_ts_same() throws Exception {
+
+        recreateTable();
+
+        Date ts = parse("2000-01-01", "yyyy-MM-dd");
+
+        Put put = new Put(rowKey_ForTest);
+
+        put.add(ColumnFamilyNameBytes, QName1, ts.getTime(), Bytes.toBytes("a"));
+
+        table.put(put);
+
+        Set<String> resultRowKeys = new HashSet<String>();
+        Scan scan = new Scan(rowKey_ForTest, rowKey_ForTest);
+        scan.setTimeRange(ts.getTime(), ts.getTime());
+
+        ResultScanner resultScanner = table.getScanner(scan);
+        for (Result result = resultScanner.next(); result != null; result = resultScanner
+                .next()) {
+            resultRowKeys.add(Bytes.toString(result.getRow()));
+        }
+
+        close(resultScanner);
+
+        Assert.assertTrue(resultRowKeys.size() == 0);
+
+        recreateTable();
+    }
+
+    @TimeDepend
+    @Test
+    public void testPutMultiVersionSameTime() throws Exception {
+        recreateTable();
+
+        Put put = new Put(rowKey_ForTest);
+        put.add(ColumnFamilyNameBytes, QName1, 1000, Bytes.toBytes("a"));
+        put.add(ColumnFamilyNameBytes, QName1, 2000, Bytes.toBytes("b"));
+        table.put(put);
+
+        Get get = new Get(rowKey_ForTest);
+        get.setMaxVersions(10);
+        Result result = table.get(get);
+        KeyValue[] keyValues = result.raw();
+        Assert.assertEquals(2, keyValues.length);
+        //have a and b both.
+        Assert.assertEquals('a' + 'b', keyValues[0].getValue()[0]
+                + keyValues[1].getValue()[0]);
+
+        recreateTable();
+    }
+
+    @TimeDepend
+    @Test
+    public void testDeleteColumnWithoutTs() throws Exception {
+        recreateTable();
+        fillData();
+
+        Delete delete = new Delete(rowKey_ForTest);
+        delete.deleteColumn(ColumnFamilyNameBytes, QName1);
+        table.delete(delete);
+
+        Get get = new Get(rowKey_ForTest);
+        get.addColumn(ColumnFamilyNameBytes, QName1);
+        get.setMaxVersions(3);
+
+        get.setTimeStamp(3L);
+        Result result = table.get(get);
+        Assert.assertEquals(0, result.raw().length);
+
+        get.setTimeStamp(2L);
+        result = table.get(get);
+        Assert.assertEquals(1, result.raw().length);
+
+        get.setTimeStamp(1L);
+        result = table.get(get);
+        Assert.assertEquals(1, result.raw().length);
+
+        get.setTimeStamp(0L);
+        result = table.get(get);
+        Assert.assertEquals(0, result.raw().length);
+
+        get.setTimeRange(1, 4);
+        result = table.get(get);
+        Assert.assertEquals(2, result.raw().length);
+
+        recreateTable();
+    }
+
+    @TimeDepend
+    @Test
+    public void testDeleteColumnWithTs() throws Exception {
+        recreateTable();
+        fillData();
+
+        Delete delete = new Delete(rowKey_ForTest);
+        delete.deleteColumn(ColumnFamilyNameBytes, QName1, 2L);
+        table.delete(delete);
+
+        Get get = new Get(rowKey_ForTest);
+        get.addColumn(ColumnFamilyNameBytes, QName1);
+        get.setMaxVersions(3);
+
+        get.setTimeStamp(3L);
+        Result result = table.get(get);
+        Assert.assertEquals(1, result.raw().length);
+
+        get.setTimeStamp(2L);
+        result = table.get(get);
+        Assert.assertEquals(0, result.raw().length);
+
+        get.setTimeStamp(1L);
+        result = table.get(get);
+        Assert.assertEquals(1, result.raw().length);
+
+        get.setTimeStamp(0L);
+        result = table.get(get);
+        Assert.assertEquals(0, result.raw().length);
+
+        get.setTimeRange(1, 4);
+        result = table.get(get);
+        Assert.assertEquals(2, result.raw().length);
+
+        recreateTable();
+    }
+
+    @TimeDepend
+    @Test
     public void testGetWith_Ts() throws Exception {
-        CreateTestTable.main(null);
+        recreateTable();
         fillData();
 
         Get get = new Get(rowKey_ForTest);
-        get.addColumn(ColumnFamilyName, QName1);
+        get.addColumn(ColumnFamilyNameBytes, QName1);
         get.setMaxVersions(3);
 
         get.setTimeStamp(3L);
@@ -65,95 +196,21 @@ public class HbaseBasicOpAboutTsTest extends HbaseTestBase {
         result = table.get(get);
         Assert.assertEquals(3, result.raw().length);
 
-        CreateTestTable.main(null);
-    }
-
-    @TimeDepend
-    @Test
-    public void testDeleteColumnWithTs() throws Exception {
-        CreateTestTable.main(null);
-        fillData();
-
-        Delete delete = new Delete(rowKey_ForTest);
-        delete.deleteColumn(ColumnFamilyName, QName1, 2L);
-        table.delete(delete);
-
-        Get get = new Get(rowKey_ForTest);
-        get.addColumn(ColumnFamilyName, QName1);
-        get.setMaxVersions(3);
-
-        get.setTimeStamp(3L);
-        Result result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
-
-        get.setTimeStamp(2L);
-        result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
-
-        get.setTimeStamp(1L);
-        result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
-
-        get.setTimeStamp(0L);
-        result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
-
-        get.setTimeRange(1, 4);
-        result = table.get(get);
-        Assert.assertEquals(2, result.raw().length);
-
-        CreateTestTable.main(null);
-    }
-
-    @TimeDepend
-    @Test
-    public void testDeleteColumnWithoutTs() throws Exception {
-        CreateTestTable.main(null);
-        fillData();
-
-        Delete delete = new Delete(rowKey_ForTest);
-        delete.deleteColumn(ColumnFamilyName, QName1);
-        table.delete(delete);
-
-        Get get = new Get(rowKey_ForTest);
-        get.addColumn(ColumnFamilyName, QName1);
-        get.setMaxVersions(3);
-
-        get.setTimeStamp(3L);
-        Result result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
-
-        get.setTimeStamp(2L);
-        result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
-
-        get.setTimeStamp(1L);
-        result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
-
-        get.setTimeStamp(0L);
-        result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
-
-        get.setTimeRange(1, 4);
-        result = table.get(get);
-        Assert.assertEquals(2, result.raw().length);
-
-        CreateTestTable.main(null);
+        recreateTable();
     }
 
     @TimeDepend
     @Test
     public void testMaxVersion() throws Exception {
-        CreateTestTable.main(null);
+        recreateTable();
         fillData();
 
         Delete delete = new Delete(rowKey_ForTest);
-        delete.deleteColumn(ColumnFamilyName, QName1, 2L);
+        delete.deleteColumn(ColumnFamilyNameBytes, QName1, 2L);
         table.delete(delete);
 
         Get get = new Get(rowKey_ForTest);
-        get.addColumn(ColumnFamilyName, QName1);
+        get.addColumn(ColumnFamilyNameBytes, QName1);
         get.setMaxVersions(1);
 
         get.setTimeStamp(3L);
@@ -176,21 +233,21 @@ public class HbaseBasicOpAboutTsTest extends HbaseTestBase {
         result = table.get(get);
         Assert.assertEquals(1, result.raw().length);
 
-        CreateTestTable.main(null);
+        recreateTable();
     }
 
     @TimeDepend
     @Test
     public void testMaxVersion2() throws Exception {
-        CreateTestTable.main(null);
+        recreateTable();
         fillData();
 
         Delete delete = new Delete(rowKey_ForTest);
-        delete.deleteColumn(ColumnFamilyName, QName1, 3L);
+        delete.deleteColumn(ColumnFamilyNameBytes, QName1, 3L);
         table.delete(delete);
 
         Get get = new Get(rowKey_ForTest);
-        get.addColumn(ColumnFamilyName, QName1);
+        get.addColumn(ColumnFamilyNameBytes, QName1);
         get.setMaxVersions(1);
 
         Result result = table.get(get);
@@ -216,7 +273,7 @@ public class HbaseBasicOpAboutTsTest extends HbaseTestBase {
         result = table.get(get);
         Assert.assertEquals(1, result.raw().length);
 
-        CreateTestTable.main(null);
+        recreateTable();
     }
 
 }

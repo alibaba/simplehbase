@@ -2,6 +2,7 @@ package com.alipay.simplehbase.util;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.List;
 
 import com.alipay.simplehbase.client.DeleteRequest;
 import com.alipay.simplehbase.client.PutRequest;
@@ -82,6 +83,24 @@ public class Util {
         if (rowKey.toBytes() == null) {
             throw new SimpleHBaseException("rowkey bytes is null. rowKey = "
                     + rowKey);
+        }
+    }
+
+    /**
+     * Check rowKey list.
+     * 
+     * <pre>
+     * rowKeyList is not null or empty.
+     * each row key in list is valid.
+     * </pre>
+     * 
+     * */
+    public static void checkRowKeyList(List<RowKey> rowKeyList) {
+        Util.checkNull(rowKeyList);
+        Util.check(!rowKeyList.isEmpty());
+
+        for (RowKey rowKey : rowKeyList) {
+            Util.checkRowKey(rowKey);
         }
     }
 

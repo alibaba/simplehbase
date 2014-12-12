@@ -29,6 +29,9 @@ public class SimpleHbaseAdminClientImpl implements SimpleHbaseAdminClient {
         try {
             HBaseAdmin hbaseAdmin = hbaseDataSource.getHBaseAdmin();
             hbaseAdmin.createTable(tableDescriptor);
+            HTableDescriptor newTableDescriptor = hbaseAdmin
+                    .getTableDescriptor(tableDescriptor.getName());
+            log.info("create table " + newTableDescriptor);
         } catch (Exception e) {
             log.error(e);
             throw new SimpleHBaseException(e);

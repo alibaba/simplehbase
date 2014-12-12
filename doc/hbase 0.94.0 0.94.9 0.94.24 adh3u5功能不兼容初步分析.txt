@@ -1,0 +1,315 @@
+hbase 0.94.0 0.94.9 0.94.24 adh3u5功能不兼容初步分析
+
+测试原因：
+原有的simplehbase count测试代码当hbase从adh3u2升级到adh3u5后，部分测试代码不通过，怀疑hbase的各个版本有兼容性问题。
+
+
+测试环境：
+adh3u5使用支付宝的测试集群。client 0.94.0
+0.94.0 0.94.9 0.94.24使用本机的独立部署hbase。 client 0.94.9
+adh3u2环境没有了，没有测试。感兴趣的同学可以部署一个adh3u2集群，重跑一下测试。
+
+
+测试数据:
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	3               16	
+	4                                32
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+	8                                              "test"
+
+
+Note:
+多family的组合情况太多，不考虑，主要测试单family的情况。	 
+文中涉及的filter。
+
+        SingleColumnValueFilter filter = new SingleColumnValueFilter(
+                ColumnFamilyNameBytes, QName1, CompareOp.GREATER_OR_EQUAL,
+                new BinaryComparator(Bytes.toBytes(4L)));
+        scan.setFilter(filter);
+		
+		
+Scan
+
+0.94.0 0.94.9 0.94.24 adh3u5
+功能一致。
+
+scan时startKey和endKey相等，则返回结果包含该key。
+使用scan.addColumn()时，结果的keyvalue必须在qualifer中。因此使用一个不存在的Column时，scan不到任何结果。
+当addColumn为Q1，选择出
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	3               16		
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+
+使用scan.addFamily()时，结果的keyvalue必须在family中。
+
+
+Scan with filter
+
+使用scan.addColumn()时
+0.94.0 0.94.9 adh3u5一致
+0.94.24和其他版本不一致
+
+在0.94.0 0.94.9 adh3u5中，当scan.addColumn()时，无论该column是否和filter中的column一致，该filter都是生效的。            
+区别在于返回的行不同。
+
+当addColumn为Q1，先选择出
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	3               16	
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+然后filter出
+
+	rowkey          f/q1            f/q2           f/q3 
+	2               4                8
+	3               16	
+	5               64               NULL
+
+
+
+当addColumn为Q2，先选择出
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	4                                32
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+然后filter出
+
+	rowkey          f/q1            f/q2           f/q3 
+	2               4                8
+	4                                32
+	5               64               NULL
+
+
+在0.94.24中，当scan.addColumn()时，如果column和filter中的column不一致，该filter不生效的。     
+
+当addColumn为Q2，先选择出
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	4                                32
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+然后filter不生效，返回结果。
+
+
+
+使用scan.addFamily()时
+4个版本功能一致。
+
+
+
+
+
+Coprocessor
+由于coprocessor的默认实现，会使用scan的family和qualifer，因此,使用coprocessor时必须进行设置。
+正常的原生scan，hbase会检测到scan没有设置family时，会自动填充该HTable的所有family。
+
+Count 
+
+使用scan.addColumn()时
+0.94.0 0.94.9 0.94.24一致
+adh3u5和其他版本不一致
+
+使用0.94.0 0.94.9 0.94.24时，count的结果和addColumn没有关系。
+该测试中都是返回8.
+可以看做在数据全集上面count。
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	3               16	
+	4                                32
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+	8                                              "test"
+	
+
+使用adh3u5时，可以看做先Scan，后count。(实际上，个人认为这个结果更合理，只是和hbase官方的结果不一致，会带来一些其他问题)
+当使用Q1 count时,结果为6。
+当使用Q2 count时,结果为6。
+当使用Q3 count时,结果为1。
+当使用不存在的column count时,结果为0。
+
+
+使用scan.addFamily()时
+4个版本功能一致。
+
+
+Count with filter
+
+使用scan.addColumn()时
+0.94.0 0.94.9 0.94.24一致
+adh3u5和其他版本不一致
+
+使用0.94.0 0.94.9 0.94.24时，count的结果都是5。
+可以看做在数据全集应用filter,然后count。
+
+	rowkey          f/q1            f/q2           f/q3 	
+	2               4                8
+	3               16	
+	4                                32
+	5               64               NULL		
+	8                                              "test"
+	
+
+使用adh3u5时，可以看做先Scan，后filter，后count。(实际上，个人认为这个结果更合理，只是和hbase官方的结果不一致，会带来一些其他问题)
+当使用Q1 count时,结果为3。
+当使用Q2 count时,结果为3。
+当使用Q3 count时,结果为1。
+当使用不存在的column count时,结果为0。
+
+这块hbase自己的3个版本一致。
+adh3u5 count和count with filter一致。并且和普通的scan请求一致，这点上看更好一些，只是长远看，和官方版的功能不兼容，终究是个隐患。
+
+
+使用scan.addFamily()时
+4个版本功能一致。
+
+
+Sum
+4个版本功能一致。
+
+
+Sum with Filter
+
+使用scan.addColumn()时
+0.94.0 0.94.9 adh3u5一致
+0.94.24和其他版本不一致
+
+当使用0.94.0 0.94.9 adh3u5时，
+
+当addColumn为Q1，先选择出
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	3               16	
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+然后filter出
+
+	rowkey          f/q1            f/q2           f/q3 
+	2               4                8
+	3               16	
+	5               64               NULL
+加和为84.
+
+
+当addColumn为Q2，先选择出
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	4                                32
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+然后filter出
+
+	rowkey          f/q1            f/q2           f/q3 
+	2               4                8
+	4                                32
+	5               64               NULL
+加和为40.
+
+当addColumn为Q3，先选择出
+
+	rowkey          f/q1            f/q2           f/q3 
+	8                                              "test"
+然后filter出
+
+	rowkey          f/q1            f/q2           f/q3 
+	8                                              "test"
+加和为null.
+
+
+在0.94.24中，当scan.addColumn()时，如果column和filter中的column不一致，该filter不生效的。     
+
+当addColumn为Q1，先选择出
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	3               16	
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+然后filter出
+
+	rowkey          f/q1            f/q2           f/q3 
+	2               4                8
+	3               16	
+	5               64               NULL
+加和为84.
+
+
+当addColumn为Q2，先选择出
+
+	rowkey          f/q1            f/q2           f/q3 
+	1               1                2
+	2               4                8
+	4                                32
+	5               64               NULL
+	6               NULL             128
+	7               NULL             NULL
+filter不生效。
+加和为170.
+
+
+使用scan.addFamily()时
+4个版本功能一致。
+
+
+结论：
+
+在scan时
+4个版本功能一致。
+
+在scan with filter中，
+0.94.0 0.94.9 adh3u5，当scan.addColumn()时，无论该column是否和filter中的column一致，该filter都是生效的。
+0.94.24比较特殊，如果column和filter中的column不一致，该filter不生效的。
+
+在coprocessor的count和count with filter时
+0.94.0 0.94.9 0.94.24一致。
+可以看做在数据全集上面count或应用filter后count。只是这块的功能和原生scan的功能不一致。
+adh3u5和原生scan的一致性较好，可以看做先原生scan，然后对结果count。
+由于是全集上面filter，0.94.24的filter可以使用。
+
+在coprocessor的sum和sum with filter时
+0.94.0 0.94.9 adh3u5一致。
+可以看做先原生的scan，然后sum。
+0.94.24
+由于其如果column和filter中的column不一致，该filter不生效的。
+所以和其他版本功能不一致。
+
+ 
+
+使用不同版本的hbase，需要对scan,filter,coprocessor做测试，以往的经验往往靠不住。
+另外，欢迎大家提测试用例，我会添加到simplehbase测试代码里面。
+这样，我们就有一个hbase测试代码库，可以在升级hbase时做回归测试。
+
+simplehbase介绍文章：
+http://www.atatech.org/articles/15037
+simplehbase代码：
+https://github.com/zhang-xzhi/simplehbase

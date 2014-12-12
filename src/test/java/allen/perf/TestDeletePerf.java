@@ -2,6 +2,8 @@ package allen.perf;
 
 import org.junit.Test;
 
+import allen.test.Config;
+
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
@@ -15,7 +17,7 @@ public class TestDeletePerf extends MyRecordTestBase {
     public void deleteObjectListPerf() {
 
         int[] testSizes = new int[] { 1 };
-        if (PerfConfig.isPerfTestOn) {
+        if (Config.isPerfTestOn) {
             testSizes = new int[] { 1, 10, 100, 1000, 2000, 5000, 10000 };
         }
 

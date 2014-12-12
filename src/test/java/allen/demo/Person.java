@@ -1,4 +1,4 @@
-package allen.sample;
+package allen.demo;
 
 import java.util.Date;
 
@@ -6,23 +6,16 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import com.alipay.simplehbase.client.HBaseColumn;
-import com.alipay.simplehbase.client.HBaseTable;
-
 /**
  * @author xinzhi
  */
-@HBaseTable(defaultFamily = "MyRecordFamily")
+
 public class Person {
-    @HBaseColumn(qualifier = "id")
+
     private int    id;
-    @HBaseColumn(qualifier = "name")
     private String name;
-    @HBaseColumn(qualifier = "date")
     private Date   date;
-    @HBaseColumn(qualifier = "gender")
     private Gender gender;
-    @HBaseColumn(qualifier = "age")
     private int    age;
 
     public int getId() {

@@ -4,7 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.alipay.simplehbase.config.Config;
+import allen.test.Config;
+
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
 /**

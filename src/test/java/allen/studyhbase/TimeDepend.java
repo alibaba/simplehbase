@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.config;
+package allen.studyhbase;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

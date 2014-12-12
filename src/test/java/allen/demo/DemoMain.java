@@ -1,4 +1,4 @@
-package allen.sample;
+package allen.demo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,19 +7,21 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
+
+import allen.test.CachedFileSystemResource;
+
 import com.alipay.simplehbase.client.SimpleHbaseClient;
 import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
-import com.alipay.simplehbase.config.CachedFileSystemResource;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 
 /**
  * @author xinzhi
  * */
-public class SampleMain {
+public class DemoMain {
 
     /** log. */
-    final private static Logger log = Logger.getLogger(SampleMain.class);
+    final private static Logger log = Logger.getLogger(DemoMain.class);
 
     private static SimpleHbaseClient getSimpleHbaseClient() {
 
@@ -29,9 +31,8 @@ public class SampleMain {
         //If run on hbase cluster, modify the following config files.
         //If run on hbase stand alone mode, comment out the following config files.
         hbaseConfigResources.add(new CachedFileSystemResource(
-                "sample\\hbase_site"));
-        hbaseConfigResources
-                .add(new CachedFileSystemResource("sample\\zk_conf"));
+                "demo\\hbase_site"));
+        hbaseConfigResources.add(new CachedFileSystemResource("demo\\zk_conf"));
         hbaseDataSource.setHbaseConfigResources(hbaseConfigResources);
 
         hbaseDataSource.init();
@@ -39,7 +40,7 @@ public class SampleMain {
         HBaseTableConfig hbaseTableConfig = new HBaseTableConfig();
         //simplehbase config file.
         hbaseTableConfig.setConfigResource(new CachedFileSystemResource(
-                "sample\\myRecord.xml"));
+                "demo\\myRecord.xml"));
 
         hbaseTableConfig.init();
 

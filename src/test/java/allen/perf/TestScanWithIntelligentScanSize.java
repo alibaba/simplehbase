@@ -8,6 +8,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
+import allen.test.Config;
+
 import com.alipay.simplehbase.client.QueryExtInfo;
 import com.alipay.simplehbase.client.rowkey.RowKeyUtil;
 
@@ -27,7 +29,7 @@ public class TestScanWithIntelligentScanSize extends MyRecordTestBase {
         int testSize = 1;
         int loop = 1;
 
-        if (PerfConfig.isPerfTestOn) {
+        if (Config.isPerfTestOn) {
             testSize = 100;
             loop = 100;
         }

@@ -1,4 +1,4 @@
-package allen.sample;
+package allen.demo;
 
 /**
  * @author xinzhi

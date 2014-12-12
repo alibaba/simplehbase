@@ -81,6 +81,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitDeletehqlc(StatementsParser.DeletehqlcContext ctx);
 
+	T visitCountsumc(StatementsParser.CountsumcContext ctx);
+
 	T visitBetweenvar(StatementsParser.BetweenvarContext ctx);
 
 	T visitCountc(StatementsParser.CountcContext ctx);
@@ -94,6 +96,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	T visitConditionwrapper(StatementsParser.ConditionwrapperContext ctx);
 
 	T visitSelecthqlc(StatementsParser.SelecthqlcContext ctx);
+
+	T visitCountsumcl(StatementsParser.CountsumclContext ctx);
 
 	T visitInserthqlc(StatementsParser.InserthqlcContext ctx);
 

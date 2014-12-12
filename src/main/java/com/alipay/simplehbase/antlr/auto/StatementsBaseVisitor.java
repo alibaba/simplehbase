@@ -1,5 +1,4 @@
-package com.alipay.simplehbase.antlr.auto;
-// Generated from Statements.g4 by ANTLR 4.0
+package com.alipay.simplehbase.antlr.auto;// Generated from Statements.g4 by ANTLR 4.0
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -83,6 +82,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitDeletehqlc(StatementsParser.DeletehqlcContext ctx) { return visitChildren(ctx); }
 
+	@Override public T visitCountsumc(StatementsParser.CountsumcContext ctx) { return visitChildren(ctx); }
+
 	@Override public T visitBetweenvar(StatementsParser.BetweenvarContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitCountc(StatementsParser.CountcContext ctx) { return visitChildren(ctx); }
@@ -96,6 +97,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	@Override public T visitConditionwrapper(StatementsParser.ConditionwrapperContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitSelecthqlc(StatementsParser.SelecthqlcContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitCountsumcl(StatementsParser.CountsumclContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitInserthqlc(StatementsParser.InserthqlcContext ctx) { return visitChildren(ctx); }
 

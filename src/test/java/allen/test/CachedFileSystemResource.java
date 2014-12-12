@@ -1,4 +1,4 @@
-package com.alipay.simplehbase.config;
+package allen.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

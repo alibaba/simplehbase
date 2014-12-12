@@ -2,7 +2,8 @@ grammar Statements;
 
 
 prog   : selectc            # selectcl
-       | countc             # countcl	   
+       | countc             # countcl	
+	   | countsumc          # countsumcl
 	   | inserthqlc         # insertHqlCl
 	   | selecthqlc         # selectHqlCl
 	   | deletehqlc         # deleteHqlCl
@@ -21,6 +22,8 @@ deletehqlc : DELETE selectCidList FROM tablename ( wherec ) ? rowkeyrange ( TS I
 		   
 selectc: SELECT wherec;
 countc : COUNT wherec;
+countsumc : COUNTSUM cidList ( wherec ) ? ;
+
 
 wherec: WHERE conditionc;
 
@@ -119,6 +122,7 @@ WHERE : 'where' ;
 
 SELECT : 'select' ; 
 COUNT  : 'count' ;
+COUNTSUM  : 'countsum' ;
 INSERT : 'insert' ;
 DELETE : 'delete' ;
 INTO   : 'into' ;

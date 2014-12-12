@@ -1,4 +1,4 @@
-package allen.sample;
+package allen.demo;
 
 import org.apache.hadoop.hbase.util.Bytes;
 

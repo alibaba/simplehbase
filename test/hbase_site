@@ -1,5 +1,11 @@
 hbase.client.pause=20
 hbase.client.retries.number=3
+
 hbase.ipc.client.tcpnodelay=true
 ipc.ping.interval=3000
 hbase.rpc.timeout=60000
+hbase.ipc.client.connection.maxidletime=60000
+
+
+zookeeper.recovery.retry=5
+zookeeper.recovery.retry.intervalmill=200

@@ -4,9 +4,10 @@ import org.junit.Test;
 
 import junit.framework.Assert;
 
-import com.alipay.simplehbase.config.Config;
-import com.alipay.simplehbase.config.CreateTestTable;
-import com.alipay.simplehbase.config.TimeDepend;
+import allen.studyhbase.TimeDepend;
+import allen.test.Config;
+import allen.test.CreateTestTable;
+
 import com.alipay.simplehbase.myrecord.MyRecord;
 import com.alipay.simplehbase.myrecord.MyRecordRowKey;
 

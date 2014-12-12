@@ -4,16 +4,19 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 import org.apache.hadoop.hbase.HConstants;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 /**
  * @author xinzhi.zhang
  * */
 public class TestServerCallable {
-    protected int  callTimeout;
-    protected long startTime, endTime;
-    final long     pause      = 1000;
-    final int      numRetries = 10;
+    /** log. */
+    private static Logger log        = Logger.getLogger(TestServerCallable.class);
+    protected int         callTimeout;
+    protected long        startTime, endTime;
+    final long            pause      = 1000;
+    final int             numRetries = 10;
 
     public void beforeCall() {
         this.startTime = System.currentTimeMillis();
@@ -74,8 +77,8 @@ public class TestServerCallable {
     }
 
     private void printTime(String msg) {
-        System.out.println(msg + "\ncallTimeout=" + callTimeout
-                + "\nstartTime=" + startTime + "\nendTime=" + endTime
+        log.info(msg + "\ncallTimeout=" + callTimeout + "\nstartTime="
+                + startTime + "\nendTime=" + endTime
                 + "\nthis.endTime - this.startTime ="
                 + (this.endTime - this.startTime) + "\n");
     }

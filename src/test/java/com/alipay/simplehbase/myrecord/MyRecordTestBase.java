@@ -10,14 +10,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.springframework.core.io.Resource;
 
+import allen.test.CachedFileSystemResource;
+import allen.test.Config;
+
 import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.SimpleHbaseAdminClient;
 import com.alipay.simplehbase.client.SimpleHbaseClient;
 import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
 
-import com.alipay.simplehbase.config.CachedFileSystemResource;
-import com.alipay.simplehbase.config.Config;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.config.HBaseTableConfigParser;
@@ -131,6 +132,14 @@ public class MyRecordTestBase {
     protected List<RowKey> rowkeyList(int start, int length) {
         List<RowKey> list = new ArrayList<RowKey>();
         for (int i = start; i < start + length; i++) {
+            list.add(new MyRecordRowKey(i));
+        }
+        return list;
+    }
+
+    protected List<RowKey> rowkeyList(int... ids) {
+        List<RowKey> list = new ArrayList<RowKey>();
+        for (int i : ids) {
             list.add(new MyRecordRowKey(i));
         }
         return list;

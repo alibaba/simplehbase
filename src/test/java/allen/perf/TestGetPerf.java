@@ -9,6 +9,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
 
 import allen.studyhbase.HbaseTestBase;
+import allen.test.Config;
 
 /**
  * @author xinzhi
@@ -20,17 +21,17 @@ public class TestGetPerf extends HbaseTestBase {
     @Test
     public void testGetPerf() throws Exception {
         Put put = new Put(rowKey_ForTest);
-        put.add(ColumnFamilyName, QName1, Bytes.toBytes("2"));
+        put.add(ColumnFamilyNameBytes, QName1, Bytes.toBytes("2"));
         table.put(put);
 
         int loopSize = 1;
-        if (PerfConfig.isPerfTestOn) {
+        if (Config.isPerfTestOn) {
             loopSize = 100;
         }
 
         for (int i = 0; i < loopSize; i++) {
             Get get = new Get(rowKey_ForTest);
-            get.addColumn(ColumnFamilyName, QName1);
+            get.addColumn(ColumnFamilyNameBytes, QName1);
             long start = System.currentTimeMillis();
             table.get(get);
             long end = System.currentTimeMillis();

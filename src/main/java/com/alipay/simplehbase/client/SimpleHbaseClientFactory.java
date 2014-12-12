@@ -31,14 +31,21 @@ public class SimpleHbaseClientFactory {
      * */
     public static SimpleHbaseClient getSimpleHbaseClient(
             SimpleHbaseClient simpleHbaseClient) {
-        Object proxy = Proxy.newProxyInstance(
-                SimpleHbaseClient.class.getClassLoader(),
-                new Class[] { SimpleHbaseClient.class },
-                new ClientInvocationHandler(simpleHbaseClient));
-        return (SimpleHbaseClient) proxy;
+        return getWrapper(SimpleHbaseClient.class, simpleHbaseClient);
     }
 
-    private static class ClientInvocationHandler implements InvocationHandler {
+    /**
+     * Encapsulate interface.
+     * */
+    public static <T> T getWrapper(Class<T> type, T t) {
+        Object proxy = Proxy.newProxyInstance(type.getClassLoader(),
+                new Class[] { type }, new ClientInvocationHandler<T>(t));
+        return type.cast(proxy);
+    }
+
+    private static class ClientInvocationHandler<T> implements
+            InvocationHandler {
+
         /** log. */
         final private static Logger log       = Logger.getLogger(ClientInvocationHandler.class);
 
@@ -46,15 +53,15 @@ public class SimpleHbaseClientFactory {
         private static Logger       digestLog = Logger.getLogger("simplehbase.digest");
 
         /**
-         * SimpleHbaseClient.
+         * t.
          * */
-        private SimpleHbaseClient   simpleHbaseClient;
+        private T                   t;
 
         /**
          * ClientInvocationHandler.
          * */
-        public ClientInvocationHandler(SimpleHbaseClient simpleHbaseClient) {
-            this.simpleHbaseClient = simpleHbaseClient;
+        public ClientInvocationHandler(T t) {
+            this.t = t;
         }
 
         @Override
@@ -66,14 +73,13 @@ public class SimpleHbaseClientFactory {
 
             long start = System.currentTimeMillis();
             try {
-                result = method.invoke(simpleHbaseClient, args);
+                result = method.invoke(t, args);
             } catch (Exception e) {
                 ex = e;
             } finally {
                 long end = System.currentTimeMillis();
-                digestLog.info(simpleHbaseClient.getClass().getName() + ","
-                        + method.getName() + "," + (ex == null ? "Y" : "N")
-                        + "," + (end - start));
+                digestLog.info(t.getClass().getName() + "," + method.getName()
+                        + "," + (ex == null ? "Y" : "N") + "," + (end - start));
             }
 
             if (log.isDebugEnabled()) {
@@ -106,7 +112,7 @@ public class SimpleHbaseClientFactory {
 
             sb.append("invoke detail.\n");
             sb.append("-------------invoke detail---------------\n");
-            sb.append("simpleHbaseClient=" + simpleHbaseClient + "\n");
+            sb.append("inner obj=" + t + "\n");
             sb.append("method=" + method + "\n");
 
             if (args == null) {
