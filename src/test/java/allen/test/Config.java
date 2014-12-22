@@ -25,8 +25,8 @@ public class Config {
 
     final public static String                     TableName              = "MyRecordV_Allen3";
     final public static String                     ColumnFamilyName       = "MyRecordFamily";
-    final public static String                     SimpleHbaseCpPath      = "hdfs://hbdev-1.alipay.net:9000/corp/jar/simplehbase-0.9.2.jar";
-    final public static String                     SimpleHbaseCpClassName = "allen.hbase.cp.ext2.CommonEndpointImpl2";
+    final public static String                     SimpleHbaseCpPath      = "hdfs://hbdev-1.alipay.net:9000/corp/jar/simplehbase-1.1.jar";
+    final public static String                     SimpleHbaseCpClassName = "com.alipay.cp.ext2.CommonEndpointImpl2";
 
     final public static String                     TestHqlNodeXmlFile     = "test\\hql\\testHqlNode.xml";
     final public static String                     HbaseSiteFile          = "test\\hbase_site";

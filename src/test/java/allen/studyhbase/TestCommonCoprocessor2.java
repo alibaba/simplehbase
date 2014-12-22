@@ -5,11 +5,12 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Assert;
 import org.junit.Test;
 
-import allen.hbase.cp.ext.aggr.AggrHandler;
-import allen.hbase.cp.ext.aggr.AggrReducer;
-import allen.hbase.cp.ext.aggr.AggrRequest;
-import allen.hbase.cp.ext.aggr.AggrResult;
-import allen.hbase.cp.ext2.CpClient2;
+import com.ailpay.cp.ext.aggr.AggrHandler;
+import com.ailpay.cp.ext.aggr.AggrReducer;
+import com.ailpay.cp.ext.aggr.AggrRequest;
+import com.ailpay.cp.ext.aggr.AggrResult;
+import com.alipay.cp.ext2.CpClient2;
+
 
 /**
  * @author xinzhi.zhang

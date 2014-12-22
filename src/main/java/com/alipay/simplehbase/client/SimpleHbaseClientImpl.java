@@ -23,12 +23,12 @@ import org.apache.hadoop.hbase.filter.FilterList;
 import org.apache.hadoop.hbase.filter.FilterList.Operator;
 import org.apache.hadoop.hbase.filter.PageFilter;
 
-import allen.hbase.cp.ext.aggr.AggrHandler;
-import allen.hbase.cp.ext.aggr.AggrReducer;
-import allen.hbase.cp.ext.aggr.AggrRequest;
-import allen.hbase.cp.ext.aggr.AggrResult;
-import allen.hbase.cp.ext2.CpClient2;
 
+import com.ailpay.cp.ext.aggr.AggrHandler;
+import com.ailpay.cp.ext.aggr.AggrReducer;
+import com.ailpay.cp.ext.aggr.AggrRequest;
+import com.ailpay.cp.ext.aggr.AggrResult;
+import com.alipay.cp.ext2.CpClient2;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Constant2Context;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CountsumclContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.DeletehqlcContext;

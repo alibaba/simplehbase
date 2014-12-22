@@ -1,4 +1,4 @@
-package allen.hbase.cp.ext2;
+package com.alipay.cp.ext2;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,18 +11,29 @@ import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.coprocessor.Batch;
 
-import allen.hbase.cp.ext.ClientReducer;
-import allen.hbase.cp.ext.KeyValueListHandler;
-import allen.hbase.cp.ext.aggr.AggrResult;
+import com.ailpay.cp.ext.aggr.AggrResult;
+import com.alipay.cp.ext.ClientReducer;
+import com.alipay.cp.ext.KeyValueListHandler;
 
+/**
+ * Coprocessor's client.
+ * 
+ * @author xinzhi.zhang
+ * */
 public class CpClient2 {
 
+    /**
+     * htable to run coprocessor.
+     * */
     private HTableInterface table;
 
     public CpClient2(HTableInterface table) {
         this.table = table;
     }
 
+    /**
+     * call the coprocessor.
+     * */
     public AggrResult call(final KeyValueListHandler<AggrResult> handler,
             final ClientReducer<AggrResult, AggrResult> reducer, final Scan scan)
             throws Throwable {

@@ -1,4 +1,4 @@
-package allen.hbase.cp.ext2;
+package com.alipay.cp.ext2;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,9 +18,14 @@ import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
 import org.apache.hadoop.hbase.ipc.ProtocolSignature;
 import org.apache.hadoop.hbase.regionserver.InternalScanner;
 
-import allen.hbase.cp.ext.aggr.AggrHandler;
-import allen.hbase.cp.ext.aggr.AggrResult;
+import com.ailpay.cp.ext.aggr.AggrHandler;
+import com.ailpay.cp.ext.aggr.AggrResult;
 
+/**
+ * The impl of CommonCoprocessorProtocol2.
+ * 
+ * @author xinzhi.zhang
+ * */
 public class CommonEndpointImpl2 extends BaseEndpointCoprocessor implements
         CommonCoprocessorProtocol2 {
 
