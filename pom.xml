@@ -4,10 +4,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>allen</groupId>
-	<artifactId>simplehbase</artifactId>
+	<artifactId>simplehbase98</artifactId>
 	<packaging>jar</packaging>
 	<version>1.1</version>
-	<name>simplehbase</name>
+	<name>simplehbase98</name>
 
 
 	<dependencies>
