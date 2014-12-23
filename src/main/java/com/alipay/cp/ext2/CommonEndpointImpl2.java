@@ -18,8 +18,8 @@ import org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;
 import org.apache.hadoop.hbase.ipc.ProtocolSignature;
 import org.apache.hadoop.hbase.regionserver.InternalScanner;
 
-import com.ailpay.cp.ext.aggr.AggrHandler;
-import com.ailpay.cp.ext.aggr.AggrResult;
+import com.alipay.cp.ext.aggr.AggrHandler;
+import com.alipay.cp.ext.aggr.AggrResult;
 
 /**
  * The impl of CommonCoprocessorProtocol2.

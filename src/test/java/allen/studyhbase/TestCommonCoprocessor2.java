@@ -5,10 +5,10 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.ailpay.cp.ext.aggr.AggrHandler;
-import com.ailpay.cp.ext.aggr.AggrReducer;
-import com.ailpay.cp.ext.aggr.AggrRequest;
-import com.ailpay.cp.ext.aggr.AggrResult;
+import com.alipay.cp.ext.aggr.AggrHandler;
+import com.alipay.cp.ext.aggr.AggrReducer;
+import com.alipay.cp.ext.aggr.AggrRequest;
+import com.alipay.cp.ext.aggr.AggrResult;
 import com.alipay.cp.ext2.CpClient2;
 
 

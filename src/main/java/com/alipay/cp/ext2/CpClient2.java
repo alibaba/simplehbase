@@ -11,9 +11,9 @@ import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.coprocessor.Batch;
 
-import com.ailpay.cp.ext.aggr.AggrResult;
 import com.alipay.cp.ext.ClientReducer;
 import com.alipay.cp.ext.KeyValueListHandler;
+import com.alipay.cp.ext.aggr.AggrResult;
 
 /**
  * Coprocessor's client.

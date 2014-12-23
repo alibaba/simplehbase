@@ -24,10 +24,10 @@ import org.apache.hadoop.hbase.filter.FilterList.Operator;
 import org.apache.hadoop.hbase.filter.PageFilter;
 
 
-import com.ailpay.cp.ext.aggr.AggrHandler;
-import com.ailpay.cp.ext.aggr.AggrReducer;
-import com.ailpay.cp.ext.aggr.AggrRequest;
-import com.ailpay.cp.ext.aggr.AggrResult;
+import com.alipay.cp.ext.aggr.AggrHandler;
+import com.alipay.cp.ext.aggr.AggrReducer;
+import com.alipay.cp.ext.aggr.AggrRequest;
+import com.alipay.cp.ext.aggr.AggrResult;
 import com.alipay.cp.ext2.CpClient2;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Constant2Context;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CountsumclContext;

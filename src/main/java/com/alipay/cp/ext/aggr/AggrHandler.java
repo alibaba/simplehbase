@@ -1,4 +1,4 @@
-package com.ailpay.cp.ext.aggr;
+package com.alipay.cp.ext.aggr;
 
 import java.io.DataInput;
 import java.io.DataOutput;
