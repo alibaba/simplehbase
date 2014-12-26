@@ -35,11 +35,6 @@ public class HbaseTestBase extends HbaseTest {
     }
 
     @Override
-    protected HBaseVersion hBaseVersion() {
-        return HBaseVersion._94adh3u5;
-    }
-
-    @Override
     protected void recreateTable() {
         CreateTestTable.main(null);
     }

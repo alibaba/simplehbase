@@ -75,8 +75,6 @@ public abstract class HbaseTest {
 
     protected abstract Configuration getConfiguration();
 
-    protected abstract HBaseVersion hBaseVersion();
-
     protected abstract void initHTable();
 
     protected abstract void recreateTable();
