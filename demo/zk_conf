@@ -1,4 +1,1 @@
-hbase.zookeeper.quorum=10.209.192.33,10.209.192.34,10.209.192.35,10.209.192.36,10.209.192.37
-hbase.zookeeper.property.clientPort=2181
-zookeeper.znode.parent=/hbase-94
-
+hbase.zookeeper.quorum=master
