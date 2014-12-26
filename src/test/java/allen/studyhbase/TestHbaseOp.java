@@ -162,19 +162,11 @@ public class TestHbaseOp extends HbaseTestBase {
 
     @Test
     public void testFilter_one_column() throws Exception {
-        switch (hBaseVersion()) {
-            case _94_24:
-                testScan_Filter(QName1, 3, rowKeyStr2, rowKeyStr3, rowKeyStr5);
-                testScan_Filter(QName2, 6, rowKeyStr1, rowKeyStr2, rowKeyStr4,
-                        rowKeyStr5, rowKeyStr6, rowKeyStr7);
-                testScan_Filter(QName_NotExistColumn, 0);
-                break;
-            default:
-                testScan_Filter(QName1, 3, rowKeyStr2, rowKeyStr3, rowKeyStr5);
-                testScan_Filter(QName2, 3, rowKeyStr2, rowKeyStr4, rowKeyStr5);
-                testScan_Filter(QName_NotExistColumn, 0);
-                break;
-        }
+
+        testScan_Filter(QName1, 3, rowKeyStr2, rowKeyStr3, rowKeyStr5);
+        testScan_Filter(QName2, 6, rowKeyStr1, rowKeyStr2, rowKeyStr4,
+                rowKeyStr5, rowKeyStr6, rowKeyStr7);
+        testScan_Filter(QName_NotExistColumn, 0);
     }
 
     @Test
