@@ -3,8 +3,6 @@ package allen.test;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hbase.Coprocessor;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.client.HTableInterface;
@@ -58,13 +56,7 @@ public class Config {
     public static void createTable() throws Exception {
         // create new table.
         HTableDescriptor tableDescriptor = new HTableDescriptor(TableName);
-        tableDescriptor.addFamily(new HColumnDescriptor(ColumnFamilyName));
-        tableDescriptor
-                .addCoprocessor("org.apache.hadoop.hbase.coprocessor.AggregateImplementation");
-
-        Path jarFilePath = new Path(SimpleHbaseCpPath);
-        tableDescriptor.addCoprocessor(SimpleHbaseCpClassName, jarFilePath,
-                Coprocessor.PRIORITY_USER, null);
+        tableDescriptor.addFamily(new HColumnDescriptor(ColumnFamilyName).setMaxVersions(3));
         simpleHbaseAdminClient.createTable(tableDescriptor);
 
     }
