@@ -8,23 +8,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
-import org.springframework.core.io.Resource;
 
-import allen.test.CachedFileSystemResource;
 import allen.test.Config;
 
 import com.alipay.simplehbase.client.PutRequest;
 import com.alipay.simplehbase.client.RowKey;
 import com.alipay.simplehbase.client.SimpleHbaseAdminClient;
 import com.alipay.simplehbase.client.SimpleHbaseClient;
-import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
 
-import com.alipay.simplehbase.config.HBaseDataSource;
-import com.alipay.simplehbase.config.HBaseTableConfig;
 import com.alipay.simplehbase.config.HBaseTableConfigParser;
 import com.alipay.simplehbase.config.SimpleHbaseRuntimeSetting;
 
-import com.alipay.simplehbase.hbase.SimpleHbaseHTableFactory;
 import com.alipay.simplehbase.hql.HBaseQuery;
 
 /**
@@ -41,52 +35,6 @@ public class MyRecordTestBase {
     static {
         simpleHbaseClient = Config.getSimpleHbaseClient();
         simpleHbaseAdminClient = Config.getSimpleHbaseAdminClient();
-    }
-
-    /**
-     * Use SimpleHbaseHTablePool and SimpleHbaseHTableFactory.
-     * */
-    public static SimpleHbaseClient getSimpleHbaseClientWithSimpleHbasePool(
-            boolean autoFlush) {
-        return getSimpleHbaseClientWithSimpleHbasePool(autoFlush, -1L);
-    }
-
-    /**
-     * Use SimpleHbaseHTablePool and SimpleHbaseHTableFactory.
-     * */
-    public static SimpleHbaseClient getSimpleHbaseClientWithSimpleHbasePool(
-            boolean autoFlush, long flushInterval) {
-
-        HBaseDataSource hbaseDataSource = new HBaseDataSource();
-
-        List<Resource> hbaseConfigResources = new ArrayList<Resource>();
-        hbaseConfigResources.add(new CachedFileSystemResource(
-                Config.HbaseSiteFile));
-        hbaseConfigResources.add(new CachedFileSystemResource(
-                Config.ZkConfigFile));
-        hbaseDataSource.setHbaseConfigResources(hbaseConfigResources);
-
-        hbaseDataSource.setHtablePoolType("SimpleHbaseHTablePool");
-        hbaseDataSource.setFlushInterval(flushInterval);
-
-        SimpleHbaseHTableFactory factory = new SimpleHbaseHTableFactory();
-        factory.setAutoFlush(autoFlush);
-        hbaseDataSource.setTableFactory(factory);
-
-        hbaseDataSource.init();
-
-        HBaseTableConfig hbaseTableConfig = new HBaseTableConfig();
-        //simplehbase config file.
-        hbaseTableConfig.setConfigResource(new CachedFileSystemResource(
-                Config.MyRecordXmlFile));
-
-        hbaseTableConfig.init();
-
-        SimpleHbaseClient tClient = new SimpleHbaseClientImpl();
-        tClient.setHbaseDataSource(hbaseDataSource);
-        tClient.setHbaseTableConfig(hbaseTableConfig);
-
-        return tClient;
     }
 
     @Before
