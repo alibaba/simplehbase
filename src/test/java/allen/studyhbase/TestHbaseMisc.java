@@ -5,7 +5,8 @@ import java.util.HashSet;
 
 import java.util.Set;
 
-import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
 
 import org.apache.hadoop.hbase.client.Get;
 
@@ -83,11 +84,11 @@ public class TestHbaseMisc extends HbaseTestBase {
         Get get = new Get(rowKey_ForTest);
         get.setMaxVersions(10);
         Result result = table.get(get);
-        KeyValue[] keyValues = result.raw();
-        Assert.assertEquals(2, keyValues.length);
+        Cell[] cells = result.rawCells();
+        Assert.assertEquals(2, cells.length);
         //have a and b both.
-        Assert.assertEquals('a' + 'b', keyValues[0].getValue()[0]
-                + keyValues[1].getValue()[0]);
+        Assert.assertEquals('a' + 'b', CellUtil.cloneValue(cells[0])[0]
+                + CellUtil.cloneValue(cells[1])[0]);
 
         recreateTable();
     }
@@ -108,23 +109,23 @@ public class TestHbaseMisc extends HbaseTestBase {
 
         get.setTimeStamp(3L);
         Result result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
+        Assert.assertEquals(0, result.rawCells().length);
 
         get.setTimeStamp(2L);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(1L);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(0L);
         result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
+        Assert.assertEquals(0, result.rawCells().length);
 
         get.setTimeRange(1, 4);
         result = table.get(get);
-        Assert.assertEquals(2, result.raw().length);
+        Assert.assertEquals(2, result.rawCells().length);
 
         recreateTable();
     }
@@ -145,23 +146,23 @@ public class TestHbaseMisc extends HbaseTestBase {
 
         get.setTimeStamp(3L);
         Result result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(2L);
         result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
+        Assert.assertEquals(0, result.rawCells().length);
 
         get.setTimeStamp(1L);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(0L);
         result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
+        Assert.assertEquals(0, result.rawCells().length);
 
         get.setTimeRange(1, 4);
         result = table.get(get);
-        Assert.assertEquals(2, result.raw().length);
+        Assert.assertEquals(2, result.rawCells().length);
 
         recreateTable();
     }
@@ -178,23 +179,23 @@ public class TestHbaseMisc extends HbaseTestBase {
 
         get.setTimeStamp(3L);
         Result result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(2L);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(1L);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(0L);
         result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
+        Assert.assertEquals(0, result.rawCells().length);
 
         get.setTimeRange(1, 4);
         result = table.get(get);
-        Assert.assertEquals(3, result.raw().length);
+        Assert.assertEquals(3, result.rawCells().length);
 
         recreateTable();
     }
@@ -215,23 +216,23 @@ public class TestHbaseMisc extends HbaseTestBase {
 
         get.setTimeStamp(3L);
         Result result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(2L);
         result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
+        Assert.assertEquals(0, result.rawCells().length);
 
         get.setTimeStamp(1L);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(0L);
         result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
+        Assert.assertEquals(0, result.rawCells().length);
 
         get.setTimeRange(1, 4);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         recreateTable();
     }
@@ -251,29 +252,28 @@ public class TestHbaseMisc extends HbaseTestBase {
         get.setMaxVersions(1);
 
         Result result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(3L);
         result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
+        Assert.assertEquals(0, result.rawCells().length);
 
         get.setTimeStamp(2L);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(1L);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         get.setTimeStamp(0L);
         result = table.get(get);
-        Assert.assertEquals(0, result.raw().length);
+        Assert.assertEquals(0, result.rawCells().length);
 
         get.setTimeRange(1, 4);
         result = table.get(get);
-        Assert.assertEquals(1, result.raw().length);
+        Assert.assertEquals(1, result.rawCells().length);
 
         recreateTable();
     }
-
 }

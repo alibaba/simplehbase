@@ -6,7 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 
-import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTableInterface;
@@ -212,8 +213,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     protected List<SimpleHbaseCellResult> convertToSimpleHbaseCellResultList(
             Result hbaseResult) {
 
-        KeyValue[] keyValues = hbaseResult.raw();
-        if (keyValues == null || keyValues.length == 0) {
+        Cell[] cells = hbaseResult.rawCells();
+        if (cells == null || cells.length == 0) {
             return new ArrayList<SimpleHbaseCellResult>();
         }
 
@@ -224,20 +225,23 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         try {
             List<SimpleHbaseCellResult> resultList = new ArrayList<SimpleHbaseCellResult>();
 
-            for (KeyValue keyValue : keyValues) {
+            for (Cell cell : cells) {
 
-                byte[] familyBytes = keyValue.getFamily();
+                byte[] familyBytes = CellUtil.cloneFamily(cell);
                 familyStr = Bytes.toString(familyBytes);
-                byte[] qualifierBytes = keyValue.getQualifier();
+
+                byte[] qualifierBytes = CellUtil.cloneQualifier(cell);
                 qualifierStr = Bytes.toString(qualifierBytes);
-                byte[] hbaseValue = keyValue.getValue();
+
+                byte[] hbaseValue = CellUtil.cloneValue(cell);
+
                 HBaseColumnSchema hbaseColumnSchema = columnSchema(familyStr,
                         qualifierStr);
                 TypeHandler typeHandler = hbaseColumnSchema.getTypeHandler();
                 Object valueObject = typeHandler.toObject(
                         hbaseColumnSchema.getType(), hbaseValue);
 
-                long ts = keyValue.getTimestamp();
+                long ts = cell.getTimestamp();
                 Date tsDate = new Date(ts);
 
                 SimpleHbaseCellResult cellResult = new SimpleHbaseCellResult();
@@ -254,7 +258,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             familyStr = "";
             qualifierStr = "";
 
-            byte[] row = keyValues[0].getRow();
+            byte[] row = CellUtil.cloneRow(cells[0]);
+
             rowKeyHandler = hbaseTableConfig.getHbaseTableSchema()
                     .getRowKeyHandler();
             RowKey rowKey = rowKeyHandler.convert(row);
@@ -272,7 +277,6 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
                             + " rowKeyHandler=" + rowKeyHandler + " result="
                             + hbaseResult, e);
         }
-
     }
 
     /**
@@ -286,8 +290,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     protected <T> SimpleHbaseDOWithKeyResult<T> convertToSimpleHbaseDOWithKeyResult(
             Result hbaseResult, Class<? extends T> type) {
 
-        KeyValue[] keyValues = hbaseResult.raw();
-        if (keyValues == null || keyValues.length == 0) {
+        Cell[] cells = hbaseResult.rawCells();
+        if (cells == null || cells.length == 0) {
             return null;
         }
 
@@ -300,12 +304,15 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             TypeInfo typeInfo = findTypeInfo(type);
             T result = type.newInstance();
 
-            for (KeyValue keyValue : keyValues) {
-                byte[] familyBytes = keyValue.getFamily();
+            for (Cell cell : cells) {
+
+                byte[] familyBytes = CellUtil.cloneFamily(cell);
                 familyStr = Bytes.toString(familyBytes);
-                byte[] qualifierBytes = keyValue.getQualifier();
+
+                byte[] qualifierBytes = CellUtil.cloneQualifier(cell);
                 qualifierStr = Bytes.toString(qualifierBytes);
-                byte[] hbaseValue = keyValue.getValue();
+
+                byte[] hbaseValue = CellUtil.cloneValue(cell);
 
                 ColumnInfo columnInfo = typeInfo.findColumnInfo(familyStr,
                         qualifierStr);
@@ -325,7 +332,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             familyStr = "";
             qualifierStr = "";
 
-            byte[] row = keyValues[0].getRow();
+            byte[] row = CellUtil.cloneRow(cells[0]);
+
             rowKeyHandler = hbaseTableConfig.getHbaseTableSchema()
                     .getRowKeyHandler();
             RowKey rowKey = rowKeyHandler.convert(row);
@@ -356,8 +364,9 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
     protected <T> List<SimpleHbaseDOResult<T>> convertToSimpleHbaseDOResult(
             Result hbaseResult, Class<? extends T> type) {
 
-        KeyValue[] keyValues = hbaseResult.raw();
-        if (keyValues == null || keyValues.length == 0) {
+        Cell[] cells = hbaseResult.rawCells();
+
+        if (cells == null || cells.length == 0) {
             return new ArrayList<SimpleHbaseDOResult<T>>();
         }
 
@@ -370,13 +379,17 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
         String qualifierStr = null;
         RowKeyHandler rowKeyHandler = null;
         try {
-            for (KeyValue keyValue : keyValues) {
-                byte[] familyBytes = keyValue.getFamily();
+            for (Cell cell : cells) {
+
+                byte[] familyBytes = CellUtil.cloneFamily(cell);
                 familyStr = Bytes.toString(familyBytes);
-                byte[] qualifierBytes = keyValue.getQualifier();
+
+                byte[] qualifierBytes = CellUtil.cloneQualifier(cell);
                 qualifierStr = Bytes.toString(qualifierBytes);
-                byte[] hbaseValue = keyValue.getValue();
-                long ts = keyValue.getTimestamp();
+
+                byte[] hbaseValue = CellUtil.cloneValue(cell);
+
+                long ts = cell.getTimestamp();
 
                 if (!temMap.containsKey(ts)) {
                     temMap.put(ts, type.newInstance());
@@ -400,7 +413,8 @@ abstract public class SimpleHbaseClientBase implements SimpleHbaseClient {
             familyStr = "";
             qualifierStr = "";
 
-            byte[] row = keyValues[0].getRow();
+            byte[] row = CellUtil.cloneRow(cells[0]);
+
             rowKeyHandler = hbaseTableConfig.getHbaseTableSchema()
                     .getRowKeyHandler();
             RowKey rowKey = rowKeyHandler.convert(row);
