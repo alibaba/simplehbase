@@ -15,13 +15,14 @@ import com.alipay.simplehbase.client.SimpleHbaseClientFactory;
 import com.alipay.simplehbase.client.SimpleHbaseClientImpl;
 import com.alipay.simplehbase.config.HBaseDataSource;
 import com.alipay.simplehbase.config.HBaseTableConfig;
+import com.alipay.simplehbase.util.TableNameUtil;
 
 /**
  * @author xinzhi
  * */
 public class Config {
 
-    final public static String                     TableName              = "MyRecordV_Allen3";
+    final public static String                     TableName              = "allen:MyRecordV_Allen3";
     final public static String                     ColumnFamilyName       = "MyRecordFamily";
     final public static String                     SimpleHbaseCpPath      = "hdfs://hbdev-1.alipay.net:9000/corp/jar/simplehbase-1.1.jar";
     final public static String                     SimpleHbaseCpClassName = "com.alipay.cp.ext2.CommonEndpointImpl2";
@@ -55,8 +56,10 @@ public class Config {
 
     public static void createTable() throws Exception {
         // create new table.
-        HTableDescriptor tableDescriptor = new HTableDescriptor(TableName);
-        tableDescriptor.addFamily(new HColumnDescriptor(ColumnFamilyName).setMaxVersions(3));
+        HTableDescriptor tableDescriptor = new HTableDescriptor(
+                TableNameUtil.getTableName(TableName));
+        tableDescriptor.addFamily(new HColumnDescriptor(ColumnFamilyName)
+                .setMaxVersions(3));
         simpleHbaseAdminClient.createTable(tableDescriptor);
 
     }

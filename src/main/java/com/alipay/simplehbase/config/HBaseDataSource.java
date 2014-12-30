@@ -17,6 +17,7 @@ import com.alipay.simplehbase.exception.SimpleHBaseException;
 
 import com.alipay.simplehbase.util.ConfigUtil;
 import com.alipay.simplehbase.util.StringUtil;
+import com.alipay.simplehbase.util.TableNameUtil;
 import com.alipay.simplehbase.util.Util;
 
 /**
@@ -81,7 +82,8 @@ public class HBaseDataSource {
     public HTableInterface getHTable(String tableName) {
         Util.checkEmptyString(tableName);
         try {
-            return new HTable(hbaseConfiguration, tableName);
+            return new HTable(hbaseConfiguration,
+                    TableNameUtil.getTableName(tableName));
         } catch (Exception e) {
             log.error(e);
             throw new SimpleHBaseException(e);

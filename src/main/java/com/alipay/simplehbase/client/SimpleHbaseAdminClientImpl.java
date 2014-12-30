@@ -1,6 +1,7 @@
 package com.alipay.simplehbase.client;
 
 import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.NamespaceDescriptor;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.log4j.Logger;
 
@@ -28,6 +29,23 @@ public class SimpleHbaseAdminClientImpl implements SimpleHbaseAdminClient {
 
         try {
             HBaseAdmin hbaseAdmin = hbaseDataSource.getHBaseAdmin();
+            NamespaceDescriptor[] namespaceDescriptors = hbaseAdmin
+                    .listNamespaceDescriptors();
+            String namespace = tableDescriptor.getTableName()
+                    .getNamespaceAsString();
+            boolean isExist = false;
+            for (NamespaceDescriptor nd : namespaceDescriptors) {
+                if (nd.getName().equals(namespace)) {
+                    isExist = true;
+                    break;
+                }
+            }
+            log.info("namespace " + namespace + " isExist " + isExist);
+            if (!isExist) {
+                hbaseAdmin.createNamespace(NamespaceDescriptor
+                        .create(namespace).build());
+            }
+
             hbaseAdmin.createTable(tableDescriptor);
             HTableDescriptor newTableDescriptor = hbaseAdmin
                     .getTableDescriptor(tableDescriptor.getName());
