@@ -36,7 +36,7 @@ public class HbaseTestBase extends HbaseTest {
 
     @Override
     protected HBaseVersion hBaseVersion() {
-        return HBaseVersion._94adh3u5;
+        return HBaseVersion._94_0;
     }
 
     @Override
