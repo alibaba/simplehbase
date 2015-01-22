@@ -53,17 +53,15 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitNotbetweenvar(StatementsParser.NotbetweenvarContext ctx);
 
-	T visitCountcl(StatementsParser.CountclContext ctx);
-
 	T visitCid(StatementsParser.CidContext ctx);
 
 	T visitCidList_Star(StatementsParser.CidList_StarContext ctx);
 
 	T visitAndcondition(StatementsParser.AndconditionContext ctx);
 
-	T visitRowkey_hbaseend(StatementsParser.Rowkey_hbaseendContext ctx);
-
 	T visitBetweenconstant(StatementsParser.BetweenconstantContext ctx);
+
+	T visitRowkey_hbaseend(StatementsParser.Rowkey_hbaseendContext ctx);
 
 	T visitRowkeyrange_onerowkey(StatementsParser.Rowkeyrange_onerowkeyContext ctx);
 
@@ -81,11 +79,7 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitDeletehqlc(StatementsParser.DeletehqlcContext ctx);
 
-	T visitCountsumc(StatementsParser.CountsumcContext ctx);
-
 	T visitBetweenvar(StatementsParser.BetweenvarContext ctx);
-
-	T visitCountc(StatementsParser.CountcContext ctx);
 
 	T visitIsnotnullc(StatementsParser.IsnotnullcContext ctx);
 
@@ -96,8 +90,6 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	T visitConditionwrapper(StatementsParser.ConditionwrapperContext ctx);
 
 	T visitSelecthqlc(StatementsParser.SelecthqlcContext ctx);
-
-	T visitCountsumcl(StatementsParser.CountsumclContext ctx);
 
 	T visitInserthqlc(StatementsParser.InserthqlcContext ctx);
 

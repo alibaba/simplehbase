@@ -12,8 +12,6 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.CidContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CidListContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Constant2Context;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.CountclContext;
-import com.alipay.simplehbase.antlr.auto.StatementsParser.CountsumclContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.DeleteHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.DeletehqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertHqlClContext;
@@ -26,7 +24,6 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelecthqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.TsrangeContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.WherecContext;
-
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.RowkeyexpContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.SelectclContext;
@@ -297,43 +294,6 @@ public class ContextUtil {
 
         SelectclContext selectclContext = ((SelectclContext) progContext);
         return parseFilter(selectclContext.selectc().wherec(),
-                hbaseTableConfig, para, runtimeSetting);
-    }
-
-    /**
-     * Parse filter from count hql's progContext.
-     * */
-    @Nullable
-    public static Filter parseCountFilter(@NotNullable ProgContext progContext,
-            @NotNullable HBaseTableConfig hbaseTableConfig,
-            @Nullable Map<String, Object> para,
-            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
-        Util.checkNull(progContext);
-        Util.checkNull(hbaseTableConfig);
-        Util.checkNull(runtimeSetting);
-
-        CountclContext countclContext = ((CountclContext) progContext);
-
-        return parseFilter(countclContext.countc().wherec(), hbaseTableConfig,
-                para, runtimeSetting);
-    }
-
-    /**
-     * Parse filter from countsum hql's progContext.
-     * */
-    @Nullable
-    public static Filter parseCountSumFilter(
-            @NotNullable ProgContext progContext,
-            @NotNullable HBaseTableConfig hbaseTableConfig,
-            @Nullable Map<String, Object> para,
-            @NotNullable SimpleHbaseRuntimeSetting runtimeSetting) {
-        Util.checkNull(progContext);
-        Util.checkNull(hbaseTableConfig);
-        Util.checkNull(runtimeSetting);
-
-        CountsumclContext countsumclContext = ((CountsumclContext) progContext);
-
-        return parseFilter(countsumclContext.countsumc().wherec(),
                 hbaseTableConfig, para, runtimeSetting);
     }
 
