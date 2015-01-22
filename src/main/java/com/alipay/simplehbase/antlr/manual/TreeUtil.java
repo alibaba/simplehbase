@@ -94,6 +94,15 @@ public class TreeUtil {
             return RawHQLType.DELETE;
         }
 
+        if (progContext instanceof CountHqlClContext) {
+            return RawHQLType.COUNT;
+
+        }
+
+        if (progContext instanceof CountsumHqlClContext) {
+            return RawHQLType.COUNTSUM;
+        }
+
         throw new SimpleHBaseException("parse error.");
     }
 

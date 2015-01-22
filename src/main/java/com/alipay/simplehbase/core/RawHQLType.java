@@ -18,6 +18,13 @@ public enum RawHQLType {
     /**
      * DELETE.
      * */
-    DELETE;
-    ;
+    DELETE,
+    /**
+     * COUNT.
+     * */
+    COUNT,
+    /**
+     * COUNTSUM.
+     * */
+    COUNTSUM, ;
 }
