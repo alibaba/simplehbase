@@ -13,9 +13,9 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitTsrange_end(StatementsParser.Tsrange_endContext ctx);
 
-	T visitDeleteHqlCl(StatementsParser.DeleteHqlClContext ctx);
-
 	T visitRowkey_Wrapper(StatementsParser.Rowkey_WrapperContext ctx);
+
+	T visitDeleteHqlCl(StatementsParser.DeleteHqlClContext ctx);
 
 	T visitConstant2_NotNull(StatementsParser.Constant2_NotNullContext ctx);
 
@@ -45,6 +45,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitGreatervar(StatementsParser.GreatervarContext ctx);
 
+	T visitCounthqlc(StatementsParser.CounthqlcContext ctx);
+
 	T visitMaxversion(StatementsParser.MaxversionContext ctx);
 
 	T visitSelectcl(StatementsParser.SelectclContext ctx);
@@ -58,6 +60,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	T visitCid(StatementsParser.CidContext ctx);
 
 	T visitCidList_Star(StatementsParser.CidList_StarContext ctx);
+
+	T visitCountsumHqlCl(StatementsParser.CountsumHqlClContext ctx);
 
 	T visitAndcondition(StatementsParser.AndconditionContext ctx);
 
@@ -103,15 +107,17 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 
 	T visitRowkeyrange_end(StatementsParser.Rowkeyrange_endContext ctx);
 
+	T visitCountHqlCl(StatementsParser.CountHqlClContext ctx);
+
 	T visitGreaterconstant(StatementsParser.GreaterconstantContext ctx);
 
 	T visitEqualconstant(StatementsParser.EqualconstantContext ctx);
 
 	T visitMatchvar(StatementsParser.MatchvarContext ctx);
 
-	T visitGreaterequalvar(StatementsParser.GreaterequalvarContext ctx);
-
 	T visitInsertHqlCl(StatementsParser.InsertHqlClContext ctx);
+
+	T visitGreaterequalvar(StatementsParser.GreaterequalvarContext ctx);
 
 	T visitConstant(StatementsParser.ConstantContext ctx);
 
@@ -124,6 +130,8 @@ public interface StatementsVisitor<T> extends ParseTreeVisitor<T> {
 	T visitOrcondition(StatementsParser.OrconditionContext ctx);
 
 	T visitInvarlist(StatementsParser.InvarlistContext ctx);
+
+	T visitCountsumhqlc(StatementsParser.CountsumhqlcContext ctx);
 
 	T visitConstant2_Null(StatementsParser.Constant2_NullContext ctx);
 

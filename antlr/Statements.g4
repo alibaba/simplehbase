@@ -7,6 +7,8 @@ prog   : selectc            # selectcl
 	   | inserthqlc         # insertHqlCl
 	   | selecthqlc         # selectHqlCl
 	   | deletehqlc         # deleteHqlCl
+	   | counthqlc          # countHqlCl
+	   | countsumhqlc       # countsumHqlCl
        ;
 
 
@@ -18,7 +20,12 @@ selecthqlc : SELECT selectCidList FROM tablename ( wherec ) ? rowkeyrange ( maxv
 	       
 deletehqlc : DELETE selectCidList FROM tablename ( wherec ) ? rowkeyrange ( TS IS tsexp ) ?
 	       ;	       
-
+		   
+counthqlc  : COUNT FROM tablename ( wherec ) ? rowkeyrange
+           ;
+		   
+countsumhqlc : 	COUNTSUM selectCidList FROM tablename ( wherec ) ? rowkeyrange
+             ;	   
 		   
 selectc: SELECT wherec;
 countc : COUNT wherec;

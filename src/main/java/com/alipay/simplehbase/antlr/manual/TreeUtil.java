@@ -5,6 +5,8 @@ import java.io.StringReader;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import com.alipay.simplehbase.antlr.auto.StatementsParser;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CountHqlClContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CountsumHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.DeleteHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ProgContext;
@@ -58,6 +60,16 @@ public class TreeUtil {
 
         if (progContext instanceof DeleteHqlClContext) {
             return DeleteHqlClContext.class.cast(progContext).deletehqlc()
+                    .tablename().TEXT().getText();
+        }
+
+        if (progContext instanceof CountHqlClContext) {
+            return CountHqlClContext.class.cast(progContext).counthqlc()
+                    .tablename().TEXT().getText();
+        }
+
+        if (progContext instanceof CountsumHqlClContext) {
+            return CountsumHqlClContext.class.cast(progContext).countsumhqlc()
                     .tablename().TEXT().getText();
         }
 

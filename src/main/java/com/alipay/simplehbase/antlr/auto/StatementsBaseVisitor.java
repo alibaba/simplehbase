@@ -1,4 +1,6 @@
-package com.alipay.simplehbase.antlr.auto;// Generated from Statements.g4 by ANTLR 4.0
+package com.alipay.simplehbase.antlr.auto;
+
+// Generated from Statements.g4 by ANTLR 4.0
 import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -14,9 +16,9 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitTsrange_end(StatementsParser.Tsrange_endContext ctx) { return visitChildren(ctx); }
 
-	@Override public T visitDeleteHqlCl(StatementsParser.DeleteHqlClContext ctx) { return visitChildren(ctx); }
-
 	@Override public T visitRowkey_Wrapper(StatementsParser.Rowkey_WrapperContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitDeleteHqlCl(StatementsParser.DeleteHqlClContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitConstant2_NotNull(StatementsParser.Constant2_NotNullContext ctx) { return visitChildren(ctx); }
 
@@ -46,6 +48,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitGreatervar(StatementsParser.GreatervarContext ctx) { return visitChildren(ctx); }
 
+	@Override public T visitCounthqlc(StatementsParser.CounthqlcContext ctx) { return visitChildren(ctx); }
+
 	@Override public T visitMaxversion(StatementsParser.MaxversionContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitSelectcl(StatementsParser.SelectclContext ctx) { return visitChildren(ctx); }
@@ -59,6 +63,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	@Override public T visitCid(StatementsParser.CidContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitCidList_Star(StatementsParser.CidList_StarContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitCountsumHqlCl(StatementsParser.CountsumHqlClContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitAndcondition(StatementsParser.AndconditionContext ctx) { return visitChildren(ctx); }
 
@@ -104,15 +110,17 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 
 	@Override public T visitRowkeyrange_end(StatementsParser.Rowkeyrange_endContext ctx) { return visitChildren(ctx); }
 
+	@Override public T visitCountHqlCl(StatementsParser.CountHqlClContext ctx) { return visitChildren(ctx); }
+
 	@Override public T visitGreaterconstant(StatementsParser.GreaterconstantContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitEqualconstant(StatementsParser.EqualconstantContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitMatchvar(StatementsParser.MatchvarContext ctx) { return visitChildren(ctx); }
 
-	@Override public T visitGreaterequalvar(StatementsParser.GreaterequalvarContext ctx) { return visitChildren(ctx); }
-
 	@Override public T visitInsertHqlCl(StatementsParser.InsertHqlClContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitGreaterequalvar(StatementsParser.GreaterequalvarContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitConstant(StatementsParser.ConstantContext ctx) { return visitChildren(ctx); }
 
@@ -125,6 +133,8 @@ public class StatementsBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	@Override public T visitOrcondition(StatementsParser.OrconditionContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitInvarlist(StatementsParser.InvarlistContext ctx) { return visitChildren(ctx); }
+
+	@Override public T visitCountsumhqlc(StatementsParser.CountsumhqlcContext ctx) { return visitChildren(ctx); }
 
 	@Override public T visitConstant2_Null(StatementsParser.Constant2_NullContext ctx) { return visitChildren(ctx); }
 

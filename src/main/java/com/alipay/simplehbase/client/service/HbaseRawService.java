@@ -30,4 +30,14 @@ public interface HbaseRawService {
      * */
     public void delete(String hql);
 
+    /**
+     * count.
+     * */
+    public long count(String hql);
+
+    /**
+     * count and sum.
+     * */
+    public long[] countAndSum(String hql);
+
 }

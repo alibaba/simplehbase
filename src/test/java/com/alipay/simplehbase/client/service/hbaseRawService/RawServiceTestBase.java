@@ -5,6 +5,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import allen.test.Config;
+
 import com.alipay.simplehbase.client.SimpleHbaseCellResult;
 import com.alipay.simplehbase.myrecord.MyRecordTestBase;
 
@@ -39,4 +41,25 @@ public class RawServiceTestBase extends MyRecordTestBase {
 
         Assert.fail();
     }
+
+    protected String rowkeyRange(int start, int end) {
+        return " startkey is intkey ( \"" + start
+                + "\" ) ,  endkey is intkey ( \"" + end + "\" )";
+    }
+
+    protected String countHql(int start, int end) {
+        return countHql("", start, end);
+    }
+
+    protected String countHql(String wherec, int start, int end) {
+        return " count from " + Config.TableName + " " + wherec
+                + rowkeyRange(start, end);
+    }
+
+    protected String countsumHql(String cidList, String wherec, int start,
+            int end) {
+        return " countsum " + cidList + " from " + Config.TableName + " "
+                + wherec + rowkeyRange(start, end);
+    }
+
 }

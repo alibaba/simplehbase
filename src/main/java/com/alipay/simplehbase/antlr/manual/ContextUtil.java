@@ -12,8 +12,12 @@ import com.alipay.simplehbase.antlr.auto.StatementsParser.CidContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CidListContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.Constant2Context;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.ConstantContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CountHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CountclContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CounthqlcContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CountsumHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.CountsumclContext;
+import com.alipay.simplehbase.antlr.auto.StatementsParser.CountsumhqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.DeleteHqlClContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.DeletehqlcContext;
 import com.alipay.simplehbase.antlr.auto.StatementsParser.InsertHqlClContext;
@@ -416,6 +420,38 @@ public class ContextUtil {
 
         Util.checkNull(result);
         return result;
+    }
+
+    /**
+     * Parse CounthqlcContext from count hql.
+     * */
+    @NotNullable
+    public static CounthqlcContext parseCounthqlcContext(
+            @NotNullable ProgContext progContext) {
+        Util.checkNull(progContext);
+
+        CountHqlClContext countHqlClContext = (CountHqlClContext) progContext;
+        CounthqlcContext result = countHqlClContext.counthqlc();
+
+        Util.checkNull(result);
+        return result;
+
+    }
+
+    /**
+     * Parse CountsumhqlcContext from countsum hql.
+     * */
+    @NotNullable
+    public static CountsumhqlcContext parseCountsumhqlcContext(
+            @NotNullable ProgContext progContext) {
+        Util.checkNull(progContext);
+
+        CountsumHqlClContext countsumHqlClContext = (CountsumHqlClContext) progContext;
+        CountsumhqlcContext result = countsumHqlClContext.countsumhqlc();
+
+        Util.checkNull(result);
+        return result;
+
     }
 
     /**
