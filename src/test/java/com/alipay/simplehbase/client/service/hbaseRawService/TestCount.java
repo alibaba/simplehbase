@@ -26,17 +26,19 @@ public class TestCount extends RawServiceTestBase {
 
     @Test
     public void testConstants() {
+        String hql;
+        long result;
 
-        long result = simpleHbaseClient.count(countHql(
-                "where name greater \"aaa\" and age less \"4\"", 0, 100));
+        hql = countHql("where name greater \"aaa\" and age less \"4\"", 0, 100);
+        result = simpleHbaseClient.count(hql);
         Assert.assertTrue(result == 1);
 
-        result = simpleHbaseClient.count(countHql(
-                "where name greater \"bbb\" and age less \"4\"", 0, 100));
+        hql = countHql("where name greater \"bbb\" and age less \"4\"", 0, 100);
+        result = simpleHbaseClient.count(hql);
         Assert.assertTrue(result == 0);
 
-        result = simpleHbaseClient.count(countHql(
-                "where name greater \"ccc\" and age less \"4\"", 0, 100));
+        hql = countHql("where name greater \"ccc\" and age less \"4\"", 0, 100);
+        result = simpleHbaseClient.count(hql);
         Assert.assertTrue(result == 0);
     }
 }
