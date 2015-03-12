@@ -47,10 +47,10 @@ public class AggrResult implements Writable {
     }
 
     /**
-     * get qualifer by index.
+     * get qualifier by index.
      * */
-    public byte[] getQualifer(int index) {
-        return aggrRequest.getQualifer(index);
+    public byte[] getQualifier(int index) {
+        return aggrRequest.getQualifier(index);
     }
 
     /**

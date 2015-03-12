@@ -142,20 +142,20 @@ public class TestHbaseOp extends HbaseTestBase {
                 rowKeyStr5, rowKeyStr6, rowKeyStr7, rowKeyStr8);
     }
 
-    private void testScan_Filter(byte[] qualifer, int expectedSize,
+    private void testScan_Filter(byte[] qualifier, int expectedSize,
             String... rowKeys) throws Exception {
 
         Scan scan = new Scan();
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         applyDefaultFilter(scan);
         testScan(scan, expectedSize, rowKeys);
     }
 
-    private void testScan_FilterList(byte[] qualifer, int expectedSize,
+    private void testScan_FilterList(byte[] qualifier, int expectedSize,
             String... rowKeys) throws Exception {
 
         Scan scan = new Scan();
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         applyDefaultFilterList(scan);
         testScan(scan, expectedSize, rowKeys);
     }
@@ -202,10 +202,10 @@ public class TestHbaseOp extends HbaseTestBase {
     }
 
     private void testFilter_filterIfMissing(boolean filterIfMissing,
-            byte[] qualifer, int expectedSize, String... rowKeys)
+            byte[] qualifier, int expectedSize, String... rowKeys)
             throws Exception {
         Scan scan = new Scan(rowKey4, rowKey4);
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         SingleColumnValueFilter filter = new SingleColumnValueFilter(
                 ColumnFamilyNameBytes, QName1, CompareOp.GREATER_OR_EQUAL,
                 new BinaryComparator(Bytes.toBytes(4L)));

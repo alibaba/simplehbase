@@ -54,10 +54,10 @@ public class AggrHandler implements KeyValueListHandler<AggrResult> {
         int columnSize = t.getColumnSize();
         for (int i = 0; i < columnSize; i++) {
             byte[] family = t.getFamily(i);
-            byte[] qualifer = t.getQualifer(i);
+            byte[] qualifier = t.getQualifier(i);
             for (KeyValue kv : keyValues) {
                 if (kv != null) {
-                    if (Bytes.equals(qualifer, 0, qualifer.length,
+                    if (Bytes.equals(qualifier, 0, qualifier.length,
                             kv.getBuffer(), kv.getQualifierOffset(),
                             kv.getQualifierLength())
                             && Bytes.equals(family, 0, family.length,

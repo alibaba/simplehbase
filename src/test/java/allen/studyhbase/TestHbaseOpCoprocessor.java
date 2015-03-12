@@ -58,12 +58,12 @@ public class TestHbaseOpCoprocessor extends HbaseTestBase {
         Assert.assertTrue(sum.longValue() == 255);
     }
 
-    private void testSum_OneColumn(byte[] qualifer, Long expected)
+    private void testSum_OneColumn(byte[] qualifier, Long expected)
             throws Throwable {
         AggregationClient aggregationClient = getAggregationClient();
 
         Scan scan = new Scan();
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         Long sum = aggregationClient.sum(TableNameBytes, columnInterpreter,
                 scan);
         if (expected == null) {
@@ -92,14 +92,14 @@ public class TestHbaseOpCoprocessor extends HbaseTestBase {
         Assert.assertTrue(sum.longValue() == 255);
     }
 
-    private void testSum_WithFilter(byte[] qualifer, Long expected)
+    private void testSum_WithFilter(byte[] qualifier, Long expected)
             throws Throwable {
 
         AggregationClient aggregationClient = getAggregationClient();
 
         Scan scan = new Scan();
 
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
 
         applyDefaultFilter(scan);
 
@@ -149,12 +149,12 @@ public class TestHbaseOpCoprocessor extends HbaseTestBase {
         Assert.assertTrue(sum.longValue() == 124L);
     }
 
-    private void testCount_OneColumn(byte[] qualifer, Long expected)
+    private void testCount_OneColumn(byte[] qualifier, Long expected)
             throws Throwable {
         AggregationClient aggregationClient = getAggregationClient();
 
         Scan scan = new Scan();
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         Long count = aggregationClient.rowCount(TableNameBytes,
                 columnInterpreter, scan);
         if (expected == null) {
@@ -193,12 +193,12 @@ public class TestHbaseOpCoprocessor extends HbaseTestBase {
         Assert.assertTrue(count.longValue() == 8);
     }
 
-    private void testCount_WithFilter(byte[] qualifer, Long expected)
+    private void testCount_WithFilter(byte[] qualifier, Long expected)
             throws Throwable {
         AggregationClient aggregationClient = getAggregationClient();
 
         Scan scan = new Scan();
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         applyDefaultFilter(scan);
 
         Long count = aggregationClient.rowCount(TableNameBytes,

@@ -19,14 +19,14 @@ public class AggrRequest implements Writable {
     /** list of family. */
     private List<byte[]> families   = new ArrayList<byte[]>();
 
-    /** list of qualifer. */
+    /** list of qualifier. */
     private List<byte[]> qualifiers = new ArrayList<byte[]>();
 
     public AggrRequest() {
     }
 
     /**
-     * add family and qualifer.
+     * add family and qualifier.
      * */
     public void add(String family, String qualifier) {
         if (family != null && qualifier != null) {
@@ -50,9 +50,9 @@ public class AggrRequest implements Writable {
     }
 
     /**
-     * get qualifer by index.
+     * get qualifier by index.
      * */
-    public byte[] getQualifer(int index) {
+    public byte[] getQualifier(int index) {
         return qualifiers.get(index);
     }
 

@@ -11,22 +11,21 @@ import com.alipay.cp.ext.aggr.AggrRequest;
 import com.alipay.cp.ext.aggr.AggrResult;
 import com.alipay.cp.ext2.CpClient2;
 
-
 /**
  * @author xinzhi.zhang
  * */
 public class TestCommonCoprocessor2 extends HbaseTestBase {
 
-    private void testSum_OneColumn(byte[] qualifer, long expected)
+    private void testSum_OneColumn(byte[] qualifier, long expected)
             throws Throwable {
         CpClient2 myClient = new CpClient2(table);
         AggrRequest aggrRequest = new AggrRequest();
         aggrRequest.add(Bytes.toString(ColumnFamilyNameBytes),
-                Bytes.toString(qualifer));
+                Bytes.toString(qualifier));
         AggrHandler aggrHandler = new AggrHandler(aggrRequest);
         Scan scan = new Scan();
 
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         AggrResult aggrResult = myClient.call(aggrHandler, new AggrReducer(),
                 scan);
         Assert.assertTrue(expected == aggrResult.getSum(0));
@@ -40,13 +39,13 @@ public class TestCommonCoprocessor2 extends HbaseTestBase {
         testSum_OneColumn(QName_NotExistColumn, 0L);
     }
 
-    private void testSum_Family_ManyColumn(byte[][] qualifers, long[] expected)
+    private void testSum_Family_ManyColumn(byte[][] qualifiers, long[] expected)
             throws Throwable {
         CpClient2 myClient = new CpClient2(table);
         AggrRequest aggrRequest = new AggrRequest();
-        for (byte[] qualifer : qualifers) {
+        for (byte[] qualifier : qualifiers) {
             aggrRequest.add(Bytes.toString(ColumnFamilyNameBytes),
-                    Bytes.toString(qualifer));
+                    Bytes.toString(qualifier));
         }
         AggrHandler aggrHandler = new AggrHandler(aggrRequest);
         Scan scan = new Scan();
@@ -73,18 +72,18 @@ public class TestCommonCoprocessor2 extends HbaseTestBase {
 
     }
 
-    private void testSum_WithFilter(byte[] qualifer, Long expected)
+    private void testSum_WithFilter(byte[] qualifier, Long expected)
             throws Throwable {
 
         CpClient2 myClient = new CpClient2(table);
         AggrRequest aggrRequest = new AggrRequest();
         aggrRequest.add(Bytes.toString(ColumnFamilyNameBytes),
-                Bytes.toString(qualifer));
+                Bytes.toString(qualifier));
         AggrHandler aggrHandler = new AggrHandler(aggrRequest);
         Scan scan = new Scan();
         applyDefaultFilter(scan);
 
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         AggrResult aggrResult = myClient.call(aggrHandler, new AggrReducer(),
                 scan);
         Assert.assertTrue(expected == aggrResult.getSum(0));
@@ -108,13 +107,13 @@ public class TestCommonCoprocessor2 extends HbaseTestBase {
         }
     }
 
-    private void testSum_WithFilter_Family_ManyColumn(byte[][] qualifers,
+    private void testSum_WithFilter_Family_ManyColumn(byte[][] qualifiers,
             long[] expected) throws Throwable {
         CpClient2 myClient = new CpClient2(table);
         AggrRequest aggrRequest = new AggrRequest();
-        for (byte[] qualifer : qualifers) {
+        for (byte[] qualifier : qualifiers) {
             aggrRequest.add(Bytes.toString(ColumnFamilyNameBytes),
-                    Bytes.toString(qualifer));
+                    Bytes.toString(qualifier));
         }
         AggrHandler aggrHandler = new AggrHandler(aggrRequest);
         Scan scan = new Scan();
@@ -143,14 +142,14 @@ public class TestCommonCoprocessor2 extends HbaseTestBase {
                 QName3, QName_NotExistColumn }, new long[] { 84L, 40L, 0L, 0L });
     }
 
-    private void testCount_OneColumn(byte[] qualifer, Long expected)
+    private void testCount_OneColumn(byte[] qualifier, Long expected)
             throws Throwable {
         CpClient2 myClient = new CpClient2(table);
         AggrRequest aggrRequest = new AggrRequest();
         AggrHandler aggrHandler = new AggrHandler(aggrRequest);
         Scan scan = new Scan();
 
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         AggrResult aggrResult = myClient.call(aggrHandler, new AggrReducer(),
                 scan);
         Assert.assertTrue(expected == aggrResult.getCount());
@@ -177,14 +176,14 @@ public class TestCommonCoprocessor2 extends HbaseTestBase {
         Assert.assertTrue(8 == aggrResult.getCount());
     }
 
-    private void testCount_WithFilter(byte[] qualifer, Long expected)
+    private void testCount_WithFilter(byte[] qualifier, Long expected)
             throws Throwable {
         CpClient2 myClient = new CpClient2(table);
         AggrRequest aggrRequest = new AggrRequest();
         AggrHandler aggrHandler = new AggrHandler(aggrRequest);
         Scan scan = new Scan();
         applyDefaultFilter(scan);
-        scan.addColumn(ColumnFamilyNameBytes, qualifer);
+        scan.addColumn(ColumnFamilyNameBytes, qualifier);
         AggrResult aggrResult = myClient.call(aggrHandler, new AggrReducer(),
                 scan);
         Assert.assertTrue(expected == aggrResult.getCount());
