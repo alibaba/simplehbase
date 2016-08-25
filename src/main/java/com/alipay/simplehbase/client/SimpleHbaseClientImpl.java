@@ -919,7 +919,8 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
 
         deleteObjectList_byRowKey_internal(deleteRequestList, type);
     }
-
+    
+	
     private void checkTimeStampForDeleteRequest(
             List<DeleteRequest> deleteRequestList) {
         if (deleteRequestList == null || deleteRequestList.isEmpty()) {
@@ -1150,6 +1151,116 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             }
         }
     }
+    
+	@Override
+	public void delete(RowKey rowKey) {
+		List<RowKey> rowKeylist = new ArrayList<RowKey>();
+		rowKeylist.add(rowKey);
+		deleteList(rowKeylist);
+	}
+
+	@Override
+	public void deleteList(List<RowKey> rowKeyList) {
+		Util.checkNull(rowKeyList);
+		if (rowKeyList.isEmpty()) {
+			return;
+		}
+
+		for (RowKey rowKey : rowKeyList) {
+			Util.checkRowKey(rowKey);
+		}
+
+		List<Delete> deletes = new LinkedList<Delete>();
+
+		for (RowKey rowKey : rowKeyList) {
+			Delete delete = new Delete(rowKey.toBytes());
+			deletes.add(delete);
+		}
+
+		HTableInterface htableInterface = htableInterface();
+		try {
+			htableInterface.delete(deletes);
+		} catch (IOException e) {
+			throw new SimpleHBaseException("deleteObjectList. rowKeyList = "
+					+ rowKeyList, e);
+		} finally {
+			Util.close(htableInterface);
+		}
+
+		// successful delete will clear the items of deletes list.
+		if (deletes.size() > 0) {
+			throw new SimpleHBaseException("deleteObjectList. deletes="
+					+ deletes);
+		}
+
+	}
+
+	@Override
+	public void deleteList(RowKey startRowKey, RowKey endRowKey) {
+		Util.checkRowKey(startRowKey);
+		Util.checkRowKey(endRowKey);
+		
+		final int deleteBatch = getDeleteBatch();
+
+		while (true) {
+
+			RowKey nextStartRowkey = startRowKey;
+			Scan temScan = constructScan(nextStartRowkey, endRowKey, null, null);
+
+			List<Delete> deletes = new LinkedList<Delete>();
+
+			HTableInterface htableInterface = htableInterface();
+			ResultScanner resultScanner = null;
+			try {
+				resultScanner = htableInterface.getScanner(temScan);
+				Result result = null;
+				while ((result = resultScanner.next()) != null) {
+
+					Delete delete = new Delete(result.getRow());
+					nextStartRowkey = new BytesRowKey(result.getRow());
+
+					deletes.add(delete);
+
+					if (deletes.size() >= deleteBatch) {
+						break;
+					}
+				}
+
+			} catch (IOException e) {
+				throw new SimpleHBaseException("deleteList. scan = " + temScan,
+						e);
+			} finally {
+				Util.close(resultScanner);
+				Util.close(htableInterface);
+			}
+
+			final int deleteListSize = deletes.size();
+			if (deleteListSize == 0) {
+				return;
+			}
+
+			try {
+				htableInterface = htableInterface();
+				htableInterface.delete(deletes);
+			} catch (IOException e) {
+				throw new SimpleHBaseException("deleteList. scan = " + temScan,
+						e);
+			} finally {
+				Util.close(htableInterface);
+			}
+
+			// successful delete will clear the items of deletes list.
+			if (deletes.size() > 0) {
+				throw new SimpleHBaseException("deleteList fail. deletes="
+						+ deletes);
+			}
+
+			if (deleteListSize < deleteBatch) {
+				return;
+			}
+		}
+
+	}
 
     @Override
     public long count(RowKey startRowKey, RowKey endRowKey) {
@@ -1402,5 +1513,7 @@ public class SimpleHbaseClientImpl extends SimpleHbaseClientBase {
             Util.close(htableInterface);
         }
     }
+
+
 
 }
