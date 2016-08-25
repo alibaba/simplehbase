@@ -297,4 +297,26 @@ public interface BasicService {
      * */
     public void deleteObjectList(RowKey startRowKey, RowKey endRowKey,
             Class<?> type);
+
+    /**
+     * Delete.
+     * 
+     * @param rowKey rowKey.
+     * */
+    public void delete(RowKey rowKey);
+
+    /**
+     * Delete list.
+     * 
+     * @param rowKeyList rowKeyList.
+     * */
+    public void deleteList(List<RowKey> rowKeyList);
+
+    /**
+     * Batch delete list.
+     * 
+     * @param startRowKey startRowKey.
+     * @param endRowKey endRowKey.
+     * */
+    public void deleteList(RowKey startRowKey, RowKey endRowKey);
 }
